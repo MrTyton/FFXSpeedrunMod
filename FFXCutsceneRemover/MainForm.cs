@@ -108,22 +108,21 @@ public class MainForm : Form
     {
         try
         {
-            // Try to extract icon from the executing assembly (embedded by ApplicationIcon in .csproj)
-            string exePath = Assembly.GetExecutingAssembly().Location;
-            if (exePath.EndsWith(".dll"))
-            {
-                // When running with dotnet run, we get a .dll, look for the .exe
-                exePath = exePath.Replace(".dll", ".exe");
-            }
-
-            if (File.Exists(exePath))
+            // For single-file apps, use AppContext.BaseDirectory instead of Assembly.Location
+            string exePath = Process.GetCurrentProcess().MainModule?.FileName;
+            
+            if (!string.IsNullOrEmpty(exePath) && File.Exists(exePath))
             {
                 this.Icon = Icon.ExtractAssociatedIcon(exePath);
             }
             else
             {
-                // Fallback to loading from file
-                this.Icon = new Icon("FFXCSR_icon.ico");
+                // Fallback: try to load from file next to the executable
+                string iconPath = Path.Combine(AppContext.BaseDirectory, "FFXCSR_icon.ico");
+                if (File.Exists(iconPath))
+                {
+                    this.Icon = new Icon(iconPath);
+                }
             }
         }
         catch (Exception ex)
