@@ -476,7 +476,7 @@ public class Program
                     if (csrConfig.SetSeedOn)
                     {
                         DiagnosticLog.Information($"Injecting Seed {seedSubmitted}");
-                        new Transition { ForceLoad = false, SetSeed = true, SetSeedValue = unchecked((int)seedSubmitted), RoomNumberAlt = (short)Array.IndexOf(PCSeeds, seedSubmitted) }.Execute();
+                        new Transition { ForceLoad = false, SetSeed = true, SetSeedValue = unchecked((int)seedSubmitted), RoomNumberAlt = (short)(Array.IndexOf(PCSeeds, seedSubmitted) + 1) }.Execute();
                         seedInjected = true;
                     }
 
@@ -489,7 +489,7 @@ public class Program
                         ($"Cutscene Remover: {(csrConfig.CsrOn ? "Enabled" : "Disabled")}", startGameIndents[2]),
                         ($"Cutscene Remover Break: {(csrConfig.CsrBreakOn ? "Enabled" : "Disabled")}", startGameIndents[3]),
                         ($"True RNG: {(csrConfig.TrueRngOn ? "Enabled" : "Disabled")}", startGameIndents[4]),
-                        ($"Set Seed: {(MemoryWatchers.RoomNumberAlt.Current != 0 ? PCSeeds[MemoryWatchers.RoomNumberAlt.Current] : "Disabled")}", startGameIndents[5]),
+                        ($"Set Seed: {(MemoryWatchers.RoomNumberAlt.Current != 0 ? PCSeeds[MemoryWatchers.RoomNumberAlt.Current - 1] : "Disabled")}", startGameIndents[5]),
                         ($"", startGameIndents[6]),
                         ($"Start Game?", startGameIndents[7])
                     };

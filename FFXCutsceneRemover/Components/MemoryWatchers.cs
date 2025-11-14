@@ -42,7 +42,7 @@ public static class MemoryWatchers
     public static MemoryWatcher<byte> MovementLock;
     public static MemoryWatcher<byte> ActiveMusicId;
     public static MemoryWatcher<byte> MusicId;
-    public static MemoryWatcher<byte> RoomNumberAlt;
+    public static MemoryWatcher<short> RoomNumberAlt;
     public static MemoryWatcher<short> CutsceneAlt;
     public static MemoryWatcher<short> AirshipDestinations;
     public static MemoryWatcher<byte> AuronOverdrives;
@@ -339,7 +339,7 @@ public static class MemoryWatchers
         MovementLock = GetMemoryWatcher<byte>(MemoryLocations.MovementLock);
         ActiveMusicId = GetMemoryWatcher<byte>(MemoryLocations.ActiveMusicId);
         MusicId = GetMemoryWatcher<byte>(MemoryLocations.MusicId);
-        RoomNumberAlt = GetMemoryWatcher<byte>(MemoryLocations.RoomNumberAlt);
+        RoomNumberAlt = GetMemoryWatcher<short>(MemoryLocations.RoomNumberAlt);
         CutsceneAlt = GetMemoryWatcher<short>(MemoryLocations.CutsceneAlt);
         AirshipDestinations = GetMemoryWatcher<short>(MemoryLocations.AirshipDestinations);
         AuronOverdrives = GetMemoryWatcher<byte>(MemoryLocations.AuronOverdrives);
