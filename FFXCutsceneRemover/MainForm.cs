@@ -31,8 +31,6 @@ public class MainForm : Form
     private ComboBox seedComboBox;
     private Label seedLabel;
     private GroupBox advancedGroupBox;
-    private NumericUpDown sleepIntervalNumeric;
-    private Label sleepIntervalLabel;
     private ComboBox logLevelComboBox;
     private Label logLevelLabel;
     private CheckBox autoStartCheckBox;
@@ -239,26 +237,13 @@ public class MainForm : Form
             new Size(370, 140))
             .WithAnchor(AnchorStyles.Top | AnchorStyles.Left);
 
-        sleepIntervalLabel = ControlFactory.CreateLabel(
-            "Main Thread Sleep Interval (ms):",
-            new Point(20, 32),
-            new Size(200, 20));
-
-        sleepIntervalNumeric = ControlFactory.CreateNumericUpDown(
-            new Point(230, 30),
-            new Size(80, 20),
-            ConfigurationDefaults.MinSleepInterval,
-            ConfigurationDefaults.MaxSleepInterval,
-            ConfigurationDefaults.DefaultSleepInterval)
-            .WithTooltip(toolTip, "How often (in milliseconds) the mod checks game state. Lower = more responsive, higher = less CPU usage");
-
         logLevelLabel = ControlFactory.CreateLabel(
             "Log Level:",
-            new Point(20, 62),
+            new Point(20, 32),
             new Size(70, 20));
 
         logLevelComboBox = ControlFactory.CreateComboBox(
-            new Point(100, 60),
+            new Point(100, 30),
             new Size(150, 20),
             LogLevelHelper.GetDisplayNames(),
             -1);
@@ -274,14 +259,12 @@ public class MainForm : Form
 
         autoStartCheckBox = ControlFactory.CreateCheckBox(
             "Automatically start mod when FFX starts",
-            new Point(20, 90),
+            new Point(20, 60),
             false,
             AutoStartCheckBox_CheckedChanged)
             .WithSize(330, 20)
             .WithTooltip(toolTip, "When enabled, the mod will automatically start when Final Fantasy X is detected");
 
-        advancedGroupBox.Controls.Add(sleepIntervalLabel);
-        advancedGroupBox.Controls.Add(sleepIntervalNumeric);
         advancedGroupBox.Controls.Add(logLevelLabel);
         advancedGroupBox.Controls.Add(logLevelComboBox);
         advancedGroupBox.Controls.Add(autoStartCheckBox);
@@ -488,7 +471,6 @@ public class MainForm : Form
             noRngModRadioButton.Checked = true;
         }
 
-        sleepIntervalNumeric.Value = config.MtSleepInterval;
         autoStartCheckBox.Checked = config.AutoStart;
 
         // Update category display
@@ -503,7 +485,7 @@ public class MainForm : Form
             CsrBreakOn = csrBreakOnCheckBox.Checked,
             TrueRngOn = trueRngRadioButton.Checked,
             SetSeedOn = setSeedRadioButton.Checked,
-            MtSleepInterval = (int)sleepIntervalNumeric.Value,
+            MtSleepInterval = ConfigurationDefaults.DefaultSleepInterval,
             AutoStart = autoStartCheckBox.Checked,
             SelectedSeed = GameConstants.PCSeeds[0], // Default to first seed
             FfxExecutablePath = csrConfig?.FfxExecutablePath // Preserve the saved path
