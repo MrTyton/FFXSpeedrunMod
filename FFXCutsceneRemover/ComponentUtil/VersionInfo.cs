@@ -14,7 +14,7 @@ public static class VersionInfo
     /// <summary>
     /// Minor version number.
     /// </summary>
-    public const int MinorVersion = 7;
+    public const int MinorVersion = 8;
 
     /// <summary>
     /// Patch version number.
