@@ -20,7 +20,7 @@ class CutsceneRemover
     // so we don't execute the same transition twice
     private Transition PreviouslyExecutedTransition;
     private int LoopSleepMillis;
-    
+
     // Cache transition dictionaries to avoid repeated property access
     private readonly Dictionary<Func<bool>, Transition> standardTransitions;
     private readonly Dictionary<Func<bool>, Transition> postBossBattleTransitions;
@@ -36,7 +36,7 @@ class CutsceneRemover
     {
         /* This loop iterates over the list of standard transitions
          * and applies them when necessary. Most transitions can be performed here. */
-        
+
         // Early exit optimization: Skip all transition checks if ForceLoad is active
         // This prevents evaluating hundreds of conditions when transitions can't execute
         if (MemoryWatchers.ForceLoad.Current == 0)

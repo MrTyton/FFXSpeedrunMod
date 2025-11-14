@@ -16,22 +16,22 @@ public class MemoryWatcherList : List<MemoryWatcher>
 
     // Dictionary for O(1) name lookups instead of O(n) LINQ
     private readonly Dictionary<string, MemoryWatcher> watchersByName = new Dictionary<string, MemoryWatcher>();
-    
+
     // Pre-allocated list to avoid creating new lists every update
     private readonly List<MemoryWatcher> changedList = new List<MemoryWatcher>();
 
     public MemoryWatcher this[string name]
     {
-        get 
-        { 
+        get
+        {
             if (watchersByName.TryGetValue(name, out var watcher))
                 return watcher;
-            
+
             // Fallback to LINQ if not in dictionary (shouldn't happen in normal operation)
             return this.First(w => w.Name == name);
         }
     }
-    
+
     // Override Add to maintain the dictionary
     public new void Add(MemoryWatcher item)
     {
@@ -41,7 +41,7 @@ public class MemoryWatcherList : List<MemoryWatcher>
             watchersByName[item.Name] = item;
         }
     }
-    
+
     // Override Clear to maintain the dictionary
     public new void Clear()
     {
@@ -202,7 +202,7 @@ public class StringWatcher : MemoryWatcher
         if (!Enabled || !CheckInterval())
             return false;
 
-        bool success = AddrType == AddressType.DeepPointer 
+        bool success = AddrType == AddressType.DeepPointer
             ? DeepPtr.DerefString(process, _stringType, _numBytes, out string str)
             : process.ReadString(Address, _stringType, _numBytes, out str);
 
