@@ -18,275 +18,162 @@ public class Transition
 
     private Process process;
 
-    public bool ConsoleOutput = true;
-    public bool ForceLoad = true;
-    public bool FullHeal = false;
-    public bool FixMenu = false;
-    public bool MenuCleanup = false;
-    public bool AddRewardItems = false;
-    public bool AddSinLocation = false;
-    public bool RemoveSinLocation = false;
-    public bool PositionPartyOffScreen = false;
-    public bool PositionTidusAfterLoad = false;
-    public bool KeepEncounterThreatAfterLoad = false;
-    public int AddOverdrive = 0;
-    public string Description = null;
-    public int BaseCutsceneValue = 0;
-    public int BaseCutsceneValue2 = 0;
-    public bool Repeatable = false;
-    public bool Suspendable = true;
-    public int Stage = 0;
-    public (byte itemref, byte itemqty)[] AddItemsToInventory = null;
+    // General transition behavior flags
+    public bool ConsoleOutput = true, ForceLoad = true, FullHeal = false, FixMenu = false,
+                MenuCleanup = false, AddRewardItems = false, AddSinLocation = false,
+                RemoveSinLocation = false, PositionPartyOffScreen = false, PositionTidusAfterLoad = false,
+                KeepEncounterThreatAfterLoad = false, Repeatable = false, Suspendable = true;
 
-    public int? ActorArrayLength = null;
-    public short[] TargetActorIDs = null;
-    public float? Target_x = null;
-    public float? Target_y = null;
-    public float? Target_z = null;
-    public float? Target_rot = null;
-    public short? Target_var1 = null;
+    // General transition parameters
+    public int AddOverdrive = 0, BaseCutsceneValue = 0, BaseCutsceneValue2 = 0, Stage = 0;
+
+    public string Description;
+    public (byte itemref, byte itemqty)[] AddItemsToInventory;
+
+    // Actor targeting and positioning
+    public int? ActorArrayLength;
+    public short[] TargetActorIDs;
+    public float? Target_x, Target_y, Target_z, Target_rot,
+                  PartyTarget_x, PartyTarget_y, PartyTarget_z;
+    public short? Target_var1;
     public byte? MoveFrame = 8; // Default to 8 Frames as this seems to work for most transitions
-    public float? PartyTarget_x = null;
-    public float? PartyTarget_y = null;
-    public float? PartyTarget_z = null;
 
-    public Formations? FormationSwitch = null;
+    // Party formation to set
+    public Formations? FormationSwitch;
 
     /* Only add members here for memory addresses that we want to write the value to.
      * If we only ever read the value then there is no need to add it here. */
-    public short? RoomNumber = null;
-    public short? Storyline = null;
-    public byte? SpawnPoint = null;
-    public short? BattleState = null;
-    public short? BattleState2 = null;
-    public byte? Menu = null;
-    public byte? MenuLock = null;
-    public short? Intro = null;
-    public short? FangirlsOrKidsSkip = null;
-    public sbyte? State = null;
-    public float? XCoordinate = null;
-    public float? YCoordinate = null;
-    public byte? Camera = null;
-    public float? Camera_x = null;
-    public float? Camera_y = null;
-    public float? Camera_z = null;
-    public float? CameraRotation = null;
-    public byte? EncounterStatus = null;
-    public byte? MovementLock = null;
-    public byte? ActiveMusicId = null;
-    public byte? MusicId = null;
-    public short? RoomNumberAlt = null;
-    public short? CutsceneAlt = null;
-    public short? AirshipDestinations = null;
-    public short? AirshipDestinationChange = null;
-    public byte? AuronOverdrives = null;
-    public int? TargetFramerate = null;
-    public byte? PartyMembers = null;
-    public byte? Sandragoras = null;
-    public short? EncounterMapID = null;
-    public byte? EncounterFormationID1 = null;
-    public byte? EncounterFormationID2 = null;
-    public byte? ScriptedBattleFlag1 = null;
-    public byte? ScriptedBattleFlag2 = null;
-    public int? ScriptedBattleVar1 = null;
-    public int? ScriptedBattleVar3 = null;
-    public int? ScriptedBattleVar4 = null;
-    public byte? EncounterTrigger = null;
-    public int? HpEnemyA = null;
-    public byte? GuadoCount = null;
-    public float? TidusXCoordinate = null;
-    public float? TidusYCoordinate = null;
-    public float? TidusZCoordinate = null;
-    public float? TidusRotation = null;
-    public byte[] DialogueFile = null;
-    public byte? CutsceneTiming = null;
-    public byte? IsLoading = null;
+
+    // Game state - Room/Story progression
+    public short? RoomNumber, Storyline, BattleState, BattleState2, Intro,
+                  FangirlsOrKidsSkip, RoomNumberAlt, CutsceneAlt,
+                  AirshipDestinations, AirshipDestinationChange, EncounterMapID;
+
+    // Game state - Menu, camera, encounters
+    public byte? SpawnPoint, Menu, MenuLock, Camera, EncounterStatus,
+                 MovementLock, ActiveMusicId, MusicId, AuronOverdrives,
+                 PartyMembers, Sandragoras, EncounterFormationID1, EncounterFormationID2,
+                 ScriptedBattleFlag1, ScriptedBattleFlag2, EncounterTrigger,
+                 GuadoCount, CutsceneTiming, IsLoading;
+
+    public sbyte? State;
+
+    // Game state - Position and camera coordinates
+    public float? XCoordinate, YCoordinate, Camera_x, Camera_y, Camera_z,
+                  CameraRotation, TidusXCoordinate, TidusYCoordinate,
+                  TidusZCoordinate, TidusRotation;
+
+    // Game state - Framerate and battle variables
+    public int? TargetFramerate, ScriptedBattleVar1, ScriptedBattleVar3,
+                ScriptedBattleVar4, HpEnemyA;
+
+    public byte[] DialogueFile;
 
     // Magic File
-    public int? CurrentMagicID = null;
-    public int? ToBeDeletedMagicID = null;
-    public int? CurrentMagicHandle = null;
-    public int? ToBeDeletedMagicHandle = null;
-    public int? EffectPointer = null;
-    public byte? EffectStatusFlag = null;
+    public int? CurrentMagicID, ToBeDeletedMagicID, CurrentMagicHandle,
+                ToBeDeletedMagicHandle, EffectPointer;
+    public byte? EffectStatusFlag;
 
     // Bespoke Transitions
-    public int? AuronTransition = null;
-    public int? AmmesTransition = null;
-    public int? TankerTransition = null;
-    public int? InsideSinTransition = null;
-    public int? DiveTransition = null;
-    public int? DiveTransition2 = null;
-    public int? DiveTransition3 = null;
-    public int? GeosTransition = null;
-    public int? KlikkTransition = null;
-    public int? AlBhedBoatTransition = null;
-    public int? UnderwaterRuinsTransition = null;
-    public int? UnderwaterRuinsTransition2 = null;
-    public int? UnderwaterRuinsOutsideTransition = null;
-    public int? BeachTransition = null;
-    public int? LagoonTransition1 = null;
-    public int? LagoonTransition2 = null;
-    public int? ValeforTransition = null;
-    public int? BesaidNightTransition1 = null;
-    public int? BesaidNightTransition2 = null;
-    public int? KimahriTransition = null;
-    public int? YunaBoatTransition = null;
-    public int? SinFinTransition = null;
-    public int? EchuillesTransition = null;
-    public int? GeneauxTransition = null;
-    public int? KilikaElevatorTransition = null;
-    public int? KilikaTrialsTransition = null;
-    public int? KilikaAntechamberTransition = null;
-    public int? IfritTransition = null;
-    public int? IfritTransition2 = null;
-    public int? JechtShotTransition = null;
-    public int? OblitzeratorTransition = null;
-    public int? BlitzballTransition = null;
-    public int? SahaginTransition = null;
-    public int? GarudaTransition = null;
-    public int? RinTransition = null;
-    public int? ChocoboEaterTransition = null;
-    public int? GuiTransition = null;
-    public int? Gui2Transition = null;
-    public int? DjoseTransition = null;
-    public int? IxionTransition = null;
-    public int? ExtractorTransition = null;
-    public int? SeymoursHouseTransition1 = null;
-    public int? SeymoursHouseTransition2 = null;
-    public int? FarplaneTransition1 = null;
-    public int? FarplaneTransition2 = null;
-    public int? TromellTransition = null;
-    public int? CrawlerTransition = null;
-    public int? SeymourTransition = null;
-    public int? SeymourTransition2 = null;
-    public int? WendigoTransition = null;
-    public int? SpherimorphTransition = null;
-    public int? UnderLakeTransition = null;
-    public int? BikanelTransition = null;
-    public int? HomeTransition = null;
-    public int? EvraeTransition = null;
-    public int? EvraeAirshipTransition = null;
-    public int? GuardsTransition = null;
-    public int? BahamutTransition = null;
-    public int? IsaaruTransition = null;
-    public int? AltanaTransition = null;
-    public int? NatusTransition = null;
-    public int? DefenderXTransition = null;
-    public int? RonsoTransition = null;
-    public int? FluxTransition = null;
-    public int? SanctuaryTransition = null;
-    public int? SpectralKeeperTransition = null;
-    public int? SpectralKeeperTransition2 = null;
-    public int? YunalescaTransition = null;
-    public int? FinsTransition = null;
-    public int? FinsAirshipTransition = null;
-    public int? SinCoreTransition = null;
-    public int? OverdriveSinTransition = null;
-    public int? OmnisTransition = null;
-    public int? BFATransition = null;
-    public int? AeonTransition = null;
-    public int? YuYevonTransition = null;
-    public int? YojimboFaythTransition = null;
+    public int? AuronTransition, AmmesTransition, TankerTransition,
+                InsideSinTransition, DiveTransition, DiveTransition2, DiveTransition3,
+                GeosTransition, KlikkTransition, AlBhedBoatTransition,
+                UnderwaterRuinsTransition, UnderwaterRuinsTransition2, UnderwaterRuinsOutsideTransition,
+                BeachTransition, LagoonTransition1, LagoonTransition2,
+                ValeforTransition, BesaidNightTransition1, BesaidNightTransition2,
+                KimahriTransition, YunaBoatTransition, SinFinTransition,
+                EchuillesTransition, GeneauxTransition, KilikaElevatorTransition,
+                KilikaTrialsTransition, KilikaAntechamberTransition, IfritTransition, IfritTransition2,
+                JechtShotTransition, OblitzeratorTransition, BlitzballTransition,
+                SahaginTransition, GarudaTransition, RinTransition,
+                ChocoboEaterTransition, GuiTransition, Gui2Transition,
+                DjoseTransition, IxionTransition, ExtractorTransition,
+                SeymoursHouseTransition1, SeymoursHouseTransition2, FarplaneTransition1, FarplaneTransition2,
+                TromellTransition, CrawlerTransition, SeymourTransition, SeymourTransition2,
+                WendigoTransition, SpherimorphTransition, UnderLakeTransition,
+                BikanelTransition, HomeTransition, EvraeTransition, EvraeAirshipTransition,
+                GuardsTransition, BahamutTransition, IsaaruTransition,
+                AltanaTransition, NatusTransition, DefenderXTransition,
+                RonsoTransition, FluxTransition, SanctuaryTransition,
+                SpectralKeeperTransition, SpectralKeeperTransition2, YunalescaTransition,
+                FinsTransition, FinsAirshipTransition, SinCoreTransition,
+                OverdriveSinTransition, OmnisTransition, BFATransition,
+                AeonTransition, YuYevonTransition, YojimboFaythTransition;
 
-    public byte? EnableTidus = null;
-    public byte? EnableYuna = null;
-    public byte? EnableAuron = null;
-    public byte? EnableKimahri = null;
-    public byte? EnableWakka = null;
-    public byte? EnableLulu = null;
-    public byte? EnableRikku = null;
-    public byte? EnableSeymour = null;
-    public byte? EnableValefor = null;
-    public byte? EnableIfrit = null;
-    public byte? EnableIxion = null;
-    public byte? EnableShiva = null;
-    public byte? EnableBahamut = null;
-    public byte? EnableAnima = null;
-    public byte? EnableYojimbo = null;
-    public byte? EnableMagus = null;
+    // Character and Aeon enable flags
+    public byte? EnableTidus, EnableYuna, EnableAuron, EnableKimahri,
+                 EnableWakka, EnableLulu, EnableRikku, EnableSeymour,
+                 EnableValefor, EnableIfrit, EnableIxion, EnableShiva,
+                 EnableBahamut, EnableAnima, EnableYojimbo, EnableMagus;
 
-    public byte? EncountersActiveFlag = null;
-    public float? TotalDistance = null;
-    public float? CycleDistance = null;
+    // Encounter mechanics
+    public byte? EncountersActiveFlag;
+    public float? TotalDistance, CycleDistance;
 
-    public byte? BaajFlag1 = null;
+    // Location-specific story flags - Baaj Temple
+    public byte? BaajFlag1;
 
-    public byte? SSWinnoFlag1 = null;
-    public byte? KilikaMapFlag = null;
-    public byte? SSWinnoFlag2 = null;
+    // Location-specific story flags - S.S. Winno / Kilika
+    public byte? SSWinnoFlag1, KilikaMapFlag, SSWinnoFlag2;
 
-    public byte? LucaFlag = null;
-    public byte? LucaFlag2 = null;
-    public byte? BlitzballFlag = null;
+    // Location-specific story flags - Luca
+    public byte? LucaFlag, LucaFlag2, BlitzballFlag;
 
-    public byte? MiihenFlag1 = null;
-    public byte? MiihenFlag2 = null;
-    public byte? MiihenFlag3 = null;
-    public byte? MiihenFlag4 = null;
+    // Location-specific story flags - Mi'ihen Highroad
+    public byte? MiihenFlag1, MiihenFlag2, MiihenFlag3, MiihenFlag4;
 
-    public byte? MRRFlag1 = null;
-    public byte? MRRFlag2 = null;
+    // Location-specific story flags - Mushroom Rock Road
+    public byte? MRRFlag1, MRRFlag2;
 
-    public byte? MoonflowFlag = null;
-    public byte? MoonflowFlag2 = null;
-    public byte? RikkuOutfit = null;
-    public byte? TidusWeaponDamageBoost = null;
-    public byte? GuadosalamShopFlag = null;
-    public byte? ThunderPlainsFlag = null;
-    public byte? MacalaniaFlag = null;
-    public byte? BikanelFlag = null;
+    // Location-specific story flags - Moonflow through Bikanel
+    public byte? MoonflowFlag, MoonflowFlag2, RikkuOutfit,
+                 TidusWeaponDamageBoost, GuadosalamShopFlag,
+                 ThunderPlainsFlag, MacalaniaFlag, BikanelFlag;
 
-    public byte[] Formation = null;
-    public byte[] RikkuName = null;
+    // Party formation and character name
+    public byte[] Formation, RikkuName;
 
-    public byte? ViaPurificoPlatform = null;
-    public byte? NatusFlag = null;
-    public ushort? CalmLandsFlag = null;
-    public short? GagazetCaveFlag = null;
-    public byte? WantzFlag = null;
-    public byte? OmegaRuinsFlag = null;
-    public byte? WantzMacalaniaFlag = null;
+    // Location-specific story flags - Via Purifico through Omega Ruins
+    public byte? ViaPurificoPlatform, NatusFlag, WantzFlag, OmegaRuinsFlag, WantzMacalaniaFlag, AurochsPlayer1;
+    public ushort? CalmLandsFlag;
+    public short? GagazetCaveFlag;
 
-    public byte[] AurochsTeamBytes = null;
-    public byte[] BlitzballBytes = null;
-    public byte? AurochsPlayer1 = null;
+    // Blitzball team data
+    public byte[] AurochsTeamBytes, BlitzballBytes;
 
-    public int? GilBattleRewards = null;
-    public int? GilRewardCounter = null;
-    public byte? BattleRewardItemCount = null;
-    public short? BattleRewardItem1 = null;
-    public byte? BattleRewardItemQty1 = null;
-    public byte? BattleRewardEquipCount = null;
-    public byte[] BattleRewardEquip1 = null;
+    // Battle rewards
+    public int? GilBattleRewards, GilRewardCounter;
+    public byte? BattleRewardItemCount, BattleRewardItemQty1, BattleRewardEquipCount;
+    public short? BattleRewardItem1;
+    public byte[] BattleRewardEquip1;
 
-    public byte[] ItemsStart = null;
-    public byte[] ItemsQtyStart = null;
+    // Inventory management
+    public byte[] ItemsStart, ItemsQtyStart;
 
-    public int[] CharacterAPRewards = null;
-    public byte[] CharacterAPFlags = null;
+    // Character progression
+    public int[] CharacterAPRewards;
+    public byte[] CharacterAPFlags;
 
-    public int? MenuValue1 = null;
-    public int? MenuValue2 = null;
-    public int? MenuTriggerValue = null;
+    // Menu system
+    public int? MenuValue1, MenuValue2, MenuTriggerValue;
 
-    public byte? AutosaveTrigger = null;
-    public byte? SupressAutosaveOnForceLoad = null;
-    public byte? SupressAutosaveCounter = null;
+    // Autosave control
+    public byte? AutosaveTrigger, SupressAutosaveOnForceLoad, SupressAutosaveCounter;
 
-    public byte? LucaMusicSpheresUnlocked = null;
+    // Music sphere collection
+    public byte? LucaMusicSpheresUnlocked;
 
-    public byte[] RNGArrayOpBytes = null;
+    // RNG manipulation
+    public byte[] RNGArrayOpBytes;
 
     public bool SetSeed = false;
-    public int? SetSeedValue = null;
+    public int? SetSeedValue;
 
     // Bitmask Addition
-    public int? AddCalmLandsBitmask = null;
+    public int? AddCalmLandsBitmask;
 
-    // Stored Values
-    public float TotalDistanceBeforeLoad = 0.0f;
-    public float CycleDistanceBeforeLoad = 0.0f;
+    // Stored Values - Encounter distances
+    public float TotalDistanceBeforeLoad = 0.0f, CycleDistanceBeforeLoad = 0.0f;
 
     public virtual void Execute(string defaultDescription = "")
     {
