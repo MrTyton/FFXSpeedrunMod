@@ -44,12 +44,12 @@ public static class ControlFactory
             Location = location,
             Size = size
         };
-        
+
         if (clickHandler != null)
         {
             button.Click += clickHandler;
         }
-        
+
         return button;
     }
 
@@ -70,12 +70,12 @@ public static class ControlFactory
             AutoSize = true,
             Checked = isChecked
         };
-        
+
         if (changedHandler != null)
         {
             checkBox.CheckedChanged += changedHandler;
         }
-        
+
         return checkBox;
     }
 
@@ -116,14 +116,14 @@ public static class ControlFactory
             Size = size,
             DropDownStyle = ComboBoxStyle.DropDownList
         };
-        
+
         comboBox.Items.AddRange(items);
-        
+
         if (selectedIndex >= 0 && selectedIndex < items.Length)
         {
             comboBox.SelectedIndex = selectedIndex;
         }
-        
+
         return comboBox;
     }
 
@@ -181,12 +181,12 @@ public static class ControlFactory
             Size = size,
             Checked = isChecked
         };
-        
+
         if (changedHandler != null)
         {
             radioButton.CheckedChanged += changedHandler;
         }
-        
+
         return radioButton;
     }
 
@@ -206,12 +206,12 @@ public static class ControlFactory
             Location = location,
             Size = size
         };
-        
+
         if (clickHandler != null)
         {
             linkLabel.LinkClicked += clickHandler;
         }
-        
+
         return linkLabel;
     }
 

@@ -10,27 +10,27 @@ public static class VersionInfo
     /// Major version number.
     /// </summary>
     public const int MajorVersion = 1;
-    
+
     /// <summary>
     /// Minor version number.
     /// </summary>
     public const int MinorVersion = 7;
-    
+
     /// <summary>
     /// Patch version number.
     /// </summary>
     public const int PatchVersion = 0;
-    
+
     /// <summary>
     /// Full version string in format "1.7.0"
     /// </summary>
     public static string FullVersion => $"{MajorVersion}.{MinorVersion}.{PatchVersion}";
-    
+
     /// <summary>
     /// Display name for GUI windows and dialogs: "FFX Speedrun Mod v1.7.0"
     /// </summary>
     public static string DisplayName => $"FFX Speedrun Mod v{FullVersion}";
-    
+
     /// <summary>
     /// Bracketed name for console/log output: "[FFX Speedrunning Mod v1.7.0]"
     /// </summary>

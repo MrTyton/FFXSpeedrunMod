@@ -215,7 +215,7 @@ public class MainForm : Form
 
         var seedItems = new List<object> { "--- Select Seed ---" };
         seedItems.AddRange(GameConstants.PCSeeds.Cast<object>());
-        
+
         seedComboBox = ControlFactory.CreateComboBox(
             new Point(170, 80),
             new Size(180, 20),

@@ -12,28 +12,28 @@ public static class GameConstants
     /// FFX process name (without .exe extension).
     /// </summary>
     public const string ProcessName = "FFX";
-    
+
     /// <summary>
     /// FFX executable file name.
     /// </summary>
     public const string GameExecutableName = "FFX.exe";
-    
+
     /// <summary>
     /// Default configuration file name.
     /// </summary>
     public const string DefaultConfigFileName = "config.json";
-    
+
     /// <summary>
     /// Application icon file name.
     /// </summary>
     public const string IconFileName = "FFXCSR_icon.ico";
-    
+
     // URLs
     /// <summary>
     /// URL to FFX speedrun rules and categories.
     /// </summary>
     public const string SpeedrunRulesUrl = "https://www.speedrun.com/ffx/full_game";
-    
+
     // UI Text Messages
     /// <summary>
     /// UI text messages for various states.
@@ -47,7 +47,7 @@ public static class GameConstants
         public const string ProcessNotFound = "FFX process not found";
         public const string ErrorConnecting = "Error connecting to game";
     }
-    
+
     /// <summary>
     /// PC RNG seed values used for set seed runs.
     /// </summary>

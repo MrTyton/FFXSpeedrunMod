@@ -649,7 +649,7 @@ public class Transition
         if (bytes != null)
         {
             var hexstring = Convert.ToHexString(bytes);
-            var dbgAddr   = watcher.Address - MemoryWatchers.GetBaseAddress();
+            var dbgAddr = watcher.Address - MemoryWatchers.GetBaseAddress();
 
             if (watcher.AddrType == MemoryWatcher.AddressType.Absolute)
             {

@@ -22,11 +22,11 @@ class GuiTransition : Transition
 
         byte dialogBoxStatus = dialogBoxStruct[0x01];
         byte dialogBoxSelection = dialogBoxStruct[0x18];
-        
+
         if (MemoryWatchers.Dialogue1.Current == 95 && dialogBoxStatus == 0x02 && dialogBoxSelection == 0x01 && Stage == 0)
         {
             process.Suspend();
-            
+
             new Transition
             {
                 EncounterMapID = 27,

@@ -31,7 +31,7 @@ public static class StartGameIndents
         [0x0A] = 0x46  // Chinese
     };
 
-    private static readonly byte[] DefaultIndents = new byte[] 
+    private static readonly byte[] DefaultIndents = new byte[]
         { 0x43, 0x00, 0x45, 0x41, 0x4a, 0x4a, 0x00, 0x4d };
 
     /// <summary>

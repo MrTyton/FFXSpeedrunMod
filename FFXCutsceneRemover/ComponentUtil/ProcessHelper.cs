@@ -18,16 +18,16 @@ public static class ProcessHelper
     public static Process FindGameProcess(string processName)
     {
         var processes = Process.GetProcessesByName(processName);
-        
+
         if (processes.Length == 0)
         {
             return null;
         }
-        
+
         // Manual loop is more efficient than LINQ OrderBy for this use case
         Process latestProcess = null;
         DateTime latestStartTime = DateTime.MinValue;
-        
+
         foreach (var proc in processes)
         {
             try
@@ -43,10 +43,10 @@ public static class ProcessHelper
                 // Process may have exited or we don't have permission, skip it
             }
         }
-        
+
         return latestProcess;
     }
-    
+
     /// <summary>
     /// Checks if a process is still running.
     /// </summary>
@@ -58,7 +58,7 @@ public static class ProcessHelper
         {
             return false;
         }
-        
+
         try
         {
             return !process.HasExited;
@@ -68,7 +68,7 @@ public static class ProcessHelper
             return false;
         }
     }
-    
+
     /// <summary>
     /// Safely disposes a process, killing it if still running.
     /// Sets the process reference to null.
@@ -80,7 +80,7 @@ public static class ProcessHelper
         {
             return;
         }
-        
+
         try
         {
             if (!process.HasExited)
@@ -92,7 +92,7 @@ public static class ProcessHelper
         {
             // Ignore errors during kill - process may have already exited
         }
-        
+
         try
         {
             process.Dispose();
@@ -106,7 +106,7 @@ public static class ProcessHelper
             process = null;
         }
     }
-    
+
     /// <summary>
     /// Waits for a process matching the given name to start.
     /// </summary>

@@ -1,4 +1,6 @@
-﻿namespace FFXCutsceneRemover;
+﻿using FFXCutsceneRemover.Constants;
+
+namespace FFXCutsceneRemover;
 
 class BahamutTransition : Transition
 {
@@ -15,9 +17,9 @@ class BahamutTransition : Transition
                 Stage = 1;
 
             }
-            else if (MemoryWatchers.BahamutTransition.Current >= (BaseCutsceneValue + 0x680) && Stage == 1)
+            else if (MemoryWatchers.BahamutTransition.Current >= (BaseCutsceneValue + CutsceneOffsets.Bahamut.CheckOffset) && Stage == 1)
             {
-                WriteValue<int>(MemoryWatchers.BahamutTransition, BaseCutsceneValue + 0x86E);
+                WriteValue<int>(MemoryWatchers.BahamutTransition, BaseCutsceneValue + CutsceneOffsets.Bahamut.SkipOffset);
                 Stage = 2;
             }
         }

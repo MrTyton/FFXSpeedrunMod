@@ -31,7 +31,7 @@ class GeneauxTransition : Transition
 
             Transition actorPositions;
             //Position Party Member 1
-            actorPositions = new Transition { ForceLoad = false, ConsoleOutput = false, TargetActorIDs = new short[] { (short)(formation[0] + 1)}, Target_x = -6.565f, Target_y = -159.997f, Target_z = 551.024f };
+            actorPositions = new Transition { ForceLoad = false, ConsoleOutput = false, TargetActorIDs = new short[] { (short)(formation[0] + 1) }, Target_x = -6.565f, Target_y = -159.997f, Target_z = 551.024f };
             actorPositions.Execute();
 
             //Position Party Member 2
@@ -41,7 +41,7 @@ class GeneauxTransition : Transition
             //Position Party Member 3
             actorPositions = new Transition { ForceLoad = false, ConsoleOutput = false, TargetActorIDs = new short[] { (short)(formation[2] + 1) }, Target_x = 43.509f, Target_y = -159.997f, Target_z = 571.721f };
             actorPositions.Execute();
-                
+
             Stage += 1;
         }
         else if (MemoryWatchers.GeneauxTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Geneaux.CheckOffset2) && Stage == 2)

@@ -61,24 +61,24 @@ internal sealed class CsrConfigBinder : BinderBase<CsrConfig>
 public sealed record CsrConfig
 {
     private int _mtSleepInterval = ConfigurationDefaults.DefaultSleepInterval;
-    
+
     public bool CsrOn { get; set; }
     public bool CsrBreakOn { get; set; }
     public bool TrueRngOn { get; set; }
     public bool SetSeedOn { get; set; }
-    
+
     public int MtSleepInterval
     {
         get => _mtSleepInterval;
-        set => _mtSleepInterval = Math.Clamp(value, 
-            ConfigurationDefaults.MinSleepInterval, 
+        set => _mtSleepInterval = Math.Clamp(value,
+            ConfigurationDefaults.MinSleepInterval,
             ConfigurationDefaults.MaxSleepInterval);
     }
-    
+
     public uint SelectedSeed { get; set; }
     public bool AutoStart { get; set; }
     public string FfxExecutablePath { get; set; }
-    
+
     /// <summary>
     /// Validates the configuration and returns any validation errors.
     /// </summary>
@@ -91,13 +91,13 @@ public sealed record CsrConfig
             errorMessage = $"Invalid seed value: {SelectedSeed}. Seed must be one of the predefined PC seeds.";
             return false;
         }
-        
+
         if (CsrBreakOn && !CsrOn)
         {
             errorMessage = "CSR Break cannot be enabled without CSR being enabled.";
             return false;
         }
-        
+
         errorMessage = null;
         return true;
     }
