@@ -832,11 +832,11 @@ public class MainForm : Form
                         if (openFileDialog.ShowDialog() == DialogResult.OK)
                         {
                             ffxPath = openFileDialog.FileName;
-                            
+
                             // Save the path by updating csrConfig and saving it
                             csrConfig = GetConfigFromUI();
                             csrConfig.FfxExecutablePath = ffxPath;
-                            
+
                             // Try to save to a default config file
                             try
                             {
