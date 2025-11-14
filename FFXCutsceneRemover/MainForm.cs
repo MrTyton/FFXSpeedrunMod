@@ -25,10 +25,12 @@ public class MainForm : Form
     private RadioButton noRngModRadioButton;
     private ComboBox seedComboBox;
     private Label seedLabel;
+    private GroupBox advancedGroupBox;
     private NumericUpDown sleepIntervalNumeric;
     private Label sleepIntervalLabel;
     private ComboBox logLevelComboBox;
     private Label logLevelLabel;
+    private CheckBox autoStartCheckBox;
 
     private GroupBox statusGroupBox;
     private Label connectionStatusLabel;
@@ -47,6 +49,7 @@ public class MainForm : Form
     // Background worker for game monitoring
     private BackgroundWorker gameWorker;
     private CancellationTokenSource cancellationTokenSource;
+    private System.Windows.Forms.Timer autoStartTimer;
 
     // Application state
     private CsrConfig csrConfig;
@@ -54,6 +57,7 @@ public class MainForm : Form
     private CutsceneRemover cutsceneRemover;
     private RNGMod rngMod;
     private bool isRunning = false;
+    private bool autoStartEnabled = false;
     private LogEventLevel currentLogLevel = LogEventLevel.Information;
 
     private static readonly uint[] PCSeeds = new uint[] {
@@ -218,6 +222,7 @@ public class MainForm : Form
             DropDownStyle = ComboBoxStyle.DropDownList,
             Enabled = false
         };
+        seedComboBox.Items.Add("--- Select Seed ---");
         foreach (var seed in PCSeeds)
         {
             seedComboBox.Items.Add(seed.ToString());
@@ -233,11 +238,11 @@ public class MainForm : Form
         rngGroupBox.Controls.Add(seedComboBox);
 
         // Advanced Settings GroupBox
-        var advancedGroupBox = new GroupBox
+        advancedGroupBox = new GroupBox
         {
             Text = "Advanced Settings",
             Location = new Point(10, 130),
-            Size = new Size(370, 110),
+            Size = new Size(370, 140),
             Anchor = AnchorStyles.Top | AnchorStyles.Left
         };
 
@@ -291,17 +296,29 @@ public class MainForm : Form
             "• Debug - Detailed diagnostic information\n" +
             "• Verbose - All messages including very detailed trace info");
 
+        // Auto-start checkbox
+        autoStartCheckBox = new CheckBox
+        {
+            Text = "Automatically start mod when FFX starts",
+            Location = new Point(20, 90),
+            Size = new Size(330, 20),
+            Checked = false
+        };
+        autoStartCheckBox.CheckedChanged += AutoStartCheckBox_CheckedChanged;
+        toolTip.SetToolTip(autoStartCheckBox, "When enabled, the mod will automatically start when Final Fantasy X is detected");
+
         advancedGroupBox.Controls.Add(sleepIntervalLabel);
         advancedGroupBox.Controls.Add(sleepIntervalNumeric);
         advancedGroupBox.Controls.Add(logLevelLabel);
         advancedGroupBox.Controls.Add(logLevelComboBox);
+        advancedGroupBox.Controls.Add(autoStartCheckBox);
 
         // Status GroupBox
         statusGroupBox = new GroupBox
         {
             Text = "Status",
-            Location = new Point(10, 250),
-            Size = new Size(760, 250),
+            Location = new Point(10, 280),
+            Size = new Size(760, 220),
             Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom
         };
 
@@ -413,6 +430,14 @@ public class MainForm : Form
         gameWorker.ProgressChanged += GameWorker_ProgressChanged;
         gameWorker.RunWorkerCompleted += GameWorker_RunWorkerCompleted;
 
+        // Set up auto-start timer
+        autoStartTimer = new System.Windows.Forms.Timer
+        {
+            Interval = 2000 // Check every 2 seconds
+        };
+        autoStartTimer.Tick += AutoStartTimer_Tick;
+        autoStartTimer.Start(); // Start monitoring immediately
+
         // Try to load default configuration
         LoadDefaultConfig();
     }
@@ -460,6 +485,7 @@ public class MainForm : Form
         }
 
         sleepIntervalNumeric.Value = config.MtSleepInterval;
+        autoStartCheckBox.Checked = config.AutoStart;
     }
 
     private CsrConfig GetConfigFromUI()
@@ -470,12 +496,15 @@ public class MainForm : Form
             CsrBreakOn = csrBreakOnCheckBox.Checked,
             TrueRngOn = trueRngRadioButton.Checked,
             SetSeedOn = setSeedRadioButton.Checked,
-            MtSleepInterval = (int)sleepIntervalNumeric.Value
+            MtSleepInterval = (int)sleepIntervalNumeric.Value,
+            AutoStart = autoStartCheckBox.Checked,
+            SelectedSeed = PCSeeds[0] // Default to first seed
         };
 
-        if (config.SetSeedOn && seedComboBox.SelectedItem != null)
+        // Index 0 is the placeholder "--- Select Seed ---", real seeds start at index 1
+        if (config.SetSeedOn && seedComboBox.SelectedIndex > 0)
         {
-            config.SelectedSeed = uint.Parse(seedComboBox.SelectedItem.ToString());
+            config.SelectedSeed = uint.Parse(seedComboBox.Items[seedComboBox.SelectedIndex].ToString());
         }
 
         return config;
@@ -509,6 +538,44 @@ public class MainForm : Form
             4 => LogEventLevel.Verbose,
             _ => LogEventLevel.Information
         };
+    }
+
+    private void AutoStartCheckBox_CheckedChanged(object sender, EventArgs e)
+    {
+        autoStartEnabled = autoStartCheckBox.Checked;
+    }
+
+    private void AutoStartTimer_Tick(object sender, EventArgs e)
+    {
+        // Only check if auto-start is enabled and mod is not already running
+        if (autoStartEnabled && !isRunning)
+        {
+            // Check if FFX process exists
+            var processes = Process.GetProcessesByName("FFX");
+            if (processes.Length > 0)
+            {
+                // Give FFX a moment to fully initialize before connecting
+                // This prevents connecting too early when the game process just started
+                var process = processes[0];
+                try
+                {
+                    // Check if the process has been running for at least 2 seconds
+                    // This ensures the game is initialized enough for memory access
+                    var uptime = DateTime.Now - process.StartTime;
+                    if (uptime.TotalSeconds >= 2)
+                    {
+                        // FFX is running and initialized, start the mod
+                        LogMessage("FFX detected! Auto-starting mod...");
+                        StartButton_Click(this, EventArgs.Empty);
+                    }
+                }
+                catch
+                {
+                    // If we can't access StartTime, the process might not be ready yet
+                    // Just skip this tick and try again next time
+                }
+            }
+        }
     }
 
     private void SaveConfigButton_Click(object sender, EventArgs e)
@@ -591,6 +658,7 @@ public class MainForm : Form
         // Disable settings while running
         settingsGroupBox.Enabled = false;
         rngGroupBox.Enabled = false;
+        advancedGroupBox.Enabled = false;
         startButton.Enabled = false;
         stopButton.Enabled = false;
         saveConfigButton.Enabled = false;
@@ -630,6 +698,7 @@ public class MainForm : Form
 
         settingsGroupBox.Enabled = true;
         rngGroupBox.Enabled = true;
+        advancedGroupBox.Enabled = true;
         startButton.Enabled = true;
         stopButton.Enabled = false;
         saveConfigButton.Enabled = true;

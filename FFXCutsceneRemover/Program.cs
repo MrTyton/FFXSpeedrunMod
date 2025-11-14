@@ -63,6 +63,7 @@ public sealed record CsrConfig
     public bool SetSeedOn { get; set; }
     public int MtSleepInterval { get; set; }
     public uint SelectedSeed { get; set; }
+    public bool AutoStart { get; set; }
 };
 
 public class Program
