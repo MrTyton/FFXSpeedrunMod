@@ -14,7 +14,7 @@ class SeymoursHouseTransition : Transition
     public override void Execute(string defaultDescription = "")
     {
         Process process = MemoryWatchers.Process;
-        
+
         if (Stage == 0)
         {
             base.Execute();

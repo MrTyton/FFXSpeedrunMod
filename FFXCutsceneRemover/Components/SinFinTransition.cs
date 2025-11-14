@@ -35,7 +35,7 @@ class SinFinTransition : Transition
                 actorPositions.Execute();
 
                 //Position Sin Fin
-                actorPositions = new Transition { ForceLoad = false, ConsoleOutput = false, TargetActorIDs = new short[] { 4209 }, Target_x = 1.0f, Target_z = 945.0f};
+                actorPositions = new Transition { ForceLoad = false, ConsoleOutput = false, TargetActorIDs = new short[] { 4209 }, Target_x = 1.0f, Target_z = 945.0f };
                 actorPositions.Execute();
 
                 Stage += 1;

@@ -30,7 +30,7 @@ class UnderwaterRuinsTransition : Transition
                 actorPositions.Execute();
 
                 //Position Tros
-                actorPositions = new Transition { ForceLoad = false, ConsoleOutput = false, TargetActorIDs = new short[] { 4197 }, Target_y = -100.0f};
+                actorPositions = new Transition { ForceLoad = false, ConsoleOutput = false, TargetActorIDs = new short[] { 4197 }, Target_y = -100.0f };
                 actorPositions.Execute();
 
                 Stage += 1;

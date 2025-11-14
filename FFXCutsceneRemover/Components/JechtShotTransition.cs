@@ -13,7 +13,7 @@ class JechtShotTransition : Transition
 
         if (MemoryWatchers.JechtShotTransition.Current > 0)
         {
-            
+
             if (Stage == 0)
             {
                 base.Execute();

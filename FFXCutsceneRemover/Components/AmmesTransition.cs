@@ -33,7 +33,7 @@ class AmmesTransition : Transition
         {
             process.Suspend();
 
-            new Transition{ Storyline = 16, SpawnPoint = 1, Description = "Sinscales to Ammes"}.Execute();
+            new Transition { Storyline = 16, SpawnPoint = 1, Description = "Sinscales to Ammes" }.Execute();
 
             Stage += 1;
 

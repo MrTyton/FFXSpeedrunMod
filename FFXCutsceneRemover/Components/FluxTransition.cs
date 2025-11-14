@@ -11,7 +11,7 @@ class FluxTransition : Transition
     public override void Execute(string defaultDescription = "")
     {
         Process process = MemoryWatchers.Process;
-        
+
         if (MemoryWatchers.MovementLock.Current == 0x20 && Stage == 0)
         {
             base.Execute();
