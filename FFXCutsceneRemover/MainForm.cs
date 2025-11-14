@@ -10,7 +10,11 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Reflection;
 using Serilog.Events;
+using FFXCutsceneRemover.ComponentUtil;
+using FFXCutsceneRemover.Constants;
 using FFXCutsceneRemover.Logging;
+using FFXCutsceneRemover.Models;
+using FFXCutsceneRemover.Services;
 
 namespace FFXCutsceneRemover;
 
@@ -62,50 +66,10 @@ public class MainForm : Form
     private Process game;
     private CutsceneRemover cutsceneRemover;
     private RNGMod rngMod;
-    private bool isRunning = false;
+    private volatile bool isRunning = false; // Made volatile for thread safety
     private bool autoStartEnabled = false;
     private LogEventLevel currentLogLevel = LogEventLevel.Information;
     private bool previousBreakState = false; // Remember break checkbox state when CSR is disabled
-
-    private static readonly uint[] PCSeeds = new uint[] {
-        2804382593, 2807284884, 2810252711, 2813220538, 2816122829, 2819090656,
-        2822058483, 2825026310, 2827928601, 2830896428, 2833864255, 2836766546,
-        2839734373, 2842702200, 2845670027, 2848572318, 2851540145, 2854507972,
-        2857410263, 2860378090, 2863345917, 2866313744, 2869216035, 2872183862,
-        2875151689, 2878053980, 2881021807, 2883989634, 2886957461, 2889859752,
-        2892827579, 2895795406, 2898697697, 2901665524, 2904633351, 2907601178,
-        2910503469, 2913471296, 2916439123, 2919341414, 2922309241, 2925277068,
-        2928244895, 2931147186, 2934115013, 2937082840, 2939985131, 2942952958,
-        2945920785, 2948888612, 2951790903, 2954758730, 2957726557, 2960628848,
-        2963596675, 2966564502, 2969532329, 2972434620, 2975402447, 2978370274,
-        2981272565, 2984240392, 2987208219, 2990176046, 2993078337, 2996046164,
-        2999013991, 3001916282, 3004884109, 3007851936, 3010819763, 3013722054,
-        3016689881, 3019657708, 3022559999, 3025527826, 3028495653, 3031463480,
-        3034365771, 3037333598, 3040301425, 3043203716, 3046171543, 3049139370,
-        3052107197, 3055009488, 3057977315, 3060945142, 3063847433, 3066815260,
-        3069783087, 3072750914, 3075653205, 3078621032, 3081588859, 3084491150,
-        3087458977, 3090426804, 3093394631, 3096296922, 3099264749, 3102232576,
-        3105134867, 3108102694, 3111070521, 3114038348, 3116940639, 3119908466,
-        3122876293, 3125778584, 3128746411, 3131714238, 3134682065, 3137584356,
-        3140552183, 3143520010, 3146422301, 3149390128, 3152357955, 3155325782,
-        3158228073, 3161195900, 3164163727, 3167066018, 3170033845, 3173001672,
-        3175969499, 3178871790, 3181839617, 3184807444, 3187709735, 3190677562,
-        3193645389, 3196613216, 3199515507, 3202483334, 3205451161, 3208353452,
-        3211321279, 3214289106, 3217256933, 3220159224, 3223127051, 3226094878,
-        3228997169, 3231964996, 3234932823, 3237900650, 3240802941, 3243770768,
-        3246738595, 3249640886, 3252608713, 3255576540, 3258544367, 3261446658,
-        3264414485, 3267382312, 3270284603, 3273252430, 3276220257, 3279188084,
-        3282090375, 3285058202, 3288026029, 3290928320, 3293896147, 3296863974,
-        3299831801, 3302734092, 3305701919, 3308669746, 3311572037, 3314539864,
-        3317507691, 3320475518, 3323377809, 3326345636, 3329313463, 3332215754,
-        3335183581, 3338151408, 3341119235, 3344021526, 3346989353, 3349957180,
-        3352859471, 3355827298, 3358795125, 3361762952, 3364665243, 3367633070,
-        3370600897, 3373503188, 3376471015, 3379438842, 3382406669, 3385308960,
-        3388276787, 3391244614, 3394146905, 3397114732, 3400082559, 3403050386,
-        3405952677, 3408920504, 3411888331, 3414790622, 3417758449, 3420726276,
-        3423694103, 3426596394, 3429564221, 3432532048, 3435434339, 3438402166,
-        3441369993, 3444337820, 3447240111
-    };
 
     public MainForm()
     {
@@ -120,14 +84,30 @@ public class MainForm : Form
 
     private void InitializeComponent()
     {
-        this.Text = "FFX Speedrun Mod v1.7.0";
+        ConfigureFormProperties();
+        SetApplicationIcon();
+        InitializeToolTip();
+        CreateSettingsGroup();
+        CreateRngGroup();
+        CreateAdvancedSettingsGroup();
+        CreateCategoryGroup();
+        CreateStatusGroup();
+        CreateButtons();
+        AddControlsToForm();
+    }
+
+    private void ConfigureFormProperties()
+    {
+        this.Text = VersionInfo.DisplayName;
         this.Size = new Size(800, 600);
         this.MinimumSize = new Size(600, 500);
         this.StartPosition = FormStartPosition.CenterScreen;
         this.FormBorderStyle = FormBorderStyle.FixedSingle;
         this.MaximizeBox = false;
+    }
 
-        // Set application icon
+    private void SetApplicationIcon()
+    {
         try
         {
             // Try to extract icon from the executing assembly (embedded by ApplicationIcon in .csproj)
@@ -153,176 +133,138 @@ public class MainForm : Form
             // Icon loading failed, continue without icon
             Debug.WriteLine($"Failed to load icon: {ex.Message}");
         }
+    }
 
-        // Initialize ToolTip
+    private void InitializeToolTip()
+    {
         toolTip = new ToolTip
         {
-            AutoPopDelay = 10000,
-            InitialDelay = 500,
-            ReshowDelay = 200,
+            AutoPopDelay = ConfigurationDefaults.ToolTipAutoPopDelay,
+            InitialDelay = ConfigurationDefaults.ToolTipInitialDelay,
+            ReshowDelay = ConfigurationDefaults.ToolTipReshowDelay,
             ShowAlways = true
         };
+    }
 
-        // Settings GroupBox
-        settingsGroupBox = new GroupBox
-        {
-            Text = "Cutscene Remover Settings",
-            Location = new Point(10, 10),
-            Size = new Size(370, 110),
-            Anchor = AnchorStyles.Top | AnchorStyles.Left
-        };
+    private void CreateSettingsGroup()
+    {
+        settingsGroupBox = ControlFactory.CreateGroupBox(
+            "Cutscene Remover Settings",
+            new Point(10, 10),
+            new Size(370, 110))
+            .WithAnchor(AnchorStyles.Top | AnchorStyles.Left);
 
-        // Cutscene Remover checkbox
-        csrOnCheckBox = new CheckBox
-        {
-            Text = "Enable Cutscene Remover",
-            Location = new Point(20, 30),
-            Size = new Size(200, 20),
-            Checked = true
-        };
-        csrOnCheckBox.CheckedChanged += CsrOnCheckBox_CheckedChanged;
-        toolTip.SetToolTip(csrOnCheckBox, "Automatically skip cutscenes during gameplay");
+        csrOnCheckBox = ControlFactory.CreateCheckBox(
+            "Enable Cutscene Remover",
+            new Point(20, 30),
+            true,
+            CsrOnCheckBox_CheckedChanged)
+            .WithSize(200, 20)
+            .WithTooltip(toolTip, "Automatically skip cutscenes during gameplay");
 
-        // CSR Break checkbox
-        csrBreakOnCheckBox = new CheckBox
-        {
-            Text = "Enable Cutscene Remover Break",
-            Location = new Point(20, 60),
-            Size = new Size(250, 20),
-            Checked = false,
-            Enabled = true
-        };
-        toolTip.SetToolTip(csrBreakOnCheckBox, "Take a break during the run after Guadosalam");
+        csrBreakOnCheckBox = ControlFactory.CreateCheckBox(
+            "Enable Cutscene Remover Break",
+            new Point(20, 60),
+            false,
+            null)
+            .WithSize(250, 20)
+            .WithEnabled(true)
+            .WithTooltip(toolTip, "Take a break during the run after Guadosalam");
 
-        // Add controls to settings group
         settingsGroupBox.Controls.Add(csrOnCheckBox);
         settingsGroupBox.Controls.Add(csrBreakOnCheckBox);
+    }
 
-        // RNG GroupBox
-        rngGroupBox = new GroupBox
-        {
-            Text = "RNG Settings",
-            Location = new Point(400, 10),
-            Size = new Size(370, 110),
-            Anchor = AnchorStyles.Top | AnchorStyles.Left
-        };
+    private void CreateRngGroup()
+    {
+        rngGroupBox = ControlFactory.CreateGroupBox(
+            "RNG Settings",
+            new Point(400, 10),
+            new Size(370, 110))
+            .WithAnchor(AnchorStyles.Top | AnchorStyles.Left);
 
-        // No RNG Mod radio button (default)
-        noRngModRadioButton = new RadioButton
-        {
-            Text = "No RNG Modification",
-            Location = new Point(20, 30),
-            Size = new Size(180, 20),
-            Checked = true
-        };
-        noRngModRadioButton.CheckedChanged += RngRadioButton_CheckedChanged;
-        toolTip.SetToolTip(noRngModRadioButton, "Use the game's default RNG behavior");
+        noRngModRadioButton = ControlFactory.CreateRadioButton(
+            "No RNG Modification",
+            new Point(20, 30),
+            new Size(180, 20),
+            true,
+            RngRadioButton_CheckedChanged)
+            .WithTooltip(toolTip, "Use the game's default RNG behavior");
 
-        // True RNG radio button
-        trueRngRadioButton = new RadioButton
-        {
-            Text = "True RNG",
-            Location = new Point(20, 55),
-            Size = new Size(150, 20),
-            Checked = false
-        };
-        trueRngRadioButton.CheckedChanged += RngRadioButton_CheckedChanged;
-        toolTip.SetToolTip(trueRngRadioButton, "Use truly random RNG");
+        trueRngRadioButton = ControlFactory.CreateRadioButton(
+            "True RNG",
+            new Point(20, 55),
+            new Size(150, 20),
+            false,
+            RngRadioButton_CheckedChanged)
+            .WithTooltip(toolTip, "Use truly random RNG");
 
-        // Set Seed radio button
-        setSeedRadioButton = new RadioButton
-        {
-            Text = "Set Seed",
-            Location = new Point(20, 80),
-            Size = new Size(90, 20),
-            Checked = false
-        };
-        setSeedRadioButton.CheckedChanged += RngRadioButton_CheckedChanged;
-        toolTip.SetToolTip(setSeedRadioButton, "Use a specific RNG seed");
+        setSeedRadioButton = ControlFactory.CreateRadioButton(
+            "Set Seed",
+            new Point(20, 80),
+            new Size(90, 20),
+            false,
+            RngRadioButton_CheckedChanged)
+            .WithTooltip(toolTip, "Use a specific RNG seed");
 
-        // Seed dropdown
-        seedLabel = new Label
-        {
-            Text = "Seed:",
-            Location = new Point(120, 82),
-            Size = new Size(50, 20),
-            Enabled = false
-        };
+        seedLabel = ControlFactory.CreateLabel(
+            "Seed:",
+            new Point(120, 82),
+            new Size(50, 20))
+            .WithEnabled(false);
 
-        seedComboBox = new ComboBox
-        {
-            Location = new Point(170, 80),
-            Size = new Size(180, 20),
-            DropDownStyle = ComboBoxStyle.DropDownList,
-            Enabled = false
-        };
-        seedComboBox.Items.Add("--- Select Seed ---");
-        foreach (var seed in PCSeeds)
-        {
-            seedComboBox.Items.Add(seed.ToString());
-        }
-        seedComboBox.SelectedIndex = 0;
-        toolTip.SetToolTip(seedComboBox, "Select a specific RNG seed value (only active when 'Set Seed' is selected)");
+        var seedItems = new List<object> { "--- Select Seed ---" };
+        seedItems.AddRange(GameConstants.PCSeeds.Cast<object>());
+        
+        seedComboBox = ControlFactory.CreateComboBox(
+            new Point(170, 80),
+            new Size(180, 20),
+            seedItems.ToArray(),
+            0)
+            .WithEnabled(false)
+            .WithTooltip(toolTip, "Select a specific RNG seed value (only active when 'Set Seed' is selected)");
 
-        // Add controls to RNG group
         rngGroupBox.Controls.Add(noRngModRadioButton);
         rngGroupBox.Controls.Add(trueRngRadioButton);
         rngGroupBox.Controls.Add(setSeedRadioButton);
         rngGroupBox.Controls.Add(seedLabel);
         rngGroupBox.Controls.Add(seedComboBox);
+    }
 
-        // Advanced Settings GroupBox
-        advancedGroupBox = new GroupBox
-        {
-            Text = "Advanced Settings",
-            Location = new Point(10, 130),
-            Size = new Size(370, 140),
-            Anchor = AnchorStyles.Top | AnchorStyles.Left
-        };
+    private void CreateAdvancedSettingsGroup()
+    {
+        advancedGroupBox = ControlFactory.CreateGroupBox(
+            "Advanced Settings",
+            new Point(10, 130),
+            new Size(370, 140))
+            .WithAnchor(AnchorStyles.Top | AnchorStyles.Left);
 
-        // Sleep interval
-        sleepIntervalLabel = new Label
-        {
-            Text = "Main Thread Sleep Interval (ms):",
-            Location = new Point(20, 32),
-            Size = new Size(200, 20)
-        };
+        sleepIntervalLabel = ControlFactory.CreateLabel(
+            "Main Thread Sleep Interval (ms):",
+            new Point(20, 32),
+            new Size(200, 20));
 
-        sleepIntervalNumeric = new NumericUpDown
-        {
-            Location = new Point(230, 30),
-            Size = new Size(80, 20),
-            Minimum = 1,
-            Maximum = 1000,
-            Value = 16
-        };
-        toolTip.SetToolTip(sleepIntervalNumeric, "How often (in milliseconds) the mod checks game state. Lower = more responsive, higher = less CPU usage");
+        sleepIntervalNumeric = ControlFactory.CreateNumericUpDown(
+            new Point(230, 30),
+            new Size(80, 20),
+            ConfigurationDefaults.MinSleepInterval,
+            ConfigurationDefaults.MaxSleepInterval,
+            ConfigurationDefaults.DefaultSleepInterval)
+            .WithTooltip(toolTip, "How often (in milliseconds) the mod checks game state. Lower = more responsive, higher = less CPU usage");
 
-        // Log level
-        logLevelLabel = new Label
-        {
-            Text = "Log Level:",
-            Location = new Point(20, 62),
-            Size = new Size(70, 20)
-        };
+        logLevelLabel = ControlFactory.CreateLabel(
+            "Log Level:",
+            new Point(20, 62),
+            new Size(70, 20));
 
-        logLevelComboBox = new ComboBox
-        {
-            Location = new Point(100, 60),
-            Size = new Size(150, 20),
-            DropDownStyle = ComboBoxStyle.DropDownList
-        };
-        logLevelComboBox.Items.AddRange(new object[]
-        {
-            "Information",
-            "Warning",
-            "Error",
-            "Debug",
-            "Verbose"
-        });
-        logLevelComboBox.SelectedIndex = 0; // Default to Information
+        logLevelComboBox = ControlFactory.CreateComboBox(
+            new Point(100, 60),
+            new Size(150, 20),
+            LogLevelHelper.GetDisplayNames(),
+            -1);
+        logLevelComboBox.SelectedItem = LogLevelHelper.ToDisplayName(LogEventLevel.Information);
         logLevelComboBox.SelectedIndexChanged += LogLevelComboBox_SelectedIndexChanged;
-        toolTip.SetToolTip(logLevelComboBox,
+        logLevelComboBox.WithTooltip(toolTip,
             "Minimum log level to display:\n" +
             "• Information - Standard operational messages\n" +
             "• Warning - Potential issues that don't stop execution\n" +
@@ -330,166 +272,141 @@ public class MainForm : Form
             "• Debug - Detailed diagnostic information\n" +
             "• Verbose - All messages including very detailed trace info");
 
-        // Auto-start checkbox
-        autoStartCheckBox = new CheckBox
-        {
-            Text = "Automatically start mod when FFX starts",
-            Location = new Point(20, 90),
-            Size = new Size(330, 20),
-            Checked = false
-        };
-        autoStartCheckBox.CheckedChanged += AutoStartCheckBox_CheckedChanged;
-        toolTip.SetToolTip(autoStartCheckBox, "When enabled, the mod will automatically start when Final Fantasy X is detected");
+        autoStartCheckBox = ControlFactory.CreateCheckBox(
+            "Automatically start mod when FFX starts",
+            new Point(20, 90),
+            false,
+            AutoStartCheckBox_CheckedChanged)
+            .WithSize(330, 20)
+            .WithTooltip(toolTip, "When enabled, the mod will automatically start when Final Fantasy X is detected");
 
         advancedGroupBox.Controls.Add(sleepIntervalLabel);
         advancedGroupBox.Controls.Add(sleepIntervalNumeric);
         advancedGroupBox.Controls.Add(logLevelLabel);
         advancedGroupBox.Controls.Add(logLevelComboBox);
         advancedGroupBox.Controls.Add(autoStartCheckBox);
+    }
 
-        // Category GroupBox
-        categoryGroupBox = new GroupBox
-        {
-            Text = "Speedrun Category",
-            Location = new Point(390, 130),
-            Size = new Size(380, 140),
-            Anchor = AnchorStyles.Top | AnchorStyles.Left
-        };
+    private void CreateCategoryGroup()
+    {
+        categoryGroupBox = ControlFactory.CreateGroupBox(
+            "Speedrun Category",
+            new Point(390, 130),
+            new Size(380, 140))
+            .WithAnchor(AnchorStyles.Top | AnchorStyles.Left);
 
-        categoryLabel = new Label
-        {
-            Text = "Any%",
-            Location = new Point(20, 30),
-            Size = new Size(340, 40),
-            Font = new Font(this.Font.FontFamily, 14, FontStyle.Bold),
-            TextAlign = ContentAlignment.MiddleCenter,
-            ForeColor = Color.DarkBlue
-        };
-        toolTip.SetToolTip(categoryLabel, "The speedrun category based on your current settings");
+        categoryLabel = ControlFactory.CreateLabel(
+            "Any%",
+            new Point(20, 30),
+            new Size(340, 40))
+            .WithFont(new Font(this.Font.FontFamily, 14, FontStyle.Bold))
+            .WithTextAlign(ContentAlignment.MiddleCenter)
+            .WithForeColor(Color.DarkBlue)
+            .WithTooltip(toolTip, "The speedrun category based on your current settings");
 
-        categoryRulesLink = new LinkLabel
-        {
-            Text = "View Category Rules",
-            Location = new Point(20, 80),
-            Size = new Size(340, 30),
-            Font = new Font(this.Font.FontFamily, 10),
-            TextAlign = ContentAlignment.MiddleCenter,
-            LinkColor = Color.Blue,
-            ActiveLinkColor = Color.Red,
-            VisitedLinkColor = Color.Purple
-        };
-        categoryRulesLink.LinkClicked += CategoryRulesLink_LinkClicked;
-        toolTip.SetToolTip(categoryRulesLink, "Click to open the speedrun.com rules for this category");
+        categoryRulesLink = ControlFactory.CreateLinkLabel(
+            "View Category Rules",
+            new Point(20, 80),
+            new Size(340, 30),
+            CategoryRulesLink_LinkClicked)
+            .WithFont(new Font(this.Font.FontFamily, 10))
+            .WithTextAlign(ContentAlignment.MiddleCenter)
+            .WithLinkColors(Color.Blue, Color.Red, Color.Purple)
+            .WithTooltip(toolTip, "Click to open the speedrun.com rules for this category");
 
         categoryGroupBox.Controls.Add(categoryLabel);
         categoryGroupBox.Controls.Add(categoryRulesLink);
+    }
 
-        // Status GroupBox
-        statusGroupBox = new GroupBox
-        {
-            Text = "Status",
-            Location = new Point(10, 280),
-            Size = new Size(760, 215),
-            Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom
-        };
+    private void CreateStatusGroup()
+    {
+        statusGroupBox = ControlFactory.CreateGroupBox(
+            "Status",
+            new Point(10, 280),
+            new Size(760, 215))
+            .WithAnchor(AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom);
 
-        connectionStatusLabel = new Label
-        {
-            Text = "Connection: Not Connected",
-            Location = new Point(20, 30),
-            Size = new Size(720, 20),
-            ForeColor = Color.Red
-        };
-        toolTip.SetToolTip(connectionStatusLabel, "Shows whether the mod is connected to the FFX process");
+        connectionStatusLabel = ControlFactory.CreateLabel(
+            "Connection: Not Connected",
+            new Point(20, 30),
+            new Size(720, 20))
+            .WithForeColor(Color.Red)
+            .WithTooltip(toolTip, "Shows whether the mod is connected to the FFX process");
 
-        gameStatusLabel = new Label
-        {
-            Text = "Game Status: Waiting for FFX",
-            Location = new Point(20, 55),
-            Size = new Size(720, 20)
-        };
-        toolTip.SetToolTip(gameStatusLabel, "Shows the current game state and progress");
+        gameStatusLabel = ControlFactory.CreateLabel(
+            "Game Status: Waiting for FFX",
+            new Point(20, 55),
+            new Size(720, 20))
+            .WithTooltip(toolTip, "Shows the current game state and progress");
 
-        modStatusLabel = new Label
-        {
-            Text = "Mod Status: Stopped",
-            Location = new Point(20, 80),
-            Size = new Size(720, 20)
-        };
-        toolTip.SetToolTip(modStatusLabel, "Shows what the mod is currently doing");
+        modStatusLabel = ControlFactory.CreateLabel(
+            "Mod Status: Stopped",
+            new Point(20, 80),
+            new Size(720, 20))
+            .WithTooltip(toolTip, "Shows what the mod is currently doing");
 
-        logTextBox = new RichTextBox
-        {
-            Location = new Point(20, 110),
-            Size = new Size(720, 90),
-            Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom,
-            ReadOnly = true,
-            BackColor = Color.Black,
-            ForeColor = Color.LightGreen,
-            Font = new Font("Consolas", 9)
-        };
-        toolTip.SetToolTip(logTextBox, "Displays diagnostic messages and mod activity");
+        logTextBox = ControlFactory.CreateRichTextBox(
+            new Point(20, 110),
+            new Size(720, 90),
+            true)
+            .WithAnchor(AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom)
+            .WithBackColor(Color.Black)
+            .WithForeColor(Color.LightGreen)
+            .WithFont(new Font("Consolas", 9))
+            .WithTooltip(toolTip, "Displays diagnostic messages and mod activity");
 
         statusGroupBox.Controls.Add(connectionStatusLabel);
         statusGroupBox.Controls.Add(gameStatusLabel);
         statusGroupBox.Controls.Add(modStatusLabel);
         statusGroupBox.Controls.Add(logTextBox);
+    }
 
-        // Buttons
-        startButton = new Button
-        {
-            Text = "Start Mod",
-            Location = new Point(10, 510),
-            Size = new Size(120, 35),
-            Anchor = AnchorStyles.Bottom | AnchorStyles.Left
-        };
-        startButton.Click += StartButton_Click;
-        toolTip.SetToolTip(startButton, "Start the FFX Speedrun Mod with current settings");
+    private void CreateButtons()
+    {
+        startButton = ControlFactory.CreateButton(
+            "Start Mod",
+            new Point(10, 510),
+            new Size(120, 35),
+            StartButton_Click)
+            .WithAnchor(AnchorStyles.Bottom | AnchorStyles.Left)
+            .WithTooltip(toolTip, "Start the FFX Speedrun Mod with current settings");
 
-        stopButton = new Button
-        {
-            Text = "Stop Mod",
-            Location = new Point(140, 510),
-            Size = new Size(200, 35),
-            Enabled = false,
-            Anchor = AnchorStyles.Bottom | AnchorStyles.Left
-        };
-        stopButton.Click += StopButton_Click;
-        toolTip.SetToolTip(stopButton, "Stop the mod and disconnect from the game");
+        stopButton = ControlFactory.CreateButton(
+            "Stop Mod",
+            new Point(140, 510),
+            new Size(200, 35),
+            StopButton_Click)
+            .WithEnabled(false)
+            .WithAnchor(AnchorStyles.Bottom | AnchorStyles.Left)
+            .WithTooltip(toolTip, "Stop the mod and disconnect from the game");
 
-        // Launch Game button
-        launchGameButton = new Button
-        {
-            Text = "Launch FFX",
-            Location = new Point(350, 510),
-            Size = new Size(120, 35),
-            Anchor = AnchorStyles.Bottom | AnchorStyles.Left
-        };
-        launchGameButton.Click += LaunchGameButton_Click;
-        toolTip.SetToolTip(launchGameButton, "Launch Final Fantasy X via Steam");
+        launchGameButton = ControlFactory.CreateButton(
+            "Launch FFX",
+            new Point(350, 510),
+            new Size(120, 35),
+            LaunchGameButton_Click)
+            .WithAnchor(AnchorStyles.Bottom | AnchorStyles.Left)
+            .WithTooltip(toolTip, "Launch Final Fantasy X via Steam");
 
-        // Config buttons
-        saveConfigButton = new Button
-        {
-            Text = "Save Config",
-            Location = new Point(520, 510),
-            Size = new Size(120, 35),
-            Anchor = AnchorStyles.Bottom | AnchorStyles.Right
-        };
-        saveConfigButton.Click += SaveConfigButton_Click;
-        toolTip.SetToolTip(saveConfigButton, "Save current settings to a configuration file");
+        saveConfigButton = ControlFactory.CreateButton(
+            "Save Config",
+            new Point(520, 510),
+            new Size(120, 35),
+            SaveConfigButton_Click)
+            .WithAnchor(AnchorStyles.Bottom | AnchorStyles.Right)
+            .WithTooltip(toolTip, "Save current settings to a configuration file");
 
-        loadConfigButton = new Button
-        {
-            Text = "Load Config",
-            Location = new Point(650, 510),
-            Size = new Size(120, 35),
-            Anchor = AnchorStyles.Bottom | AnchorStyles.Right
-        };
-        loadConfigButton.Click += LoadConfigButton_Click;
-        toolTip.SetToolTip(loadConfigButton, "Load settings from a saved configuration file");
+        loadConfigButton = ControlFactory.CreateButton(
+            "Load Config",
+            new Point(650, 510),
+            new Size(120, 35),
+            LoadConfigButton_Click)
+            .WithAnchor(AnchorStyles.Bottom | AnchorStyles.Right)
+            .WithTooltip(toolTip, "Load settings from a saved configuration file");
+    }
 
-        // Add all controls to form
+    private void AddControlsToForm()
+    {
         this.Controls.Add(settingsGroupBox);
         this.Controls.Add(rngGroupBox);
         this.Controls.Add(advancedGroupBox);
@@ -517,7 +434,7 @@ public class MainForm : Form
         // Set up auto-start timer
         autoStartTimer = new System.Windows.Forms.Timer
         {
-            Interval = 2000 // Check every 2 seconds
+            Interval = ConfigurationDefaults.AutoStartCheckInterval // Check every 2 seconds
         };
         autoStartTimer.Tick += AutoStartTimer_Tick;
         autoStartTimer.Start(); // Start monitoring immediately
@@ -588,7 +505,7 @@ public class MainForm : Form
             SetSeedOn = setSeedRadioButton.Checked,
             MtSleepInterval = (int)sleepIntervalNumeric.Value,
             AutoStart = autoStartCheckBox.Checked,
-            SelectedSeed = PCSeeds[0], // Default to first seed
+            SelectedSeed = GameConstants.PCSeeds[0], // Default to first seed
             FfxExecutablePath = csrConfig?.FfxExecutablePath // Preserve the saved path
         };
 
@@ -685,15 +602,7 @@ public class MainForm : Form
 
     private void LogLevelComboBox_SelectedIndexChanged(object sender, EventArgs e)
     {
-        currentLogLevel = logLevelComboBox.SelectedIndex switch
-        {
-            0 => LogEventLevel.Information,
-            1 => LogEventLevel.Warning,
-            2 => LogEventLevel.Error,
-            3 => LogEventLevel.Debug,
-            4 => LogEventLevel.Verbose,
-            _ => LogEventLevel.Information
-        };
+        currentLogLevel = LogLevelHelper.FromDisplayName(logLevelComboBox.SelectedItem?.ToString() ?? "Information");
     }
 
     private void AutoStartCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -707,12 +616,11 @@ public class MainForm : Form
         if (autoStartEnabled && !isRunning)
         {
             // Check if FFX process exists
-            var processes = Process.GetProcessesByName("FFX");
-            if (processes.Length > 0)
+            var process = ProcessHelper.FindGameProcess(GameConstants.ProcessName);
+            if (process != null)
             {
                 // Give FFX a moment to fully initialize before connecting
                 // This prevents connecting too early when the game process just started
-                var process = processes[0];
                 try
                 {
                     // Check if the process has been running for at least 2 seconds
@@ -966,11 +874,11 @@ public class MainForm : Form
         // Try to connect to game
         while (isRunning && game == null)
         {
-            game = ConnectToTarget("FFX");
+            game = ConnectToTarget(GameConstants.ProcessName);
             if (game == null)
             {
-                worker.ReportProgress(0, "Waiting for game...");
-                Thread.Sleep(1000);
+                worker.ReportProgress((int)WorkerProgressStatus.WaitingForGame, GameConstants.FormText.ConnectionWaiting);
+                Thread.Sleep(ConfigurationDefaults.ProcessSearchDelay);
             }
         }
 
@@ -979,7 +887,7 @@ public class MainForm : Form
             return;
         }
 
-        worker.ReportProgress(1, "Connected to FFX!");
+        worker.ReportProgress((int)WorkerProgressStatus.Connected, GameConstants.FormText.ConnectionConnected);
 
         // Initialize memory watchers
         MemoryWatchers.Initialize(game);
@@ -987,7 +895,7 @@ public class MainForm : Form
 
         // Get language and set up start game indents
         byte language = MemoryWatchers.Language.Current;
-        List<byte> startGameIndents = GetStartGameIndents(language);
+        List<byte> startGameIndents = StartGameIndents.GetIndents(language, csrConfig.SetSeedOn);
 
         // Initialize components based on config
         if (csrConfig.CsrOn)
@@ -1002,178 +910,62 @@ public class MainForm : Form
             rngMod.Game = game;
         }
 
-        worker.ReportProgress(2, "Mod running");
+        worker.ReportProgress((int)WorkerProgressStatus.Running, "Mod running");
 
-        // Main game loop
-        bool newGameSetUp = false;
-        bool seedInjected = false;
+        // Execute the game loop using the shared service
+        var gameLoopService = new GameLoopService(
+            game,
+            csrConfig,
+            cutsceneRemover,
+            rngMod,
+            message => worker.ReportProgress((int)WorkerProgressStatus.SeedInjection, message),
+            () => isRunning
+        );
 
-        var BreakTransition = new BreakTransition
+        try
         {
-            ForceLoad = false,
-            Description = "Break Setup",
-            ConsoleOutput = false,
-            Suspendable = false,
-            Repeatable = true
-        };
-
-        while (isRunning && !game.HasExited)
+            gameLoopService.Execute(startGameIndents, cancellationTokenSource?.Token ?? CancellationToken.None);
+        }
+        catch (Exception ex)
         {
-            try
-            {
-                MemoryWatchers.Watchers.UpdateAll(game);
-
-                // New game setup logic
-                if (!newGameSetUp && MemoryWatchers.RoomNumber.Current == 0 &&
-                    MemoryWatchers.Storyline.Current == 0 && MemoryWatchers.Dialogue1.Current == 6)
-                {
-                    if (csrConfig.SetSeedOn)
-                    {
-                        worker.ReportProgress(10, $"Injecting Seed {csrConfig.SelectedSeed}");
-                        new Transition
-                        {
-                            ForceLoad = false,
-                            SetSeed = true,
-                            SetSeedValue = unchecked((int)csrConfig.SelectedSeed),
-                            RoomNumberAlt = (short)Array.IndexOf(PCSeeds, csrConfig.SelectedSeed)
-                        }.Execute();
-                        seedInjected = true;
-                    }
-
-                    MemoryWatchers.Watchers.UpdateAll(game);
-
-                    var startGameText = new List<(string, byte)>
-                    {
-                        ($"[FFX Speedrunning Mod v1.7.0]", startGameIndents[0]),
-                        ($"", startGameIndents[1]),
-                        ($"Cutscene Remover: {(csrConfig.CsrOn ? "Enabled" : "Disabled")}", startGameIndents[2]),
-                        ($"Cutscene Remover Break: {(csrConfig.CsrBreakOn ? "Enabled" : "Disabled")}", startGameIndents[3]),
-                        ($"True RNG: {(csrConfig.TrueRngOn ? "Enabled" : "Disabled")}", startGameIndents[4]),
-                        ($"Set Seed: {(MemoryWatchers.RoomNumberAlt.Current != 0 ? PCSeeds[MemoryWatchers.RoomNumberAlt.Current] : "Disabled")}", startGameIndents[5]),
-                        ($"", startGameIndents[6]),
-                        ($"Start Game?", startGameIndents[7])
-                    };
-
-                    new NewGameTransition { ForceLoad = false, ConsoleOutput = false, startGameText = startGameText }.Execute();
-
-                    newGameSetUp = true;
-                }
-
-                if (newGameSetUp && MemoryWatchers.RoomNumber.Current == 23)
-                {
-                    newGameSetUp = false;
-                }
-
-                // Break logic
-                if (csrConfig.CsrBreakOn && MemoryWatchers.ForceLoad.Current == 0)
-                {
-                    if (MemoryWatchers.RoomNumber.Current == 140 && MemoryWatchers.Storyline.Current == 1300)
-                    {
-                        new Transition { RoomNumber = 184, SpawnPoint = 0, Description = "Break" }.Execute();
-                    }
-                    else if (MemoryWatchers.RoomNumber.Current == 184 && MemoryWatchers.Storyline.Current == 1300)
-                    {
-                        BreakTransition.Execute();
-                    }
-                    else if (MemoryWatchers.RoomNumber.Current == 158 && MemoryWatchers.Storyline.Current == 1300)
-                    {
-                        new Transition { RoomNumber = 140, Storyline = 1310, SpawnPoint = 0, Description = "End of Break + Map + Rikku afraid + tutorial" }.Execute();
-                    }
-                }
-                else
-                {
-                    if (MemoryWatchers.RoomNumber.Current == 140 && MemoryWatchers.Storyline.Current == 1300)
-                    {
-                        new Transition { RoomNumber = 140, Storyline = 1310, SpawnPoint = 0, Description = "End of Break + Map + Rikku afraid + tutorial" }.Execute();
-                    }
-                }
-
-                // Run mod main loops
-                if (csrConfig.CsrOn && cutsceneRemover != null)
-                {
-                    cutsceneRemover.MainLoop();
-                }
-
-                if (csrConfig.TrueRngOn && rngMod != null)
-                {
-                    rngMod.MainLoop();
-                }
-
-                Thread.Sleep(csrConfig.MtSleepInterval);
-            }
-            catch (Exception ex)
-            {
-                worker.ReportProgress(-1, $"Error: {ex.Message}");
-                break;
-            }
+            worker.ReportProgress((int)WorkerProgressStatus.Error, $"Error: {ex.Message}");
         }
 
-        worker.ReportProgress(3, "Game exited or mod stopped");
-    }
-
-    private List<byte> GetStartGameIndents(byte language)
-    {
-        switch (language)
-        {
-            case 0x00: // Japanese
-                return new List<byte>() {
-                    0x43, 0x00, 0x47, 0x43, 0x4b,
-                    csrConfig.SetSeedOn ? (byte)0x48 : (byte)0x4b,
-                    0x00, 0x4e
-                };
-            case 0x09: // Korean
-                return new List<byte>() {
-                    0x43, 0x00, 0x46, 0x43, 0x4a,
-                    csrConfig.SetSeedOn ? (byte)0x48 : (byte)0x4a,
-                    0x00, 0x4d
-                };
-            case 0x0A: // Chinese
-                return new List<byte>() {
-                    0x43, 0x00, 0x46, 0x43, 0x4a,
-                    csrConfig.SetSeedOn ? (byte)0x46 : (byte)0x4a,
-                    0x00, 0x4d
-                };
-            default: // English and others
-                return new List<byte>() {
-                    0x43, 0x00, 0x45, 0x41, 0x4a,
-                    csrConfig.SetSeedOn ? (byte)0x47 : (byte)0x4a,
-                    0x00, 0x4d
-                };
-        }
+        worker.ReportProgress((int)WorkerProgressStatus.Stopped, "Game exited or mod stopped");
     }
 
     private void GameWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
     {
         string message = e.UserState as string;
 
-        switch (e.ProgressPercentage)
+        switch ((WorkerProgressStatus)e.ProgressPercentage)
         {
-            case 0: // Waiting for game
+            case WorkerProgressStatus.WaitingForGame:
                 connectionStatusLabel.Text = "Connection: " + message;
                 connectionStatusLabel.ForeColor = Color.Orange;
                 gameStatusLabel.Text = "Game Status: Waiting for FFX";
                 stopButton.Text = "Stop Mod";
                 break;
-            case 1: // Connected
+            case WorkerProgressStatus.Connected:
                 connectionStatusLabel.Text = "Connection: Connected";
                 connectionStatusLabel.ForeColor = Color.Green;
                 gameStatusLabel.Text = "Game Status: FFX Running";
                 stopButton.Text = "Stop Mod (Close FFX First)";
                 LogMessage(message);
                 break;
-            case 2: // Running
+            case WorkerProgressStatus.Running:
                 modStatusLabel.Text = "Mod Status: Running";
                 modStatusLabel.ForeColor = Color.Green;
                 LogMessage(message);
                 break;
-            case 3: // Stopped
+            case WorkerProgressStatus.Stopped:
                 gameStatusLabel.Text = "Game Status: " + message;
                 stopButton.Text = "Stop Mod";
                 break;
-            case 10: // Seed injection
+            case WorkerProgressStatus.SeedInjection:
                 LogMessage(message);
                 break;
-            case -1: // Error
+            case WorkerProgressStatus.Error:
                 LogMessage(message);
                 break;
         }
@@ -1205,9 +997,7 @@ public class MainForm : Form
     {
         try
         {
-            var processes = Process.GetProcessesByName(targetName);
-            return processes.OrderByDescending(x => x.StartTime)
-                     .FirstOrDefault(x => !x.HasExited);
+            return ProcessHelper.FindGameProcess(targetName);
         }
         catch (Exception ex)
         {

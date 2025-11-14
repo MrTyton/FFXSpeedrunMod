@@ -50,7 +50,7 @@ public class Transition
     public float? PartyTarget_y = null;
     public float? PartyTarget_z = null;
 
-    public formations? FormationSwitch = null;
+    public Formations? FormationSwitch = null;
 
     /* Only add members here for memory addresses that we want to write the value to.
      * If we only ever read the value then there is no need to add it here. */
@@ -974,7 +974,7 @@ public class Transition
 
     // Formation Functions
 
-    public enum formations
+    public enum Formations
     {
         Klikk2,
         PreKimahri,
@@ -1018,42 +1018,42 @@ public class Transition
         {
             switch (FormationSwitch)
             {
-                case formations.Klikk2:
+                case Formations.Klikk2:
                     formation = new byte[] { 0x00, 0x06, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
                     break;
-                case formations.PreKimahri:
+                case Formations.PreKimahri:
                     formation = new byte[] { 0x00, 0xFF, 0xFF, 0x01, 0x04, 0x05, 0xFF, 0xFF, 0xFF, 0xFF };
                     break;
-                case formations.PostKimahri:
+                case Formations.PostKimahri:
                     formation = new byte[] { 0x00, 0x01, 0x04, 0xFF, 0xFF, 0x05, 0xFF, 0xFF, 0xFF, 0xFF };
                     break;
-                case formations.BoardingSSLiki:
+                case Formations.BoardingSSLiki:
                     formation = AddCharacter(formation, 0x03);
                     break;
-                case formations.PostEchuilles:
+                case Formations.PostEchuilles:
                     formation = new byte[] { 0x05, 0x04, 0x00, 0x01, 0x03, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
                     WriteValue<byte>(MemoryWatchers.EnableYuna, 17);
                     WriteValue<byte>(MemoryWatchers.EnableKimahri, 17);
                     WriteValue<byte>(MemoryWatchers.EnableLulu, 17);
                     break;
-                case formations.MachinaFights:
+                case Formations.MachinaFights:
                     formation = new byte[] { 0x05, 0x00, 0x03, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
                     WriteValue<byte>(MemoryWatchers.EnableYuna, 16);
                     WriteValue<byte>(MemoryWatchers.EnableWakka, 16);
                     break;
-                case formations.PreOblitzerator:
+                case Formations.PreOblitzerator:
                     formation = new byte[] { 0x00, 0x05, 0x03, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
                     break;
-                case formations.PostOblitzerator:
+                case Formations.PostOblitzerator:
                     formation = new byte[] { 0x05, 0x00, 0x03, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
                     break;
-                case formations.PreSahagins:
+                case Formations.PreSahagins:
                     WriteValue<byte>(MemoryWatchers.EnableKimahri, 16);
                     WriteValue<byte>(MemoryWatchers.EnableLulu, 16);
                     WriteValue<byte>(MemoryWatchers.EnableWakka, 17);
                     formation = new byte[] { 0x04, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
                     break;
-                case formations.AuronJoinsTheParty:
+                case Formations.AuronJoinsTheParty:
                     WriteValue<byte>(MemoryWatchers.EnableTidus, 17);
                     WriteValue<byte>(MemoryWatchers.EnableYuna, 17);
                     WriteValue<byte>(MemoryWatchers.EnableAuron, 17);
@@ -1062,7 +1062,7 @@ public class Transition
                     WriteValue<byte>(MemoryWatchers.EnableLulu, 17);
                     formation = new byte[] { 0x00, 0x04, 0x01, 0x02, 0xFF, 0xFF, 0x05, 0x03, 0xFF, 0xFF };
                     break;
-                case formations.PreGui2:
+                case Formations.PreGui2:
                     formation = SwapPositionWithFirstEmptyReservePosition(formation, 0);
                     formation = SwapPositionWithFirstEmptyReservePosition(formation, 1);
                     formation = SwapPositionWithFirstEmptyReservePosition(formation, 2);
@@ -1079,7 +1079,7 @@ public class Transition
                     formation = SwapCharacterWithPosition(formation, 7, 1);
                     formation = SwapCharacterWithPosition(formation, 2, 2);
                     break;
-                case formations.PostGui:
+                case Formations.PostGui:
                     WriteValue<byte>(MemoryWatchers.EnableTidus, 17);
                     WriteValue<byte>(MemoryWatchers.EnableKimahri, 17);
                     WriteValue<byte>(MemoryWatchers.EnableWakka, 17);
@@ -1091,44 +1091,44 @@ public class Transition
                     newformation = SwapCharacterWithPosition(newformation, initialPosition3, 2);
                     formation = newformation;
                     break;
-                case formations.MeetRikku:
+                case Formations.MeetRikku:
                     WriteValue<byte>(MemoryWatchers.EnableRikku, 17);
                     formation = AddCharacter(formation, 0x06);
                     formation = SwapCharacterWithPosition(formation, 0x06, 3);
                     break;
-                case formations.PostCrawler:
+                case Formations.PostCrawler:
                     formation = RemoveCharacter(formation, 0x01);
                     WriteValue<byte>(MemoryWatchers.EnableYuna, 0);
                     formation = FillMainPartySlotIfEmpty(formation, 0x00);
                     break;
-                case formations.PreSeymour:
+                case Formations.PreSeymour:
                     WriteValue<byte>(MemoryWatchers.EnableYuna, 17);
                     formation = AddCharacter(formation, 0x01);
                     formation = SwapCharacterWithPosition(formation, 0x00, 0);
                     formation = SwapCharacterWithPosition(formation, 0x01, 1);
                     formation = SwapCharacterWithPosition(formation, 0x03, 2);
                     break;
-                case formations.BikanelStart:
+                case Formations.BikanelStart:
                     formation = RemoveAll(formation);
                     WriteValue<byte>(MemoryWatchers.EnableTidus, 17);
                     formation = AddCharacter(formation, 0x00);
                     formation = SwapCharacterWithPosition(formation, 0x00, 0);
                     break;
-                case formations.PostZu:
+                case Formations.PostZu:
                     WriteValue<byte>(MemoryWatchers.EnableWakka, 17);
                     formation = AddCharacter(formation, 0x04);
                     break;
-                case formations.BikanelRikku:
+                case Formations.BikanelRikku:
                     WriteValue<byte>(MemoryWatchers.EnableRikku, 17);
                     formation = AddCharacter(formation, 0x06);
                     break;
-                case formations.ViaPurificoStart:
+                case Formations.ViaPurificoStart:
                     formation = RemoveAll(formation);
                     WriteValue<byte>(MemoryWatchers.EnableYuna, 17);
                     formation = AddCharacter(formation, 0x01);
                     formation = SwapCharacterWithPosition(formation, 0x01, 0);
                     break;
-                case formations.HighbridgeStart:
+                case Formations.HighbridgeStart:
                     WriteValue<byte>(MemoryWatchers.EnableYuna, 17);
                     WriteValue<byte>(MemoryWatchers.EnableAuron, 17);
                     WriteValue<byte>(MemoryWatchers.EnableLulu, 17);
@@ -1139,14 +1139,14 @@ public class Transition
                     formation = SwapCharacterWithPosition(formation, 0x01, 1);
                     formation = SwapCharacterWithPosition(formation, 0x04, 2);
                     break;
-                case formations.PreNatus:
+                case Formations.PreNatus:
                     WriteValue<byte>(MemoryWatchers.EnableKimahri, 17);
                     formation = AddCharacter(formation, 0x03);
                     formation = SwapCharacterWithPosition(formation, 0x00, 0);
                     formation = SwapCharacterWithPosition(formation, 0x01, 2);
                     formation = SwapCharacterWithPosition(formation, 0x03, 1);
                     break;
-                case formations.PostBiranYenke:
+                case Formations.PostBiranYenke:
                     WriteValue<byte>(MemoryWatchers.EnableTidus, 17);
                     WriteValue<byte>(MemoryWatchers.EnableYuna, 17);
                     WriteValue<byte>(MemoryWatchers.EnableAuron, 17);

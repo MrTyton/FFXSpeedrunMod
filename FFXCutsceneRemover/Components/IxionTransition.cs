@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using FFXCutsceneRemover.Constants;
 
 namespace FFXCutsceneRemover;
 
@@ -17,9 +18,9 @@ class IxionTransition : Transition
                 Stage += 1;
 
             }
-            else if (MemoryWatchers.IxionTransition.Current == (BaseCutsceneValue + 0x2241) && Stage == 1)
+            else if (MemoryWatchers.IxionTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Ixion.CheckOffset) && Stage == 1)
             {
-                WriteValue<int>(MemoryWatchers.IxionTransition, BaseCutsceneValue + 0x2529);
+                WriteValue<int>(MemoryWatchers.IxionTransition, BaseCutsceneValue + CutsceneOffsets.Ixion.SkipOffset);
                 Stage += 1;
             }
         }

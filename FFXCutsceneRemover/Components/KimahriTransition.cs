@@ -1,4 +1,8 @@
-﻿namespace FFXCutsceneRemover;
+﻿using FFXCutsceneRemover.ComponentUtil;
+using FFXCutsceneRemover.Components;
+using FFXCutsceneRemover.Constants;
+
+namespace FFXCutsceneRemover;
 
 class KimahriTransition : Transition
 {
@@ -7,21 +11,18 @@ class KimahriTransition : Transition
         if (MemoryWatchers.MovementLock.Current == 0x20 && Stage == 0)
         {
             base.Execute();
-
             BaseCutsceneValue = MemoryWatchers.EventFileStart.Current;
-
-            Stage += 1;
-
+            Stage = 1;
         }
-        else if (MemoryWatchers.KimahriTransition.Current >= (BaseCutsceneValue + 0x231A) && Stage == 1)
+        else if (MemoryWatchers.KimahriTransition.Current >= (BaseCutsceneValue + CutsceneOffsets.Kimahri.CheckOffset) && Stage == 1)
         {
-            WriteValue<int>(MemoryWatchers.KimahriTransition, BaseCutsceneValue + 0x23F3);
-            Stage += 1;
+            WriteValue<int>(MemoryWatchers.KimahriTransition, BaseCutsceneValue + CutsceneOffsets.Kimahri.SkipOffset);
+            Stage = 2;
         }
         else if (MemoryWatchers.BattleState2.Current == 1 && Stage == 2)
         {
-            WriteValue<int>(MemoryWatchers.KimahriTransition, BaseCutsceneValue + 0x2AE3);
-            Stage += 1;
+            WriteValue<int>(MemoryWatchers.KimahriTransition, BaseCutsceneValue + CutsceneOffsets.Kimahri.PostBattleOffset);
+            Stage = 3;
         }
     }
 }

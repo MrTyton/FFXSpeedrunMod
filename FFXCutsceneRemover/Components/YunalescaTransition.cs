@@ -2,6 +2,7 @@
 using System.Diagnostics;
 
 using FFXCutsceneRemover.ComponentUtil;
+using FFXCutsceneRemover.Constants;
 
 namespace FFXCutsceneRemover;
 
@@ -23,21 +24,21 @@ class YunalescaTransition : Transition
                 BaseCutsceneValue = MemoryWatchers.EventFileStart.Current;
                 Stage += 1;
 
-            }//*/
-            else if (MemoryWatchers.YunalescaTransition.Current == (BaseCutsceneValue + 0x5DF0) && Stage == 1)
+            }
+            else if (MemoryWatchers.YunalescaTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Yunalesca.CheckOffset1) && Stage == 1)
             {
-                WriteValue<int>(MemoryWatchers.YunalescaTransition, BaseCutsceneValue + 0x645A);
+                WriteValue<int>(MemoryWatchers.YunalescaTransition, BaseCutsceneValue + CutsceneOffsets.Yunalesca.SkipOffset1);
                 Stage += 1;
             }
-            else if (MemoryWatchers.YunalescaTransition.Current == (BaseCutsceneValue + 0x64BA) && Stage == 2)
+            else if (MemoryWatchers.YunalescaTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Yunalesca.CheckOffset2) && Stage == 2)
             {
-                WriteValue<int>(MemoryWatchers.YunalescaTransition, BaseCutsceneValue + 0x67B4);
+                WriteValue<int>(MemoryWatchers.YunalescaTransition, BaseCutsceneValue + CutsceneOffsets.Yunalesca.SkipOffset2);
                 WriteValue<byte>(MemoryWatchers.CutsceneTiming, 0);
                 Stage += 1;
             }
             else if (MemoryWatchers.BattleState2.Current == 1 && Stage == 3)
             {
-                WriteValue<int>(MemoryWatchers.YunalescaTransition, BaseCutsceneValue + 0x6C8D);
+                WriteValue<int>(MemoryWatchers.YunalescaTransition, BaseCutsceneValue + CutsceneOffsets.Yunalesca.PostBattleOffset);
                 Stage += 1;
             }
             else if (MemoryWatchers.GilRewardCounter.Current > 0 && Stage == 4)

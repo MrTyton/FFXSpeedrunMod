@@ -1,4 +1,6 @@
-﻿namespace FFXCutsceneRemover;
+﻿using FFXCutsceneRemover.Constants;
+
+namespace FFXCutsceneRemover;
 
 class GarudaTransition : Transition
 {
@@ -16,14 +18,14 @@ class GarudaTransition : Transition
                 Stage = 1;
 
             }
-            else if (MemoryWatchers.GarudaTransition.Current == (BaseCutsceneValue + 0x21) && MemoryWatchers.HpEnemyA.Current == 0 && Stage == 1)
+            else if (MemoryWatchers.GarudaTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Garuda.CheckOffset1) && MemoryWatchers.HpEnemyA.Current == 0 && Stage == 1)
             {
-                WriteValue<int>(MemoryWatchers.GarudaTransition, BaseCutsceneValue + 0x2A9);
+                WriteValue<int>(MemoryWatchers.GarudaTransition, BaseCutsceneValue + CutsceneOffsets.Garuda.SkipOffset1);
                 Stage = 2;
             }
-            else if (MemoryWatchers.GarudaTransition.Current == (BaseCutsceneValue + 0x566) && MemoryWatchers.HpEnemyA.Current == 0 && Stage == 2) //0x428 Allows for a faster skip but causes motion blur. Need a way to turn off.
+            else if (MemoryWatchers.GarudaTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Garuda.CheckOffset2) && MemoryWatchers.HpEnemyA.Current == 0 && Stage == 2)
             {
-                WriteValue<int>(MemoryWatchers.GarudaTransition, BaseCutsceneValue + 0x84C);
+                WriteValue<int>(MemoryWatchers.GarudaTransition, BaseCutsceneValue + CutsceneOffsets.Garuda.SkipOffset2);
                 Stage = 3;
             }
         }

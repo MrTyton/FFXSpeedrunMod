@@ -1,4 +1,6 @@
-﻿namespace FFXCutsceneRemover;
+﻿using FFXCutsceneRemover.Constants;
+
+namespace FFXCutsceneRemover;
 
 class SpherimorphTransition : Transition
 {
@@ -14,9 +16,9 @@ class SpherimorphTransition : Transition
                 Stage += 1;
 
             }
-            else if (MemoryWatchers.SpherimorphTransition.Current == (BaseCutsceneValue + 0x3477) && Stage == 1) // 486
+            else if (MemoryWatchers.SpherimorphTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Spherimorph.CheckOffset) && Stage == 1)
             {
-                WriteValue<int>(MemoryWatchers.SpherimorphTransition, BaseCutsceneValue + 0x35A5);// 1B44
+                WriteValue<int>(MemoryWatchers.SpherimorphTransition, BaseCutsceneValue + CutsceneOffsets.Spherimorph.SkipOffset);
 
                 Transition actorPositions;
                 //Position Wendigo
@@ -27,7 +29,7 @@ class SpherimorphTransition : Transition
             }
             else if (MemoryWatchers.BattleState2.Current == 1 && Stage == 2)
             {
-                WriteValue<int>(MemoryWatchers.SpherimorphTransition, BaseCutsceneValue + 0x36CC);// 1E34
+                WriteValue<int>(MemoryWatchers.SpherimorphTransition, BaseCutsceneValue + CutsceneOffsets.Spherimorph.PostBattleOffset);
                 Stage += 1;
             }
         }

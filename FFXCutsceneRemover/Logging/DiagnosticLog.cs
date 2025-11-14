@@ -34,63 +34,49 @@ public static class DiagnosticLog
         return Path.GetFileName(filePath);
     }
 
+    /// <summary>
+    /// Core logging method that formats and writes log messages.
+    /// </summary>
+    private static void LogMessage(LogEventLevel level, string msg, string mname, string fpath, int lnb)
+    {
+        string formattedMsg = $"[{TrimFilePath(fpath)}:{lnb}] {mname}: {msg}";
+        Log.Write(level, formattedMsg);
+        LogMessageReceived?.Invoke(msg, level);
+    }
+
     public static void Fatal(string msg,
                              [CallerMemberName] string mname = "",
                              [CallerFilePath] string fpath = "",
                              [CallerLineNumber] int lnb = 0)
-    {
-        string formattedMsg = $"[{TrimFilePath(fpath)}:{lnb}] {mname}: {msg}";
-        Log.Fatal(formattedMsg);
-        LogMessageReceived?.Invoke(msg, LogEventLevel.Fatal);
-    }
+        => LogMessage(LogEventLevel.Fatal, msg, mname, fpath, lnb);
 
     public static void Error(string msg,
                              [CallerMemberName] string mname = "",
                              [CallerFilePath] string fpath = "",
                              [CallerLineNumber] int lnb = 0)
-    {
-        string formattedMsg = $"[{TrimFilePath(fpath)}:{lnb}] {mname}: {msg}";
-        Log.Error(formattedMsg);
-        LogMessageReceived?.Invoke(msg, LogEventLevel.Error);
-    }
+        => LogMessage(LogEventLevel.Error, msg, mname, fpath, lnb);
 
     public static void Warning(string msg,
                                [CallerMemberName] string mname = "",
                                [CallerFilePath] string fpath = "",
                                [CallerLineNumber] int lnb = 0)
-    {
-        string formattedMsg = $"[{TrimFilePath(fpath)}:{lnb}] {mname}: {msg}";
-        Log.Warning(formattedMsg);
-        LogMessageReceived?.Invoke(msg, LogEventLevel.Warning);
-    }
+        => LogMessage(LogEventLevel.Warning, msg, mname, fpath, lnb);
 
     public static void Information(string msg,
                                    [CallerMemberName] string mname = "",
                                    [CallerFilePath] string fpath = "",
                                    [CallerLineNumber] int lnb = 0)
-    {
-        string formattedMsg = $"[{TrimFilePath(fpath)}:{lnb}] {mname}: {msg}";
-        Log.Information(formattedMsg);
-        LogMessageReceived?.Invoke(msg, LogEventLevel.Information);
-    }
+        => LogMessage(LogEventLevel.Information, msg, mname, fpath, lnb);
 
     public static void Debug(string msg,
                              [CallerMemberName] string mname = "",
                              [CallerFilePath] string fpath = "",
                              [CallerLineNumber] int lnb = 0)
-    {
-        string formattedMsg = $"[{TrimFilePath(fpath)}:{lnb}] {mname}: {msg}";
-        Log.Debug(formattedMsg);
-        LogMessageReceived?.Invoke(msg, LogEventLevel.Debug);
-    }
+        => LogMessage(LogEventLevel.Debug, msg, mname, fpath, lnb);
 
     public static void Verbose(string msg,
                                [CallerMemberName] string mname = "",
                                [CallerFilePath] string fpath = "",
                                [CallerLineNumber] int lnb = 0)
-    {
-        string formattedMsg = $"[{TrimFilePath(fpath)}:{lnb}] {mname}: {msg}";
-        Log.Verbose(formattedMsg);
-        LogMessageReceived?.Invoke(msg, LogEventLevel.Verbose);
-    }
+        => LogMessage(LogEventLevel.Verbose, msg, mname, fpath, lnb);
 }

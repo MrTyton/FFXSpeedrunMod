@@ -1,4 +1,5 @@
 ﻿using FFXCutsceneRemover.Logging;
+using FFXCutsceneRemover.Constants;
 
 namespace FFXCutsceneRemover;
 
@@ -18,7 +19,7 @@ class DefenderXTransition : Transition
         }
         else if (MemoryWatchers.DefenderXTransition.Current >= (BaseCutsceneValue + 0x5451) && Stage == 1)
         {
-            WriteValue<int>(MemoryWatchers.DefenderXTransition, BaseCutsceneValue + 0x586F);
+            WriteValue<int>(MemoryWatchers.DefenderXTransition, BaseCutsceneValue + CutsceneOffsets.DefenderX.SkipOffset);
             Stage = 2;
         }
     }

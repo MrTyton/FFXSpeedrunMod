@@ -1,4 +1,6 @@
-﻿namespace FFXCutsceneRemover;
+﻿using FFXCutsceneRemover.Constants;
+
+namespace FFXCutsceneRemover;
 
 class BikanelTransition : Transition
 {
@@ -16,7 +18,7 @@ class BikanelTransition : Transition
             }
             else if (MemoryWatchers.BikanelTransition.Current == (BaseCutsceneValue + 0x11F) && Stage == 1)
             {
-                WriteValue<int>(MemoryWatchers.BikanelTransition, BaseCutsceneValue + 0x1DC); // 1DC
+                WriteValue<int>(MemoryWatchers.BikanelTransition, BaseCutsceneValue + CutsceneOffsets.Bikanel.SkipOffset);
 
                 Transition actorPositions;
                 // After the transition Kimahri's model is still visible so we bin him off to Narnia

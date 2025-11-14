@@ -1,9 +1,10 @@
 using System;
 using System.IO;
 using System.Text.Json;
+using System.Threading.Tasks;
 using FFXCutsceneRemover.Logging;
 
-namespace FFXCutsceneRemover;
+namespace FFXCutsceneRemover.Services;
 
 public class ConfigManager
 {
@@ -88,5 +89,61 @@ public class ConfigManager
     public static string GetConfigDirectory()
     {
         return ConfigDirectory;
+    }
+
+    /// <summary>
+    /// Asynchronously saves configuration to a file.
+    /// Prevents UI freezing during file operations.
+    /// </summary>
+    public static async Task SaveConfigAsync(CsrConfig config, string filename)
+    {
+        string filePath = Path.Combine(ConfigDirectory, filename);
+
+        try
+        {
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true
+            };
+
+            string json = JsonSerializer.Serialize(config, options);
+            await File.WriteAllTextAsync(filePath, json);
+
+            DiagnosticLog.Information($"Configuration saved to: {filePath}");
+        }
+        catch (Exception ex)
+        {
+            DiagnosticLog.Error($"Failed to save configuration: {ex.Message}");
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Asynchronously loads configuration from a file.
+    /// Prevents UI freezing during file operations.
+    /// </summary>
+    public static async Task<CsrConfig> LoadConfigAsync(string filename)
+    {
+        string filePath = Path.Combine(ConfigDirectory, filename);
+
+        if (!File.Exists(filePath))
+        {
+            DiagnosticLog.Information($"Configuration file not found: {filePath}");
+            return null;
+        }
+
+        try
+        {
+            string json = await File.ReadAllTextAsync(filePath);
+            var config = JsonSerializer.Deserialize<CsrConfig>(json);
+
+            DiagnosticLog.Information($"Configuration loaded from: {filePath}");
+            return config;
+        }
+        catch (Exception ex)
+        {
+            DiagnosticLog.Error($"Failed to load configuration: {ex.Message}");
+            return null;
+        }
     }
 }

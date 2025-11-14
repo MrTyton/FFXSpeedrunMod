@@ -2,6 +2,7 @@
 using System.Diagnostics;
 
 using FFXCutsceneRemover.ComponentUtil;
+using FFXCutsceneRemover.Constants;
 
 namespace FFXCutsceneRemover;
 
@@ -22,9 +23,9 @@ class GeneauxTransition : Transition
             Stage = 1;
 
         }
-        else if (MemoryWatchers.GeneauxTransition.Current == (BaseCutsceneValue + 0x65CA) && Stage == 1) // 0x65CA
+        else if (MemoryWatchers.GeneauxTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Geneaux.CheckOffset) && Stage == 1)
         {
-            WriteValue<int>(MemoryWatchers.GeneauxTransition, BaseCutsceneValue + 0x67AA);
+            WriteValue<int>(MemoryWatchers.GeneauxTransition, BaseCutsceneValue + CutsceneOffsets.Geneaux.SkipOffset);
 
             formation = process.ReadBytes(MemoryWatchers.Formation.Address, 10);
 
@@ -43,9 +44,9 @@ class GeneauxTransition : Transition
                 
             Stage += 1;
         }
-        else if (MemoryWatchers.GeneauxTransition.Current == (BaseCutsceneValue + 0x67F4) && Stage == 2) // 0x68C3 , 0x67E9
+        else if (MemoryWatchers.GeneauxTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Geneaux.CheckOffset2) && Stage == 2)
         {
-            WriteValue<int>(MemoryWatchers.GeneauxTransition, BaseCutsceneValue + 0x6A47);
+            WriteValue<int>(MemoryWatchers.GeneauxTransition, BaseCutsceneValue + CutsceneOffsets.Geneaux.SkipOffset2);
             Stage += 1;
         }
     }

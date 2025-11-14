@@ -1,4 +1,8 @@
-﻿namespace FFXCutsceneRemover;
+﻿using FFXCutsceneRemover.ComponentUtil;
+using FFXCutsceneRemover.Components;
+using FFXCutsceneRemover.Constants;
+
+namespace FFXCutsceneRemover;
 
 class IfritTransition : Transition
 {
@@ -15,9 +19,9 @@ class IfritTransition : Transition
                 Stage = 1;
 
             }
-            else if (MemoryWatchers.IfritTransition.Current >= (BaseCutsceneValue + 0x34) && Stage == 1)
+            else if (MemoryWatchers.IfritTransition.Current >= (BaseCutsceneValue + CutsceneOffsets.Ifrit.CheckOffset) && Stage == 1)
             {
-                WriteValue<int>(MemoryWatchers.IfritTransition, BaseCutsceneValue + 0x1E4);
+                WriteValue<int>(MemoryWatchers.IfritTransition, BaseCutsceneValue + CutsceneOffsets.Ifrit.SkipOffset);
 
                 Stage = 2;
             }

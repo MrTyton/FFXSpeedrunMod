@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using FFXCutsceneRemover.Constants;
 
 namespace FFXCutsceneRemover;
 
@@ -17,9 +18,9 @@ class WendigoTransition : Transition
                 Stage += 1;
 
             }
-            else if (MemoryWatchers.WendigoTransition.Current == (BaseCutsceneValue + 0x19BF) && Stage == 1) // 486
+            else if (MemoryWatchers.WendigoTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Wendigo.CheckOffset) && Stage == 1)
             {
-                WriteValue<int>(MemoryWatchers.WendigoTransition, BaseCutsceneValue + 0x1B1E);// 1B44
+                WriteValue<int>(MemoryWatchers.WendigoTransition, BaseCutsceneValue + CutsceneOffsets.Wendigo.SkipOffset);
 
                 Transition actorPositions;
                 //Position Party Members off screen
@@ -36,9 +37,9 @@ class WendigoTransition : Transition
 
                 Stage += 1;
             }
-            else if (MemoryWatchers.WendigoTransition.Current == (BaseCutsceneValue + 0x1B7E) && MemoryWatchers.BattleState2.Current == 22 && Stage == 2) // 1200 is HP of Guado
+            else if (MemoryWatchers.WendigoTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Wendigo.PostCheckOffset) && MemoryWatchers.BattleState2.Current == 22 && Stage == 2)
             {
-                WriteValue<int>(MemoryWatchers.WendigoTransition, BaseCutsceneValue + 0x1E31);
+                WriteValue<int>(MemoryWatchers.WendigoTransition, BaseCutsceneValue + CutsceneOffsets.Wendigo.PostBattleOffset);
                 Stage += 1;
             }
         }
