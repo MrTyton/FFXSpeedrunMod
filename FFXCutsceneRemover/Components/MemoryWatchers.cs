@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Reflection;
 
 using FFXCutsceneRemover.ComponentUtil;
+using FFXCutsceneRemover.Factories;
 using FFXCutsceneRemover.Logging;
 using FFXCutsceneRemover.Resources;
 
@@ -315,296 +316,227 @@ public static class MemoryWatchers
         processBaseAddress = process.Modules[0].BaseAddress.ToInt32();
         DiagnosticLog.Information($"Process base address: {processBaseAddress:X8}");
 
-        Language = GetMemoryWatcher<byte>(MemoryLocations.Language);
-
-        RoomNumber = GetMemoryWatcher<short>(MemoryLocations.RoomNumber);
-        Storyline = GetMemoryWatcher<short>(MemoryLocations.Storyline);
-        ForceLoad = GetMemoryWatcher<byte>(MemoryLocations.ForceLoad);
-        SpawnPoint = GetMemoryWatcher<byte>(MemoryLocations.SpawnPoint);
-        BattleState = GetMemoryWatcher<short>(MemoryLocations.BattleState);
-        BattleState2 = GetMemoryWatcher<short>(MemoryLocations.BattleState2);
-        Input = GetMemoryWatcher<short>(MemoryLocations.Input);
-        Menu = GetMemoryWatcher<byte>(MemoryLocations.Menu);
-        MenuLock = GetMemoryWatcher<byte>(MemoryLocations.MenuLock);
-        Intro = GetMemoryWatcher<short>(MemoryLocations.Intro);
-        State = GetMemoryWatcher<sbyte>(MemoryLocations.State);
-        XCoordinate = GetMemoryWatcher<float>(MemoryLocations.XCoordinate);
-        YCoordinate = GetMemoryWatcher<float>(MemoryLocations.YCoordinate);
-        Camera = GetMemoryWatcher<byte>(MemoryLocations.Camera);
-        Camera_x = GetMemoryWatcher<float>(MemoryLocations.Camera_x);
-        Camera_y = GetMemoryWatcher<float>(MemoryLocations.Camera_y);
-        Camera_z = GetMemoryWatcher<float>(MemoryLocations.Camera_z);
-        CameraRotation = GetMemoryWatcher<float>(MemoryLocations.CameraRotation);
-        EncounterStatus = GetMemoryWatcher<byte>(MemoryLocations.EncounterStatus);
-        MovementLock = GetMemoryWatcher<byte>(MemoryLocations.MovementLock);
-        ActiveMusicId = GetMemoryWatcher<byte>(MemoryLocations.ActiveMusicId);
-        MusicId = GetMemoryWatcher<byte>(MemoryLocations.MusicId);
-        RoomNumberAlt = GetMemoryWatcher<short>(MemoryLocations.RoomNumberAlt);
-        CutsceneAlt = GetMemoryWatcher<short>(MemoryLocations.CutsceneAlt);
-        AirshipDestinations = GetMemoryWatcher<short>(MemoryLocations.AirshipDestinations);
-        AuronOverdrives = GetMemoryWatcher<byte>(MemoryLocations.AuronOverdrives);
-        Gil = GetMemoryWatcher<int>(MemoryLocations.Gil);
-        TargetFramerate = GetMemoryWatcher<int>(MemoryLocations.TargetFramerate);
-        Dialogue1 = GetMemoryWatcher<int>(MemoryLocations.Dialogue1);
-        DialogueBoxStructs = GetMemoryWatcher<byte>(MemoryLocations.DialogueBoxStructs);
-        PlayerTurn = GetMemoryWatcher<byte>(MemoryLocations.PlayerTurn);
-        FrameCounterFromLoad = GetMemoryWatcher<int>(MemoryLocations.FrameCounterFromLoad);
+        // Basic game state watchers
+        Language = MemoryWatcherFactory.Create<byte>(nameof(Language));
+        RoomNumber = MemoryWatcherFactory.Create<short>(nameof(RoomNumber));
+        Storyline = MemoryWatcherFactory.Create<short>(nameof(Storyline));
+        ForceLoad = MemoryWatcherFactory.Create<byte>(nameof(ForceLoad));
+        SpawnPoint = MemoryWatcherFactory.Create<byte>(nameof(SpawnPoint));
+        BattleState = MemoryWatcherFactory.Create<short>(nameof(BattleState));
+        BattleState2 = MemoryWatcherFactory.Create<short>(nameof(BattleState2));
+        Input = MemoryWatcherFactory.Create<short>(nameof(Input));
+        Menu = MemoryWatcherFactory.Create<byte>(nameof(Menu));
+        MenuLock = MemoryWatcherFactory.Create<byte>(nameof(MenuLock));
+        Intro = MemoryWatcherFactory.Create<short>(nameof(Intro));
+        State = MemoryWatcherFactory.Create<sbyte>(nameof(State));
+        XCoordinate = MemoryWatcherFactory.Create<float>(nameof(XCoordinate));
+        YCoordinate = MemoryWatcherFactory.Create<float>(nameof(YCoordinate));
+        Camera = MemoryWatcherFactory.Create<byte>(nameof(Camera));
+        Camera_x = MemoryWatcherFactory.Create<float>(nameof(Camera_x));
+        Camera_y = MemoryWatcherFactory.Create<float>(nameof(Camera_y));
+        Camera_z = MemoryWatcherFactory.Create<float>(nameof(Camera_z));
+        CameraRotation = MemoryWatcherFactory.Create<float>(nameof(CameraRotation));
+        EncounterStatus = MemoryWatcherFactory.Create<byte>(nameof(EncounterStatus));
+        MovementLock = MemoryWatcherFactory.Create<byte>(nameof(MovementLock));
+        ActiveMusicId = MemoryWatcherFactory.Create<byte>(nameof(ActiveMusicId));
+        MusicId = MemoryWatcherFactory.Create<byte>(nameof(MusicId));
+        RoomNumberAlt = MemoryWatcherFactory.Create<short>(nameof(RoomNumberAlt));
+        CutsceneAlt = MemoryWatcherFactory.Create<short>(nameof(CutsceneAlt));
+        AirshipDestinations = MemoryWatcherFactory.Create<short>(nameof(AirshipDestinations));
+        AuronOverdrives = MemoryWatcherFactory.Create<byte>(nameof(AuronOverdrives));
+        Gil = MemoryWatcherFactory.Create<int>(nameof(Gil));
+        TargetFramerate = MemoryWatcherFactory.Create<int>(nameof(TargetFramerate));
+        Dialogue1 = MemoryWatcherFactory.Create<int>(nameof(Dialogue1));
+        DialogueBoxStructs = MemoryWatcherFactory.Create<byte>(nameof(DialogueBoxStructs));
+        PlayerTurn = MemoryWatcherFactory.Create<byte>(nameof(PlayerTurn));
+        FrameCounterFromLoad = MemoryWatcherFactory.Create<int>(nameof(FrameCounterFromLoad));
 
         // Event File
-        EventFileStart = GetMemoryWatcher<int>(MemoryLocations.EventFileStart);
+        EventFileStart = MemoryWatcherFactory.Create<int>(nameof(EventFileStart));
 
-        // Deep Pointers
-        HpEnemyA = GetMemoryWatcher<int>(MemoryLocations.HpEnemyA);
-        GuadoCount = GetMemoryWatcher<byte>(MemoryLocations.GuadoCount);
-        NPCLastInteraction = GetMemoryWatcher<short>(MemoryLocations.NPCLastInteraction);
-        TidusActionCount = GetMemoryWatcher<byte>(MemoryLocations.TidusActionCount);
-        TidusXCoordinate = GetMemoryWatcher<float>(MemoryLocations.TidusXCoordinate);
-        TidusYCoordinate = GetMemoryWatcher<float>(MemoryLocations.TidusYCoordinate);
-        TidusZCoordinate = GetMemoryWatcher<float>(MemoryLocations.TidusZCoordinate);
-        TidusRotation = GetMemoryWatcher<float>(MemoryLocations.TidusRotation);
-        DialogueFile = GetMemoryWatcher<byte>(MemoryLocations.DialogueFile);
-        CutsceneTiming = GetMemoryWatcher<byte>(MemoryLocations.CutsceneTiming);
-        IsLoading = GetMemoryWatcher<byte>(MemoryLocations.IsLoading);
-        CurrentMagicID = GetMemoryWatcher<int>(MemoryLocations.CurrentMagicID);
-        ToBeDeletedMagicID = GetMemoryWatcher<int>(MemoryLocations.ToBeDeletedMagicID);
-        CurrentMagicHandle = GetMemoryWatcher<int>(MemoryLocations.CurrentMagicHandle);
-        ToBeDeletedMagicHandle = GetMemoryWatcher<int>(MemoryLocations.ToBeDeletedMagicHandle);
-        EffectPointer = GetMemoryWatcher<int>(MemoryLocations.EffectPointer);
-        EffectStatusFlag = GetMemoryWatcher<byte>(MemoryLocations.EffectStatusFlag);
-        AuronTransition = GetMemoryWatcher<int>(MemoryLocations.AuronTransition);
-        AmmesTransition = GetMemoryWatcher<int>(MemoryLocations.AmmesTransition);
-        TankerTransition = GetMemoryWatcher<int>(MemoryLocations.TankerTransition);
-        InsideSinTransition = GetMemoryWatcher<int>(MemoryLocations.InsideSinTransition);
-        DiveTransition = GetMemoryWatcher<int>(MemoryLocations.DiveTransition);
-        DiveTransition2 = GetMemoryWatcher<int>(MemoryLocations.DiveTransition2);
-        DiveTransition3 = GetMemoryWatcher<int>(MemoryLocations.DiveTransition3);
-        GeosTransition = GetMemoryWatcher<int>(MemoryLocations.GeosTransition);
-        KlikkTransition = GetMemoryWatcher<int>(MemoryLocations.KlikkTransition);
-        AlBhedBoatTransition = GetMemoryWatcher<int>(MemoryLocations.AlBhedBoatTransition);
-        UnderwaterRuinsTransition = GetMemoryWatcher<int>(MemoryLocations.UnderwaterRuinsTransition);
-        UnderwaterRuinsTransition2 = GetMemoryWatcher<int>(MemoryLocations.UnderwaterRuinsTransition2);
-        UnderwaterRuinsOutsideTransition = GetMemoryWatcher<int>(MemoryLocations.UnderwaterRuinsOutsideTransition);
-        BeachTransition = GetMemoryWatcher<int>(MemoryLocations.BeachTransition);
-        LagoonTransition1 = GetMemoryWatcher<int>(MemoryLocations.LagoonTransition1);
-        LagoonTransition2 = GetMemoryWatcher<int>(MemoryLocations.LagoonTransition2);
-        ValeforTransition = GetMemoryWatcher<int>(MemoryLocations.ValeforTransition);
-        BesaidNightTransition1 = GetMemoryWatcher<int>(MemoryLocations.BesaidNightTransition1);
-        BesaidNightTransition2 = GetMemoryWatcher<int>(MemoryLocations.BesaidNightTransition2);
-        KimahriTransition = GetMemoryWatcher<int>(MemoryLocations.KimahriTransition);
-        YunaBoatTransition = GetMemoryWatcher<int>(MemoryLocations.YunaBoatTransition);
-        SinFinTransition = GetMemoryWatcher<int>(MemoryLocations.SinFinTransition);
-        EchuillesTransition = GetMemoryWatcher<int>(MemoryLocations.EchuillesTransition);
-        GeneauxTransition = GetMemoryWatcher<int>(MemoryLocations.GeneauxTransition);
-        KilikaElevatorTransition = GetMemoryWatcher<int>(MemoryLocations.KilikaElevatorTransition);
-        KilikaTrialsTransition = GetMemoryWatcher<int>(MemoryLocations.KilikaTrialsTransition);
-        KilikaAntechamberTransition = GetMemoryWatcher<int>(MemoryLocations.KilikaAntechamberTransition);
-        IfritTransition = GetMemoryWatcher<int>(MemoryLocations.IfritTransition);
-        IfritTransition2 = GetMemoryWatcher<int>(MemoryLocations.IfritTransition2);
-        JechtShotTransition = GetMemoryWatcher<int>(MemoryLocations.JechtShotTransition);
-        OblitzeratorTransition = GetMemoryWatcher<int>(MemoryLocations.OblitzeratorTransition);
-        BlitzballTransition = GetMemoryWatcher<int>(MemoryLocations.BlitzballTransition);
-        SahaginTransition = GetMemoryWatcher<int>(MemoryLocations.SahaginTransition);
-        GarudaTransition = GetMemoryWatcher<int>(MemoryLocations.GarudaTransition);
-        RinTransition = GetMemoryWatcher<int>(MemoryLocations.RinTransition);
-        ChocoboEaterTransition = GetMemoryWatcher<int>(MemoryLocations.ChocoboEaterTransition);
-        GuiTransition = GetMemoryWatcher<int>(MemoryLocations.GuiTransition);
-        Gui2Transition = GetMemoryWatcher<int>(MemoryLocations.Gui2Transition);
-        DjoseTransition = GetMemoryWatcher<int>(MemoryLocations.DjoseTransition);
-        IxionTransition = GetMemoryWatcher<int>(MemoryLocations.IxionTransition);
-        ExtractorTransition = GetMemoryWatcher<int>(MemoryLocations.ExtractorTransition);
-        SeymoursHouseTransition1 = GetMemoryWatcher<int>(MemoryLocations.SeymoursHouseTransition1);
-        SeymoursHouseTransition2 = GetMemoryWatcher<int>(MemoryLocations.SeymoursHouseTransition2);
-        FarplaneTransition1 = GetMemoryWatcher<int>(MemoryLocations.FarplaneTransition1);
-        FarplaneTransition2 = GetMemoryWatcher<int>(MemoryLocations.FarplaneTransition2);
-        TromellTransition = GetMemoryWatcher<int>(MemoryLocations.TromellTransition);
-        CrawlerTransition = GetMemoryWatcher<int>(MemoryLocations.CrawlerTransition);
-        SeymourTransition = GetMemoryWatcher<int>(MemoryLocations.SeymourTransition);
-        SeymourTransition2 = GetMemoryWatcher<int>(MemoryLocations.SeymourTransition2);
-        WendigoTransition = GetMemoryWatcher<int>(MemoryLocations.WendigoTransition);
-        SpherimorphTransition = GetMemoryWatcher<int>(MemoryLocations.SpherimorphTransition);
-        UnderLakeTransition = GetMemoryWatcher<int>(MemoryLocations.UnderLakeTransition);
-        BikanelTransition = GetMemoryWatcher<int>(MemoryLocations.BikanelTransition);
-        HomeTransition = GetMemoryWatcher<int>(MemoryLocations.HomeTransition);
-        EvraeTransition = GetMemoryWatcher<int>(MemoryLocations.EvraeTransition);
-        EvraeAirshipTransition = GetMemoryWatcher<int>(MemoryLocations.EvraeAirshipTransition);
-        GuardsTransition = GetMemoryWatcher<int>(MemoryLocations.GuardsTransition);
-        BahamutTransition = GetMemoryWatcher<int>(MemoryLocations.BahamutTransition);
-        IsaaruTransition = GetMemoryWatcher<int>(MemoryLocations.IsaaruTransition);
-        AltanaTransition = GetMemoryWatcher<int>(MemoryLocations.AltanaTransition);
-        NatusTransition = GetMemoryWatcher<int>(MemoryLocations.NatusTransition);
-        DefenderXTransition = GetMemoryWatcher<int>(MemoryLocations.DefenderXTransition);
-        RonsoTransition = GetMemoryWatcher<int>(MemoryLocations.RonsoTransition);
-        FluxTransition = GetMemoryWatcher<int>(MemoryLocations.FluxTransition);
-        SanctuaryTransition = GetMemoryWatcher<int>(MemoryLocations.SanctuaryTransition);
-        SpectralKeeperTransition = GetMemoryWatcher<int>(MemoryLocations.SpectralKeeperTransition);
-        SpectralKeeperTransition2 = GetMemoryWatcher<int>(MemoryLocations.SpectralKeeperTransition2);
-        YunalescaTransition = GetMemoryWatcher<int>(MemoryLocations.YunalescaTransition);
-        FinsTransition = GetMemoryWatcher<int>(MemoryLocations.FinsTransition);
-        FinsAirshipTransition = GetMemoryWatcher<int>(MemoryLocations.FinsAirshipTransition);
-        SinCoreTransition = GetMemoryWatcher<int>(MemoryLocations.SinCoreTransition);
-        OverdriveSinTransition = GetMemoryWatcher<int>(MemoryLocations.OverdriveSinTransition);
-        OmnisTransition = GetMemoryWatcher<int>(MemoryLocations.OmnisTransition);
-        BFATransition = GetMemoryWatcher<int>(MemoryLocations.BFATransition);
-        AeonTransition = GetMemoryWatcher<int>(MemoryLocations.AeonTransition);
-        YuYevonTransition = GetMemoryWatcher<int>(MemoryLocations.YuYevonTransition);
-        YojimboFaythTransition = GetMemoryWatcher<int>(MemoryLocations.YojimboFaythTransition);
-        CutsceneProgress_Max = GetMemoryWatcher<int>(MemoryLocations.CutsceneProgress_Max);
-        CutsceneProgress_uVar1 = GetMemoryWatcher<int>(MemoryLocations.CutsceneProgress_uVar1);
-        CutsceneProgress_uVar2 = GetMemoryWatcher<int>(MemoryLocations.CutsceneProgress_uVar2);
-        CutsceneProgress_uVar3 = GetMemoryWatcher<int>(MemoryLocations.CutsceneProgress_uVar3);
+        // Deep Pointers - Misc
+        HpEnemyA = MemoryWatcherFactory.Create<int>(nameof(HpEnemyA));
+        GuadoCount = MemoryWatcherFactory.Create<byte>(nameof(GuadoCount));
+        NPCLastInteraction = MemoryWatcherFactory.Create<short>(nameof(NPCLastInteraction));
+        TidusActionCount = MemoryWatcherFactory.Create<byte>(nameof(TidusActionCount));
+        TidusXCoordinate = MemoryWatcherFactory.Create<float>(nameof(TidusXCoordinate));
+        TidusYCoordinate = MemoryWatcherFactory.Create<float>(nameof(TidusYCoordinate));
+        TidusZCoordinate = MemoryWatcherFactory.Create<float>(nameof(TidusZCoordinate));
+        TidusRotation = MemoryWatcherFactory.Create<float>(nameof(TidusRotation));
+        DialogueFile = MemoryWatcherFactory.Create<byte>(nameof(DialogueFile));
+        CutsceneTiming = MemoryWatcherFactory.Create<byte>(nameof(CutsceneTiming));
+        IsLoading = MemoryWatcherFactory.Create<byte>(nameof(IsLoading));
+        CurrentMagicID = MemoryWatcherFactory.Create<int>(nameof(CurrentMagicID));
+        ToBeDeletedMagicID = MemoryWatcherFactory.Create<int>(nameof(ToBeDeletedMagicID));
+        CurrentMagicHandle = MemoryWatcherFactory.Create<int>(nameof(CurrentMagicHandle));
+        ToBeDeletedMagicHandle = MemoryWatcherFactory.Create<int>(nameof(ToBeDeletedMagicHandle));
+        EffectPointer = MemoryWatcherFactory.Create<int>(nameof(EffectPointer));
+        EffectStatusFlag = MemoryWatcherFactory.Create<byte>(nameof(EffectStatusFlag));
 
+        // Boss Transition Watchers (all int type)
+        MemoryWatcherFactory.CreateBatch<int>(new[]
+        {
+            nameof(AuronTransition), nameof(AmmesTransition), nameof(TankerTransition),
+            nameof(InsideSinTransition), nameof(DiveTransition), nameof(DiveTransition2), nameof(DiveTransition3),
+            nameof(GeosTransition), nameof(KlikkTransition), nameof(AlBhedBoatTransition),
+            nameof(UnderwaterRuinsTransition), nameof(UnderwaterRuinsTransition2), nameof(UnderwaterRuinsOutsideTransition),
+            nameof(BeachTransition), nameof(LagoonTransition1), nameof(LagoonTransition2),
+            nameof(ValeforTransition), nameof(BesaidNightTransition1), nameof(BesaidNightTransition2),
+            nameof(KimahriTransition), nameof(YunaBoatTransition), nameof(SinFinTransition),
+            nameof(EchuillesTransition), nameof(GeneauxTransition), nameof(KilikaElevatorTransition),
+            nameof(KilikaTrialsTransition), nameof(KilikaAntechamberTransition), nameof(IfritTransition),
+            nameof(IfritTransition2), nameof(JechtShotTransition), nameof(OblitzeratorTransition),
+            nameof(BlitzballTransition), nameof(SahaginTransition), nameof(GarudaTransition),
+            nameof(RinTransition), nameof(ChocoboEaterTransition), nameof(GuiTransition),
+            nameof(Gui2Transition), nameof(DjoseTransition), nameof(IxionTransition),
+            nameof(ExtractorTransition), nameof(SeymoursHouseTransition1), nameof(SeymoursHouseTransition2),
+            nameof(FarplaneTransition1), nameof(FarplaneTransition2), nameof(TromellTransition),
+            nameof(CrawlerTransition), nameof(SeymourTransition), nameof(SeymourTransition2),
+            nameof(WendigoTransition), nameof(SpherimorphTransition), nameof(UnderLakeTransition),
+            nameof(BikanelTransition), nameof(HomeTransition), nameof(EvraeTransition),
+            nameof(EvraeAirshipTransition), nameof(GuardsTransition), nameof(BahamutTransition),
+            nameof(IsaaruTransition), nameof(AltanaTransition), nameof(NatusTransition),
+            nameof(DefenderXTransition), nameof(RonsoTransition), nameof(FluxTransition),
+            nameof(SanctuaryTransition), nameof(SpectralKeeperTransition), nameof(SpectralKeeperTransition2),
+            nameof(YunalescaTransition), nameof(FinsTransition), nameof(FinsAirshipTransition),
+            nameof(SinCoreTransition), nameof(OverdriveSinTransition), nameof(OmnisTransition),
+            nameof(BFATransition), nameof(AeonTransition), nameof(YuYevonTransition),
+            nameof(YojimboFaythTransition), nameof(CutsceneProgress_Max), nameof(CutsceneProgress_uVar1),
+            nameof(CutsceneProgress_uVar2), nameof(CutsceneProgress_uVar3)
+        }, (name, watcher) =>
+        {
+            typeof(MemoryWatchers).GetField(name, BindingFlags.Public | BindingFlags.Static)?.SetValue(null, watcher);
+        });
 
-        //Encounters
-        EncounterMapID = GetMemoryWatcher<byte>(MemoryLocations.EncounterMapID);
-        EncounterFormationID1 = GetMemoryWatcher<byte>(MemoryLocations.EncounterFormationID1);
-        EncounterFormationID2 = GetMemoryWatcher<byte>(MemoryLocations.EncounterFormationID2);
-        ScriptedBattleFlag1 = GetMemoryWatcher<byte>(MemoryLocations.ScriptedBattleFlag1);
-        ScriptedBattleFlag2 = GetMemoryWatcher<byte>(MemoryLocations.ScriptedBattleFlag2);
-        ScriptedBattleVar1 = GetMemoryWatcher<int>(MemoryLocations.ScriptedBattleVar1);
-        ScriptedBattleVar3 = GetMemoryWatcher<int>(MemoryLocations.ScriptedBattleVar3);
-        ScriptedBattleVar4 = GetMemoryWatcher<int>(MemoryLocations.ScriptedBattleVar4);
-        EncounterTrigger = GetMemoryWatcher<byte>(MemoryLocations.EncounterTrigger);
+        // Encounters
+        MemoryWatcherFactory.CreateBatch<byte>(new[]
+        {
+            nameof(EncounterMapID), nameof(EncounterFormationID1), nameof(EncounterFormationID2),
+            nameof(ScriptedBattleFlag1), nameof(ScriptedBattleFlag2), nameof(EncounterTrigger)
+        }, (name, watcher) =>
+        {
+            typeof(MemoryWatchers).GetField(name, BindingFlags.Public | BindingFlags.Static)?.SetValue(null, watcher);
+        });
+        
+        MemoryWatcherFactory.CreateBatch<int>(new[]
+        {
+            nameof(ScriptedBattleVar1), nameof(ScriptedBattleVar3), nameof(ScriptedBattleVar4)
+        }, (name, watcher) =>
+        {
+            typeof(MemoryWatchers).GetField(name, BindingFlags.Public | BindingFlags.Static)?.SetValue(null, watcher);
+        });
 
         // Party Configuration
-        Formation = GetMemoryWatcher<byte>(MemoryLocations.Formation);
-        RikkuName = GetMemoryWatcher<byte>(MemoryLocations.RikkuName);
-        EnableTidus = GetMemoryWatcher<byte>(MemoryLocations.EnableTidus);
-        EnableYuna = GetMemoryWatcher<byte>(MemoryLocations.EnableYuna);
-        EnableAuron = GetMemoryWatcher<byte>(MemoryLocations.EnableAuron);
-        EnableKimahri = GetMemoryWatcher<byte>(MemoryLocations.EnableKimahri);
-        EnableWakka = GetMemoryWatcher<byte>(MemoryLocations.EnableWakka);
-        EnableLulu = GetMemoryWatcher<byte>(MemoryLocations.EnableLulu);
-        EnableRikku = GetMemoryWatcher<byte>(MemoryLocations.EnableRikku);
-        EnableSeymour = GetMemoryWatcher<byte>(MemoryLocations.EnableSeymour);
-        EnableValefor = GetMemoryWatcher<byte>(MemoryLocations.EnableValefor);
-        EnableIfrit = GetMemoryWatcher<byte>(MemoryLocations.EnableIfrit);
-        EnableIxion = GetMemoryWatcher<byte>(MemoryLocations.EnableIxion);
-        EnableShiva = GetMemoryWatcher<byte>(MemoryLocations.EnableShiva);
-        EnableBahamut = GetMemoryWatcher<byte>(MemoryLocations.EnableBahamut);
-        EnableAnima = GetMemoryWatcher<byte>(MemoryLocations.EnableAnima);
-        EnableYojimbo = GetMemoryWatcher<byte>(MemoryLocations.EnableYojimbo);
-        EnableMagus = GetMemoryWatcher<byte>(MemoryLocations.EnableMagus);
-
+        MemoryWatcherFactory.CreateBatch<byte>(new[]
+        {
+            nameof(Formation), nameof(RikkuName), nameof(EnableTidus), nameof(EnableYuna),
+            nameof(EnableAuron), nameof(EnableKimahri), nameof(EnableWakka), nameof(EnableLulu),
+            nameof(EnableRikku), nameof(EnableSeymour), nameof(EnableValefor), nameof(EnableIfrit),
+            nameof(EnableIxion), nameof(EnableShiva), nameof(EnableBahamut), nameof(EnableAnima),
+            nameof(EnableYojimbo), nameof(EnableMagus)
+        }, (name, watcher) =>
+        {
+            typeof(MemoryWatchers).GetField(name, BindingFlags.Public | BindingFlags.Static)?.SetValue(null, watcher);
+        });
         // Encounter Rate
-        EncountersActiveFlag = GetMemoryWatcher<byte>(MemoryLocations.EncountersActiveFlag);
-        TotalDistance = GetMemoryWatcher<float>(MemoryLocations.TotalDistance);
-        CycleDistance = GetMemoryWatcher<float>(MemoryLocations.CycleDistance);
+        EncountersActiveFlag = MemoryWatcherFactory.Create<byte>(nameof(EncountersActiveFlag));
+        TotalDistance = MemoryWatcherFactory.Create<float>(nameof(TotalDistance));
+        CycleDistance = MemoryWatcherFactory.Create<float>(nameof(CycleDistance));
 
-        // HP/MP
-        TidusHP = GetMemoryWatcher<int>(MemoryLocations.TidusHP);
-        TidusMP = GetMemoryWatcher<short>(MemoryLocations.TidusMP);
-        TidusMaxHP = GetMemoryWatcher<int>(MemoryLocations.TidusMaxHP);
-        TidusMaxMP = GetMemoryWatcher<short>(MemoryLocations.TidusMaxMP);
-        YunaHP = GetMemoryWatcher<int>(MemoryLocations.YunaHP);
-        YunaMP = GetMemoryWatcher<short>(MemoryLocations.YunaMP);
-        YunaMaxHP = GetMemoryWatcher<int>(MemoryLocations.YunaMaxHP);
-        YunaMaxMP = GetMemoryWatcher<short>(MemoryLocations.YunaMaxMP);
-        AuronHP = GetMemoryWatcher<int>(MemoryLocations.AuronHP);
-        AuronMP = GetMemoryWatcher<short>(MemoryLocations.AuronMP);
-        AuronMaxHP = GetMemoryWatcher<int>(MemoryLocations.AuronMaxHP);
-        AuronMaxMP = GetMemoryWatcher<short>(MemoryLocations.AuronMaxMP);
-        WakkaHP = GetMemoryWatcher<int>(MemoryLocations.WakkaHP);
-        WakkaMP = GetMemoryWatcher<short>(MemoryLocations.WakkaMP);
-        WakkaMaxHP = GetMemoryWatcher<int>(MemoryLocations.WakkaMaxHP);
-        WakkaMaxMP = GetMemoryWatcher<short>(MemoryLocations.WakkaMaxMP);
-        KimahriHP = GetMemoryWatcher<int>(MemoryLocations.KimahriHP);
-        KimahriMP = GetMemoryWatcher<short>(MemoryLocations.KimahriMP);
-        KimahriMaxHP = GetMemoryWatcher<int>(MemoryLocations.KimahriMaxHP);
-        KimahriMaxMP = GetMemoryWatcher<short>(MemoryLocations.KimahriMaxMP);
-        LuluHP = GetMemoryWatcher<int>(MemoryLocations.LuluHP);
-        LuluMP = GetMemoryWatcher<short>(MemoryLocations.LuluMP);
-        LuluMaxHP = GetMemoryWatcher<int>(MemoryLocations.LuluMaxHP);
-        LuluMaxMP = GetMemoryWatcher<short>(MemoryLocations.LuluMaxMP);
-        RikkuHP = GetMemoryWatcher<int>(MemoryLocations.RikkuHP);
-        RikkuMP = GetMemoryWatcher<short>(MemoryLocations.RikkuMP);
-        RikkuMaxHP = GetMemoryWatcher<int>(MemoryLocations.RikkuMaxHP);
-        RikkuMaxMP = GetMemoryWatcher<short>(MemoryLocations.RikkuMaxMP);
-        ValeforHP = GetMemoryWatcher<int>(MemoryLocations.ValeforHP);
-        ValeforMP = GetMemoryWatcher<short>(MemoryLocations.ValeforMP);
-        ValeforMaxHP = GetMemoryWatcher<int>(MemoryLocations.ValeforMaxHP);
-        ValeforMaxMP = GetMemoryWatcher<short>(MemoryLocations.ValeforMaxMP);
+        // HP/MP - Batch create for characters
+        MemoryWatcherFactory.CreateBatch<int>(new[]
+        {
+            nameof(TidusHP), nameof(TidusMaxHP), nameof(YunaHP), nameof(YunaMaxHP),
+            nameof(AuronHP), nameof(AuronMaxHP), nameof(WakkaHP), nameof(WakkaMaxHP),
+            nameof(KimahriHP), nameof(KimahriMaxHP), nameof(LuluHP), nameof(LuluMaxHP),
+            nameof(RikkuHP), nameof(RikkuMaxHP), nameof(ValeforHP), nameof(ValeforMaxHP)
+        }, (name, watcher) =>
+        {
+            typeof(MemoryWatchers).GetField(name, BindingFlags.Public | BindingFlags.Static)?.SetValue(null, watcher);
+        });
+        
+        MemoryWatcherFactory.CreateBatch<short>(new[]
+        {
+            nameof(TidusMP), nameof(TidusMaxMP), nameof(YunaMP), nameof(YunaMaxMP),
+            nameof(AuronMP), nameof(AuronMaxMP), nameof(WakkaMP), nameof(WakkaMaxMP),
+            nameof(KimahriMP), nameof(KimahriMaxMP), nameof(LuluMP), nameof(LuluMaxMP),
+            nameof(RikkuMP), nameof(RikkuMaxMP), nameof(ValeforMP), nameof(ValeforMaxMP)
+        }, (name, watcher) =>
+        {
+            typeof(MemoryWatchers).GetField(name, BindingFlags.Public | BindingFlags.Static)?.SetValue(null, watcher);
+        });
 
         // Special Flags
-        FangirlsOrKidsSkip = GetMemoryWatcher<short>(MemoryLocations.FangirlsOrKidsSkip);
-        BaajFlag1 = GetMemoryWatcher<byte>(MemoryLocations.BaajFlag1);
-        BesaidFlag1 = GetMemoryWatcher<byte>(MemoryLocations.BesaidFlag1);
-        SSWinnoFlag1 = GetMemoryWatcher<byte>(MemoryLocations.SSWinnoFlag1);
-        KilikaMapFlag = GetMemoryWatcher<byte>(MemoryLocations.KilikaMapFlag);
-        SSWinnoFlag2 = GetMemoryWatcher<byte>(MemoryLocations.SSWinnoFlag2);
-        LucaFlag = GetMemoryWatcher<byte>(MemoryLocations.LucaFlag);
-        LucaFlag2 = GetMemoryWatcher<byte>(MemoryLocations.LucaFlag2);
-        BlitzballFlag = GetMemoryWatcher<byte>(MemoryLocations.BlitzballFlag);
-        MiihenFlag1 = GetMemoryWatcher<byte>(MemoryLocations.MiihenFlag1);
-        MiihenFlag2 = GetMemoryWatcher<byte>(MemoryLocations.MiihenFlag2);
-        MiihenFlag3 = GetMemoryWatcher<byte>(MemoryLocations.MiihenFlag3);
-        MiihenFlag4 = GetMemoryWatcher<byte>(MemoryLocations.MiihenFlag4);
-        MRRFlag1 = GetMemoryWatcher<byte>(MemoryLocations.MRRFlag1);
-        MRRFlag2 = GetMemoryWatcher<byte>(MemoryLocations.MRRFlag2);
-        MoonflowFlag = GetMemoryWatcher<byte>(MemoryLocations.MoonflowFlag);
-        MoonflowFlag2 = GetMemoryWatcher<byte>(MemoryLocations.MoonflowFlag2);
-        RikkuOutfit = GetMemoryWatcher<byte>(MemoryLocations.RikkuOutfit);
-        TidusWeaponDamageBoost = GetMemoryWatcher<byte>(MemoryLocations.TidusWeaponDamageBoost);
-        GuadosalamShopFlag = GetMemoryWatcher<byte>(MemoryLocations.GuadosalamShopFlag);
-        ThunderPlainsFlag = GetMemoryWatcher<byte>(MemoryLocations.ThunderPlainsFlag);
-        MacalaniaFlag = GetMemoryWatcher<byte>(MemoryLocations.MacalaniaFlag);
-        BikanelFlag = GetMemoryWatcher<byte>(MemoryLocations.BikanelFlag);
-        Sandragoras = GetMemoryWatcher<byte>(MemoryLocations.Sandragoras);
-        ViaPurificoPlatform = GetMemoryWatcher<byte>(MemoryLocations.ViaPurificoPlatform);
-        NatusFlag = GetMemoryWatcher<byte>(MemoryLocations.NatusFlag);
-        CalmLandsFlag = GetMemoryWatcher<ushort>(MemoryLocations.CalmLandsFlag);
-        WantzFlag = GetMemoryWatcher<byte>(MemoryLocations.WantzFlag);
-        GagazetCaveFlag = GetMemoryWatcher<short>(MemoryLocations.GagazetCaveFlag);
-        OmegaRuinsFlag = GetMemoryWatcher<byte>(MemoryLocations.OmegaRuinsFlag);
-        WantzMacalaniaFlag = GetMemoryWatcher<byte>(MemoryLocations.WantzMacalaniaFlag);
+        FangirlsOrKidsSkip = MemoryWatcherFactory.Create<short>(nameof(FangirlsOrKidsSkip));
+        CalmLandsFlag = MemoryWatcherFactory.Create<ushort>(nameof(CalmLandsFlag));
+        GagazetCaveFlag = MemoryWatcherFactory.Create<short>(nameof(GagazetCaveFlag));
+        
+        MemoryWatcherFactory.CreateBatch<byte>(new[]
+        {
+            nameof(BaajFlag1), nameof(BesaidFlag1), nameof(SSWinnoFlag1), nameof(KilikaMapFlag),
+            nameof(SSWinnoFlag2), nameof(LucaFlag), nameof(LucaFlag2), nameof(BlitzballFlag),
+            nameof(MiihenFlag1), nameof(MiihenFlag2), nameof(MiihenFlag3), nameof(MiihenFlag4),
+            nameof(MRRFlag1), nameof(MRRFlag2), nameof(MoonflowFlag), nameof(MoonflowFlag2),
+            nameof(RikkuOutfit), nameof(TidusWeaponDamageBoost), nameof(GuadosalamShopFlag),
+            nameof(ThunderPlainsFlag), nameof(MacalaniaFlag), nameof(BikanelFlag),
+            nameof(Sandragoras), nameof(ViaPurificoPlatform), nameof(NatusFlag),
+            nameof(WantzFlag), nameof(OmegaRuinsFlag), nameof(WantzMacalaniaFlag)
+        }, (name, watcher) =>
+        {
+            typeof(MemoryWatchers).GetField(name, BindingFlags.Public | BindingFlags.Static)?.SetValue(null, watcher);
+        });
 
         // Blitzball Abilities
-        AurochsTeamBytes = GetMemoryWatcher<byte>(MemoryLocations.AurochsTeamBytes);
-        BlitzballBytes = GetMemoryWatcher<byte>(MemoryLocations.BlitzballBytes);
-        AurochsPlayer1 = GetMemoryWatcher<byte>(MemoryLocations.AurochsPlayer1);
+        MemoryWatcherFactory.CreateBatch<byte>(new[]
+        {
+            nameof(AurochsTeamBytes), nameof(BlitzballBytes), nameof(AurochsPlayer1)
+        }, (name, watcher) =>
+        {
+            typeof(MemoryWatchers).GetField(name, BindingFlags.Public | BindingFlags.Static)?.SetValue(null, watcher);
+        });
 
         // Battle Rewards
-        GilBattleRewards = GetMemoryWatcher<int>(MemoryLocations.GilBattleRewards);
-        GilRewardCounter = GetMemoryWatcher<int>(MemoryLocations.GilRewardCounter);
-        BattleRewardItemCount = GetMemoryWatcher<byte>(MemoryLocations.BattleRewardItemCount);
-        BattleRewardItem1 = GetMemoryWatcher<short>(MemoryLocations.BattleRewardItem1);
-        BattleRewardItemQty1 = GetMemoryWatcher<byte>(MemoryLocations.BattleRewardItemQty1);
-        BattleRewardEquipCount = GetMemoryWatcher<byte>(MemoryLocations.BattleRewardEquipCount);
-        BattleRewardEquip1 = GetMemoryWatcher<byte>(MemoryLocations.BattleRewardEquip1);
+        GilBattleRewards = MemoryWatcherFactory.Create<int>(nameof(GilBattleRewards));
+        GilRewardCounter = MemoryWatcherFactory.Create<int>(nameof(GilRewardCounter));
+        BattleRewardItemCount = MemoryWatcherFactory.Create<byte>(nameof(BattleRewardItemCount));
+        BattleRewardItem1 = MemoryWatcherFactory.Create<short>(nameof(BattleRewardItem1));
+        BattleRewardItemQty1 = MemoryWatcherFactory.Create<byte>(nameof(BattleRewardItemQty1));
+        BattleRewardEquipCount = MemoryWatcherFactory.Create<byte>(nameof(BattleRewardEquipCount));
+        BattleRewardEquip1 = MemoryWatcherFactory.Create<byte>(nameof(BattleRewardEquip1));
 
         //Items
-        ItemsStart = GetMemoryWatcher<byte>(MemoryLocations.ItemsStart);
-        ItemsQtyStart = GetMemoryWatcher<byte>(MemoryLocations.ItemsQtyStart);
+        ItemsStart = MemoryWatcherFactory.Create<byte>(nameof(ItemsStart));
+        ItemsQtyStart = MemoryWatcherFactory.Create<byte>(nameof(ItemsQtyStart));
 
         // AP
-        CharacterAPRewards = GetMemoryWatcher<int>(MemoryLocations.CharacterAPRewards);
-        CharacterAPFlags = GetMemoryWatcher<byte>(MemoryLocations.CharacterAPFlags);
+        CharacterAPRewards = MemoryWatcherFactory.Create<int>(nameof(CharacterAPRewards));
+        CharacterAPFlags = MemoryWatcherFactory.Create<byte>(nameof(CharacterAPFlags));
 
         // Menu Values
-        MenuTriggerValue = GetMemoryWatcher<int>(MemoryLocations.MenuTriggerValue);
-
-        MenuValue1 = GetMemoryWatcher<int>(MemoryLocations.MenuValue1);
-        MenuValue2 = GetMemoryWatcher<int>(MemoryLocations.MenuValue2);
-
-        MenuValue3 = GetMemoryWatcher<int>(MemoryLocations.MenuValue3);
-        MenuValue4 = GetMemoryWatcher<int>(MemoryLocations.MenuValue4);
-        MenuValue5 = GetMemoryWatcher<byte>(MemoryLocations.MenuValue5);
-        MenuValue6 = GetMemoryWatcher<int>(MemoryLocations.MenuValue6);
-        MenuValue7 = GetMemoryWatcher<byte>(MemoryLocations.MenuValue7);
-
-        SpeedBoostAmount = GetMemoryWatcher<int>(MemoryLocations.SpeedBoostAmount);
-        SpeedBoostVar1 = GetMemoryWatcher<int>(MemoryLocations.SpeedBoostVar1);
-
-        ActorArrayLength = GetMemoryWatcher<int>(MemoryLocations.ActorArrayLength);
-
-        AutosaveTrigger = GetMemoryWatcher<byte>(MemoryLocations.AutosaveTrigger);
-        SupressAutosaveOnForceLoad = GetMemoryWatcher<byte>(MemoryLocations.SupressAutosaveOnForceLoad);
-        SupressAutosaveCounter = GetMemoryWatcher<byte>(MemoryLocations.SupressAutosaveCounter);
+        MemoryWatcherFactory.CreateBatch<int>(new[]
+        {
+            nameof(MenuTriggerValue), nameof(MenuValue1), nameof(MenuValue2), nameof(MenuValue3),
+            nameof(MenuValue4), nameof(MenuValue6), nameof(SpeedBoostAmount), nameof(SpeedBoostVar1),
+            nameof(ActorArrayLength)
+        }, (name, watcher) =>
+        {
+            typeof(MemoryWatchers).GetField(name, BindingFlags.Public | BindingFlags.Static)?.SetValue(null, watcher);
+        });
+        
+        MemoryWatcherFactory.CreateBatch<byte>(new[]
+        {
+            nameof(MenuValue5), nameof(MenuValue7), nameof(AutosaveTrigger),
+            nameof(SupressAutosaveOnForceLoad), nameof(SupressAutosaveCounter)
+        }, (name, watcher) =>
+        {
+            typeof(MemoryWatchers).GetField(name, BindingFlags.Public | BindingFlags.Static)?.SetValue(null, watcher);
+        });
 
         // Break Specific Values
-        LucaMusicSpheresUnlocked = GetMemoryWatcher<byte>(MemoryLocations.LucaMusicSpheresUnlocked);
+        LucaMusicSpheresUnlocked = MemoryWatcherFactory.Create<byte>(nameof(LucaMusicSpheresUnlocked));
 
         // RNGMod
-        RNGArrayOpBytes = GetMemoryWatcher<byte>(MemoryLocations.RNGArrayOpBytes);
+        RNGArrayOpBytes = MemoryWatcherFactory.Create<byte>(nameof(RNGArrayOpBytes));
 
         HpEnemyA.FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
 
