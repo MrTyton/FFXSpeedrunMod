@@ -714,7 +714,7 @@ public class MainForm : Form
 
             // Check if FFX is running
             var ffxProcesses = Process.GetProcessesByName("FFX");
-            
+
             // If FFX is not running but we have a launcher process, close it
             if (ffxProcesses.Length == 0 && launcherProcess != null && !launcherProcess.HasExited)
             {
