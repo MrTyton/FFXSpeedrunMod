@@ -7,6 +7,8 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using System.IO;
+using Serilog.Events;
 using FFXCutsceneRemover.Logging;
 
 namespace FFXCutsceneRemover;
@@ -25,6 +27,8 @@ public class MainForm : Form
     private Label seedLabel;
     private NumericUpDown sleepIntervalNumeric;
     private Label sleepIntervalLabel;
+    private ComboBox logLevelComboBox;
+    private Label logLevelLabel;
     
     private GroupBox statusGroupBox;
     private Label connectionStatusLabel;
@@ -34,6 +38,8 @@ public class MainForm : Form
     
     private Button startButton;
     private Button stopButton;
+    private Button saveConfigButton;
+    private Button loadConfigButton;
     
     // Background worker for game monitoring
     private BackgroundWorker gameWorker;
@@ -45,6 +51,7 @@ public class MainForm : Form
     private CutsceneRemover cutsceneRemover;
     private RNGMod rngMod;
     private bool isRunning = false;
+    private LogEventLevel currentLogLevel = LogEventLevel.Information;
     
     private static readonly uint[] PCSeeds = new uint[] {
         2804382593, 2807284884, 2810252711, 2813220538, 2816122829, 2819090656,
@@ -90,6 +97,10 @@ public class MainForm : Form
     {
         InitializeComponent();
         InitializeCustomComponents();
+        
+        // Subscribe to diagnostic log events
+        DiagnosticLog.LogMessageReceived += OnDiagnosticLogReceived;
+        
         DiagnosticLog.Information("FFX Speedrun Mod GUI started");
     }
 
@@ -208,7 +219,7 @@ public class MainForm : Form
         {
             Text = "Advanced Settings",
             Location = new Point(10, 130),
-            Size = new Size(370, 80),
+            Size = new Size(370, 110),
             Anchor = AnchorStyles.Top | AnchorStyles.Left
         };
         
@@ -229,8 +240,35 @@ public class MainForm : Form
             Value = 16
         };
         
+        // Log level
+        logLevelLabel = new Label
+        {
+            Text = "Log Level:",
+            Location = new Point(20, 62),
+            Size = new Size(70, 20)
+        };
+        
+        logLevelComboBox = new ComboBox
+        {
+            Location = new Point(100, 60),
+            Size = new Size(150, 20),
+            DropDownStyle = ComboBoxStyle.DropDownList
+        };
+        logLevelComboBox.Items.AddRange(new object[] 
+        { 
+            "Information", 
+            "Warning", 
+            "Error",
+            "Debug",
+            "Verbose"
+        });
+        logLevelComboBox.SelectedIndex = 0; // Default to Information
+        logLevelComboBox.SelectedIndexChanged += LogLevelComboBox_SelectedIndexChanged;
+        
         advancedGroupBox.Controls.Add(sleepIntervalLabel);
         advancedGroupBox.Controls.Add(sleepIntervalNumeric);
+        advancedGroupBox.Controls.Add(logLevelLabel);
+        advancedGroupBox.Controls.Add(logLevelComboBox);
         
         // Status GroupBox
         statusGroupBox = new GroupBox
@@ -299,6 +337,25 @@ public class MainForm : Form
         };
         stopButton.Click += StopButton_Click;
         
+        // Config buttons
+        saveConfigButton = new Button
+        {
+            Text = "Save Config",
+            Location = new Point(520, 510),
+            Size = new Size(120, 35),
+            Anchor = AnchorStyles.Bottom | AnchorStyles.Right
+        };
+        saveConfigButton.Click += SaveConfigButton_Click;
+        
+        loadConfigButton = new Button
+        {
+            Text = "Load Config",
+            Location = new Point(650, 510),
+            Size = new Size(120, 35),
+            Anchor = AnchorStyles.Bottom | AnchorStyles.Right
+        };
+        loadConfigButton.Click += LoadConfigButton_Click;
+        
         // Add all controls to form
         this.Controls.Add(settingsGroupBox);
         this.Controls.Add(rngGroupBox);
@@ -306,6 +363,8 @@ public class MainForm : Form
         this.Controls.Add(statusGroupBox);
         this.Controls.Add(startButton);
         this.Controls.Add(stopButton);
+        this.Controls.Add(saveConfigButton);
+        this.Controls.Add(loadConfigButton);
     }
 
     private void InitializeCustomComponents()
@@ -319,6 +378,73 @@ public class MainForm : Form
         gameWorker.DoWork += GameWorker_DoWork;
         gameWorker.ProgressChanged += GameWorker_ProgressChanged;
         gameWorker.RunWorkerCompleted += GameWorker_RunWorkerCompleted;
+        
+        // Try to load default configuration
+        LoadDefaultConfig();
+    }
+
+    private void LoadDefaultConfig()
+    {
+        if (ConfigManager.ConfigExists("default.conf"))
+        {
+            var config = ConfigManager.LoadConfig("default.conf");
+            if (config != null)
+            {
+                ApplyConfigToUI(config);
+                LogMessage("Loaded default.conf configuration");
+            }
+        }
+    }
+
+    private void ApplyConfigToUI(CsrConfig config)
+    {
+        csrOnCheckBox.Checked = config.CsrOn;
+        csrBreakOnCheckBox.Checked = config.CsrBreakOn;
+        
+        if (config.TrueRngOn)
+        {
+            trueRngRadioButton.Checked = true;
+        }
+        else if (config.SetSeedOn)
+        {
+            setSeedRadioButton.Checked = true;
+            
+            // Try to find and select the seed in the combo box
+            if (config.SelectedSeed > 0)
+            {
+                string seedStr = config.SelectedSeed.ToString();
+                int index = seedComboBox.Items.IndexOf(seedStr);
+                if (index >= 0)
+                {
+                    seedComboBox.SelectedIndex = index;
+                }
+            }
+        }
+        else
+        {
+            noRngModRadioButton.Checked = true;
+        }
+        
+        sleepIntervalNumeric.Value = config.MtSleepInterval;
+    }
+
+    private CsrConfig GetConfigFromUI()
+    {
+        var config = new CsrConfig
+        {
+            CsrOn = csrOnCheckBox.Checked,
+            CsrBreakOn = csrBreakOnCheckBox.Checked,
+            TrueRngOn = trueRngRadioButton.Checked,
+            SetSeedOn = setSeedRadioButton.Checked,
+            MtSleepInterval = (int)sleepIntervalNumeric.Value
+        };
+
+        if (config.SetSeedOn && seedComboBox.SelectedItem != null)
+        {
+            config.SelectedSeed = uint.Parse(seedComboBox.SelectedItem.ToString());
+        }
+
+        return config;
     }
 
     private void CsrOnCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -338,28 +464,103 @@ public class MainForm : Form
         seedLabel.Enabled = isSeedSelected;
     }
 
+    private void LogLevelComboBox_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        currentLogLevel = logLevelComboBox.SelectedIndex switch
+        {
+            0 => LogEventLevel.Information,
+            1 => LogEventLevel.Warning,
+            2 => LogEventLevel.Error,
+            3 => LogEventLevel.Debug,
+            4 => LogEventLevel.Verbose,
+            _ => LogEventLevel.Information
+        };
+    }
+
+    private void SaveConfigButton_Click(object sender, EventArgs e)
+    {
+        using (var dialog = new SaveFileDialog())
+        {
+            dialog.Filter = "Configuration files (*.conf)|*.conf|All files (*.*)|*.*";
+            dialog.DefaultExt = "conf";
+            dialog.FileName = "default.conf";
+            dialog.InitialDirectory = ConfigManager.GetConfigDirectory();
+            dialog.Title = "Save Configuration";
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    var config = GetConfigFromUI();
+                    string filename = Path.GetFileName(dialog.FileName);
+                    ConfigManager.SaveConfig(config, filename);
+                    
+                    LogMessage($"Configuration saved: {filename}");
+                    MessageBox.Show($"Configuration saved successfully to:\n{dialog.FileName}", 
+                        "Save Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    LogMessage($"Error saving configuration: {ex.Message}");
+                    MessageBox.Show($"Failed to save configuration:\n{ex.Message}", 
+                        "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+    }
+
+    private void LoadConfigButton_Click(object sender, EventArgs e)
+    {
+        using (var dialog = new OpenFileDialog())
+        {
+            dialog.Filter = "Configuration files (*.conf)|*.conf|All files (*.*)|*.*";
+            dialog.DefaultExt = "conf";
+            dialog.InitialDirectory = ConfigManager.GetConfigDirectory();
+            dialog.Title = "Load Configuration";
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    string filename = Path.GetFileName(dialog.FileName);
+                    var config = ConfigManager.LoadConfig(filename);
+                    
+                    if (config != null)
+                    {
+                        ApplyConfigToUI(config);
+                        LogMessage($"Configuration loaded: {filename}");
+                        MessageBox.Show($"Configuration loaded successfully from:\n{dialog.FileName}", 
+                            "Load Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        LogMessage($"Failed to load configuration: {filename}");
+                        MessageBox.Show($"Failed to load configuration from:\n{dialog.FileName}", 
+                            "Load Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LogMessage($"Error loading configuration: {ex.Message}");
+                    MessageBox.Show($"Failed to load configuration:\n{ex.Message}", 
+                        "Load Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+    }
+
     private void StartButton_Click(object sender, EventArgs e)
     {
-        // Create config from UI
-        csrConfig = new CsrConfig
-        {
-            CsrOn = csrOnCheckBox.Checked,
-            CsrBreakOn = csrBreakOnCheckBox.Checked,
-            TrueRngOn = trueRngRadioButton.Checked,
-            SetSeedOn = setSeedRadioButton.Checked,
-            MtSleepInterval = (int)sleepIntervalNumeric.Value
-        };
-
-        if (csrConfig.SetSeedOn && seedComboBox.SelectedItem != null)
-        {
-            csrConfig.SelectedSeed = uint.Parse(seedComboBox.SelectedItem.ToString());
-        }
+        // Create config from UI using helper method
+        csrConfig = GetConfigFromUI();
 
         // Disable settings while running
         settingsGroupBox.Enabled = false;
         rngGroupBox.Enabled = false;
         startButton.Enabled = false;
-        stopButton.Enabled = true;
+        stopButton.Enabled = false;
+        saveConfigButton.Enabled = false;
+        loadConfigButton.Enabled = false;
         
         isRunning = true;
         cancellationTokenSource = new CancellationTokenSource();
@@ -397,6 +598,8 @@ public class MainForm : Form
         rngGroupBox.Enabled = true;
         startButton.Enabled = true;
         stopButton.Enabled = false;
+        saveConfigButton.Enabled = true;
+        loadConfigButton.Enabled = true;
     }
 
     private void GameWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -653,19 +856,59 @@ public class MainForm : Form
         }
     }
 
-    private void LogMessage(string message)
+    private void LogMessage(string message, Color? color = null)
     {
         if (logTextBox.InvokeRequired)
         {
-            logTextBox.Invoke(new Action<string>(LogMessage), message);
+            logTextBox.Invoke(new Action<string, Color?>(LogMessage), message, color);
             return;
         }
 
         string timestamp = DateTime.Now.ToString("HH:mm:ss");
-        logTextBox.AppendText($"[{timestamp}] {message}\n");
-        logTextBox.ScrollToCaret();
         
-        DiagnosticLog.Information(message);
+        // Save current selection
+        int selectionStart = logTextBox.SelectionStart;
+        int selectionLength = logTextBox.SelectionLength;
+        
+        // Move to end and add new text
+        logTextBox.SelectionStart = logTextBox.TextLength;
+        logTextBox.SelectionLength = 0;
+        
+        // Set color for the message
+        logTextBox.SelectionColor = color ?? Color.LightGreen;
+        logTextBox.AppendText($"[{timestamp}] {message}\n");
+        
+        // Restore selection
+        logTextBox.SelectionStart = selectionStart;
+        logTextBox.SelectionLength = selectionLength;
+        logTextBox.SelectionColor = logTextBox.ForeColor;
+        
+        // Scroll to bottom
+        logTextBox.SelectionStart = logTextBox.TextLength;
+        logTextBox.ScrollToCaret();
+    }
+
+    private void OnDiagnosticLogReceived(string message, LogEventLevel level)
+    {
+        // Filter messages based on selected log level
+        // Only show messages at or above the current log level
+        if (level < currentLogLevel)
+        {
+            return;
+        }
+
+        Color color = level switch
+        {
+            LogEventLevel.Fatal => Color.Red,
+            LogEventLevel.Error => Color.OrangeRed,
+            LogEventLevel.Warning => Color.Yellow,
+            LogEventLevel.Information => Color.LightGreen,
+            LogEventLevel.Debug => Color.Cyan,
+            LogEventLevel.Verbose => Color.Gray,
+            _ => Color.LightGreen
+        };
+        
+        LogMessage(message, color);
     }
 
     protected override void OnFormClosing(FormClosingEventArgs e)
@@ -687,6 +930,9 @@ public class MainForm : Form
             StopMod();
             Thread.Sleep(500); // Give time for cleanup
         }
+
+        // Unsubscribe from log events
+        DiagnosticLog.LogMessageReceived -= OnDiagnosticLogReceived;
 
         base.OnFormClosing(e);
     }

@@ -55,7 +55,7 @@ internal sealed class CsrConfigBinder : BinderBase<CsrConfig>
     }
 }
 
-internal sealed record CsrConfig
+public sealed record CsrConfig
 {
     public bool CsrOn { get; set; }
     public bool CsrBreakOn { get; set; }

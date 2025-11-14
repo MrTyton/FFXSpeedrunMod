@@ -13,6 +13,9 @@ namespace FFXCutsceneRemover.Logging;
 
 public static class DiagnosticLog
 {
+    // Event that GUI can subscribe to for real-time log messages
+    public static event Action<string, LogEventLevel> LogMessageReceived;
+
     static DiagnosticLog()
     {
         string rootPath = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) ??
@@ -36,7 +39,9 @@ public static class DiagnosticLog
                              [CallerFilePath]   string fpath = "",
                              [CallerLineNumber] int    lnb   = 0)
     {
-        Log.Fatal($"[{TrimFilePath(fpath)}:{lnb}] {mname}: {msg}");
+        string formattedMsg = $"[{TrimFilePath(fpath)}:{lnb}] {mname}: {msg}";
+        Log.Fatal(formattedMsg);
+        LogMessageReceived?.Invoke(msg, LogEventLevel.Fatal);
     }
 
     public static void Error(string                    msg,
@@ -44,7 +49,9 @@ public static class DiagnosticLog
                              [CallerFilePath]   string fpath = "",
                              [CallerLineNumber] int    lnb   = 0)
     {
-        Log.Error($"[{TrimFilePath(fpath)}:{lnb}] {mname}: {msg}");
+        string formattedMsg = $"[{TrimFilePath(fpath)}:{lnb}] {mname}: {msg}";
+        Log.Error(formattedMsg);
+        LogMessageReceived?.Invoke(msg, LogEventLevel.Error);
     }
 
     public static void Warning(string                    msg,
@@ -52,7 +59,9 @@ public static class DiagnosticLog
                                [CallerFilePath]   string fpath = "",
                                [CallerLineNumber] int    lnb   = 0)
     {
-        Log.Warning($"[{TrimFilePath(fpath)}:{lnb}] {mname}: {msg}");
+        string formattedMsg = $"[{TrimFilePath(fpath)}:{lnb}] {mname}: {msg}";
+        Log.Warning(formattedMsg);
+        LogMessageReceived?.Invoke(msg, LogEventLevel.Warning);
     }
 
     public static void Information(string                    msg,
@@ -60,7 +69,9 @@ public static class DiagnosticLog
                                    [CallerFilePath]   string fpath = "",
                                    [CallerLineNumber] int    lnb   = 0)
     {
-        Log.Information($"[{TrimFilePath(fpath)}:{lnb}] {mname}: {msg}");
+        string formattedMsg = $"[{TrimFilePath(fpath)}:{lnb}] {mname}: {msg}";
+        Log.Information(formattedMsg);
+        LogMessageReceived?.Invoke(msg, LogEventLevel.Information);
     }
 
     public static void Debug(string                    msg,
@@ -68,7 +79,9 @@ public static class DiagnosticLog
                              [CallerFilePath]   string fpath = "",
                              [CallerLineNumber] int    lnb   = 0)
     {
-        Log.Debug($"[{TrimFilePath(fpath)}:{lnb}] {mname}: {msg}");
+        string formattedMsg = $"[{TrimFilePath(fpath)}:{lnb}] {mname}: {msg}";
+        Log.Debug(formattedMsg);
+        LogMessageReceived?.Invoke(msg, LogEventLevel.Debug);
     }
 
     public static void Verbose(string                    msg,
@@ -76,6 +89,8 @@ public static class DiagnosticLog
                                [CallerFilePath]   string fpath = "",
                                [CallerLineNumber] int    lnb   = 0)
     {
-        Log.Verbose($"[{TrimFilePath(fpath)}:{lnb}] {mname}: {msg}");
+        string formattedMsg = $"[{TrimFilePath(fpath)}:{lnb}] {mname}: {msg}";
+        Log.Verbose(formattedMsg);
+        LogMessageReceived?.Invoke(msg, LogEventLevel.Verbose);
     }
 }
