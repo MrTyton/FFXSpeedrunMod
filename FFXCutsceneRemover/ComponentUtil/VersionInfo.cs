@@ -19,7 +19,7 @@ public static class VersionInfo
     /// <summary>
     /// Patch version number.
     /// </summary>
-    public const int PatchVersion = 0;
+    public const int PatchVersion = 1;
 
     /// <summary>
     /// Full version string in format "1.7.0"
