@@ -309,4 +309,48 @@ public static class GameConstants
         3553426523,
         3556394350
     };
+
+    // Character state values
+    /// <summary>
+    /// Value indicating that a character is enabled/active in the party.
+    /// </summary>
+    public const byte CharacterEnabled = 17;
+
+    // Inventory and item constants
+    /// <summary>
+    /// Size of the items array (in bytes).
+    /// </summary>
+    public const int ItemsArraySize = 224;
+
+    /// <summary>
+    /// Size of the items quantity array.
+    /// </summary>
+    public const int ItemsQtyArraySize = 112;
+
+    /// <summary>
+    /// Size of the battle reward items array.
+    /// </summary>
+    public const int BattleRewardItemsSize = 16;
+
+    /// <summary>
+    /// Size of the battle reward items quantity array.
+    /// </summary>
+    public const int BattleRewardItemsQtySize = 8;
+
+    /// <summary>
+    /// Length of each equipment array item.
+    /// </summary>
+    public const int EquipmentArrayLength = 22;
+
+    // Dialog box constants
+    /// <summary>
+    /// Size of the dialog box structure (in bytes).
+    /// </summary>
+    public const int DialogBoxStructSize = 312;
+
+    // Airship constants
+    /// <summary>
+    /// Value to add/subtract from airship destinations for Sin.
+    /// </summary>
+    public const short AirshipSinValue = 512;
 }

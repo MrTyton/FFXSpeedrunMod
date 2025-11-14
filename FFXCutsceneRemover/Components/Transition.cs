@@ -504,10 +504,10 @@ public class Transition
 
         if (AddRewardItems)
         {
-            byte[] items = process.ReadBytes(MemoryWatchers.ItemsStart.Address, 224);
-            byte[] itemsQty = process.ReadBytes(MemoryWatchers.ItemsQtyStart.Address, 112);
-            byte[] itemRewards = process.ReadBytes(MemoryWatchers.BattleRewardItem1.Address, 16);
-            byte[] itemRewardsQty = process.ReadBytes(MemoryWatchers.BattleRewardItemQty1.Address, 8);
+            byte[] items = process.ReadBytes(MemoryWatchers.ItemsStart.Address, GameConstants.ItemsArraySize);
+            byte[] itemsQty = process.ReadBytes(MemoryWatchers.ItemsQtyStart.Address, GameConstants.ItemsQtyArraySize);
+            byte[] itemRewards = process.ReadBytes(MemoryWatchers.BattleRewardItem1.Address, GameConstants.BattleRewardItemsSize);
+            byte[] itemRewardsQty = process.ReadBytes(MemoryWatchers.BattleRewardItemQty1.Address, GameConstants.BattleRewardItemsQtySize);
 
             int rewardCount = MemoryWatchers.BattleRewardItemCount.Current;
 
@@ -517,7 +517,7 @@ public class Transition
             {
                 alreadyExists = false;
 
-                for (int j = 0; j < 112; j++)
+                for (int j = 0; j < GameConstants.ItemsQtyArraySize; j++)
                 {
                     if (items[2 * j] == itemRewards[2 * i] && itemsQty[j] > 0)
                     {
@@ -530,9 +530,9 @@ public class Transition
 
                 if (alreadyExists == false)
                 {
-                    for (int j = 0; j < 112; j++)
+                    for (int j = 0; j < GameConstants.ItemsQtyArraySize; j++)
                     {
-                        if (items[2 * j] == 0xFF && itemsQty[j] == 0)
+                        if (items[2 * j] == ItemSlot.EmptyItemSlot && itemsQty[j] == 0)
                         {
                             alreadyExists = true;
                             items[2 * j] = itemRewards[2 * i];
@@ -551,12 +551,12 @@ public class Transition
 
         // Clear Battle Reward Items
         WriteValue<byte>(MemoryWatchers.BattleRewardItemCount, 0);
-        process.WriteBytes(MemoryWatchers.BattleRewardItem1.Address, Enumerable.Repeat((byte)0x00, 16).ToArray<byte>());
-        process.WriteBytes(MemoryWatchers.BattleRewardItemQty1.Address, Enumerable.Repeat((byte)0x00, 8).ToArray<byte>());
+        process.WriteBytes(MemoryWatchers.BattleRewardItem1.Address, Enumerable.Repeat((byte)0x00, GameConstants.BattleRewardItemsSize).ToArray<byte>());
+        process.WriteBytes(MemoryWatchers.BattleRewardItemQty1.Address, Enumerable.Repeat((byte)0x00, GameConstants.BattleRewardItemsQtySize).ToArray<byte>());
 
         // Clear Battle Reward Equipment -- Equipment Arrays are 22 bytes long
         WriteValue<byte>(MemoryWatchers.BattleRewardEquipCount, 0);
-        process.WriteBytes(MemoryWatchers.BattleRewardEquip1.Address, Enumerable.Repeat((byte)0x00, 22 * 8).ToArray<byte>());
+        process.WriteBytes(MemoryWatchers.BattleRewardEquip1.Address, Enumerable.Repeat((byte)0x00, GameConstants.EquipmentArrayLength * 8).ToArray<byte>());
 
         // Clear AP Flags
         WriteBytes(MemoryWatchers.CharacterAPFlags, new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
@@ -564,8 +564,8 @@ public class Transition
 
     private void AddItems((byte itemref, byte itemqty)[] AddItemsToInventory)
     {
-        byte[] items = process.ReadBytes(MemoryWatchers.ItemsStart.Address, 224);
-        byte[] itemsQty = process.ReadBytes(MemoryWatchers.ItemsQtyStart.Address, 112);
+        byte[] items = process.ReadBytes(MemoryWatchers.ItemsStart.Address, GameConstants.ItemsArraySize);
+        byte[] itemsQty = process.ReadBytes(MemoryWatchers.ItemsQtyStart.Address, GameConstants.ItemsQtyArraySize);
 
         bool alreadyExists;
 
@@ -573,7 +573,7 @@ public class Transition
         {
             alreadyExists = false;
 
-            for (int j = 0; j < 112; j++)
+            for (int j = 0; j < GameConstants.ItemsQtyArraySize; j++)
             {
                 if (items[2 * j] == AddItemsToInventory[i].itemref)
                 {
@@ -586,13 +586,13 @@ public class Transition
 
             if (alreadyExists == false)
             {
-                for (int j = 0; j < 112; j++)
+                for (int j = 0; j < GameConstants.ItemsQtyArraySize; j++)
                 {
-                    if (items[2 * j] == 0xFF && itemsQty[j] == 0)
+                    if (items[2 * j] == ItemSlot.EmptyItemSlot && itemsQty[j] == 0)
                     {
                         DiagnosticLog.Information($"Adding Item: {AddItemsToInventory[i].itemref}");
                         items[2 * j] = AddItemsToInventory[i].itemref;
-                        items[2 * j + 1] = 0x20;
+                        items[2 * j + 1] = ItemSlot.ItemFlag;
                         itemsQty[j] = AddItemsToInventory[i].itemqty;
 
                         break;
@@ -607,45 +607,45 @@ public class Transition
 
     private void AddSin()
     {
-        WriteValue<short>(MemoryWatchers.AirshipDestinations, (short)(MemoryWatchers.AirshipDestinations.Current + 512));
+        WriteValue<short>(MemoryWatchers.AirshipDestinations, (short)(MemoryWatchers.AirshipDestinations.Current + GameConstants.AirshipSinValue));
     }
 
     private void RemoveSin()
     {
-        WriteValue<short>(MemoryWatchers.AirshipDestinations, (short)(MemoryWatchers.AirshipDestinations.Current - 512));
+        WriteValue<short>(MemoryWatchers.AirshipDestinations, (short)(MemoryWatchers.AirshipDestinations.Current - GameConstants.AirshipSinValue));
     }
 
     private void PartyOffScreen()
     {
-        if (MemoryWatchers.EnableTidus.Current == 17)
+        if (MemoryWatchers.EnableTidus.Current == GameConstants.CharacterEnabled)
         {
             SetActorPosition(1, PartyTarget_x, PartyTarget_y, PartyTarget_z);
         }
-        if (MemoryWatchers.EnableYuna.Current == 17)
+        if (MemoryWatchers.EnableYuna.Current == GameConstants.CharacterEnabled)
         {
             SetActorPosition(2, PartyTarget_x, PartyTarget_y, PartyTarget_z);
         }
-        if (MemoryWatchers.EnableAuron.Current == 17)
+        if (MemoryWatchers.EnableAuron.Current == GameConstants.CharacterEnabled)
         {
             SetActorPosition(3, PartyTarget_x, PartyTarget_y, PartyTarget_z);
         }
-        if (MemoryWatchers.EnableKimahri.Current == 17)
+        if (MemoryWatchers.EnableKimahri.Current == GameConstants.CharacterEnabled)
         {
             SetActorPosition(4, PartyTarget_x, PartyTarget_y, PartyTarget_z);
         }
-        if (MemoryWatchers.EnableWakka.Current == 17)
+        if (MemoryWatchers.EnableWakka.Current == GameConstants.CharacterEnabled)
         {
             SetActorPosition(5, PartyTarget_x, PartyTarget_y, PartyTarget_z);
         }
-        if (MemoryWatchers.EnableLulu.Current == 17)
+        if (MemoryWatchers.EnableLulu.Current == GameConstants.CharacterEnabled)
         {
             SetActorPosition(6, PartyTarget_x, PartyTarget_y, PartyTarget_z);
         }
-        if (MemoryWatchers.EnableRikku.Current == 17)
+        if (MemoryWatchers.EnableRikku.Current == GameConstants.CharacterEnabled)
         {
             SetActorPosition(7, PartyTarget_x, PartyTarget_y, PartyTarget_z);
         }
-        if (MemoryWatchers.EnableSeymour.Current == 17)
+        if (MemoryWatchers.EnableSeymour.Current == GameConstants.CharacterEnabled)
         {
             SetActorPosition(8, PartyTarget_x, PartyTarget_y, PartyTarget_z);
         }
@@ -665,7 +665,7 @@ public class Transition
 
             for (int i = 0; i < ActorCount; i++)
             {
-                MemoryWatcher<short> characterIndex = new MemoryWatcher<short>(new DeepPointer(new IntPtr(baseAddress + 0x1FC44E4), new int[] { 0x00 + 0x880 * i }));
+                MemoryWatcher<short> characterIndex = new MemoryWatcher<short>(new DeepPointer(new IntPtr(baseAddress + 0x1FC44E4), new int[] { ActorOffsets.ActorIndex + ActorOffsets.ActorStride * i }));
                 characterIndex.Update(process);
 
                 short ActorID = characterIndex.Current;
@@ -674,12 +674,12 @@ public class Transition
                 {
                     actorFound = true;
 
-                    MemoryWatcher<float> characterPos_x = new MemoryWatcher<float>(new DeepPointer(new IntPtr(baseAddress + 0x1FC44E4), new int[] { 0x0C + 0x880 * i }));
-                    MemoryWatcher<float> characterPos_y = new MemoryWatcher<float>(new DeepPointer(new IntPtr(baseAddress + 0x1FC44E4), new int[] { 0x10 + 0x880 * i }));
-                    MemoryWatcher<float> characterPos_z = new MemoryWatcher<float>(new DeepPointer(new IntPtr(baseAddress + 0x1FC44E4), new int[] { 0x14 + 0x880 * i }));
-                    MemoryWatcher<float> characterPos_floor = new MemoryWatcher<float>(new DeepPointer(new IntPtr(baseAddress + 0x1FC44E4), new int[] { 0x16C + 0x880 * i }));
-                    MemoryWatcher<float> characterPos_rot = new MemoryWatcher<float>(new DeepPointer(new IntPtr(baseAddress + 0x1FC44E4), new int[] { 0x168 + 0x880 * i }));
-                    MemoryWatcher<short> characterPos_var1 = new MemoryWatcher<short>(new DeepPointer(new IntPtr(baseAddress + 0x1FC44E4), new int[] { 0x824 + 0x880 * i }));
+                    MemoryWatcher<float> characterPos_x = new MemoryWatcher<float>(new DeepPointer(new IntPtr(baseAddress + 0x1FC44E4), new int[] { ActorOffsets.ActorPosX + ActorOffsets.ActorStride * i }));
+                    MemoryWatcher<float> characterPos_y = new MemoryWatcher<float>(new DeepPointer(new IntPtr(baseAddress + 0x1FC44E4), new int[] { ActorOffsets.ActorPosY + ActorOffsets.ActorStride * i }));
+                    MemoryWatcher<float> characterPos_z = new MemoryWatcher<float>(new DeepPointer(new IntPtr(baseAddress + 0x1FC44E4), new int[] { ActorOffsets.ActorPosZ + ActorOffsets.ActorStride * i }));
+                    MemoryWatcher<float> characterPos_floor = new MemoryWatcher<float>(new DeepPointer(new IntPtr(baseAddress + 0x1FC44E4), new int[] { ActorOffsets.ActorFloor + ActorOffsets.ActorStride * i }));
+                    MemoryWatcher<float> characterPos_rot = new MemoryWatcher<float>(new DeepPointer(new IntPtr(baseAddress + 0x1FC44E4), new int[] { 0x168 + ActorOffsets.ActorStride * i }));
+                    MemoryWatcher<short> characterPos_var1 = new MemoryWatcher<short>(new DeepPointer(new IntPtr(baseAddress + 0x1FC44E4), new int[] { 0x824 + ActorOffsets.ActorStride * i }));
 
                     if (!(Target_x is null))
                     {

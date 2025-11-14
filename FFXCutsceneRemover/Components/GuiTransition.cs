@@ -13,7 +13,7 @@ class GuiTransition : Transition
     static private List<short> CutsceneAltList2 = new List<short>(new short[] { 4449, 4450 });
 
     byte dialogBoxIndex = 2;
-    int dialogBoxStructSize = 312;
+    int dialogBoxStructSize = GameConstants.DialogBoxStructSize;
 
     public override void Execute(string defaultDescription = "")
     {
@@ -21,16 +21,16 @@ class GuiTransition : Transition
 
         byte[] dialogBoxStruct = process.ReadBytes(MemoryWatchers.DialogueBoxStructs.Address + dialogBoxIndex * dialogBoxStructSize, dialogBoxStructSize);
 
-        byte dialogBoxStatus = dialogBoxStruct[0x01];
-        byte dialogBoxSelection = dialogBoxStruct[0x18];
+        byte dialogBoxStatus = dialogBoxStruct[DialogBoxConstants.StatusOffset];
+        byte dialogBoxSelection = dialogBoxStruct[DialogBoxConstants.SelectionOffset];
 
-        if (MemoryWatchers.Dialogue1.Current == 95 && dialogBoxStatus == DialogBoxStatus.Active && dialogBoxSelection == DialogBoxSelection.FirstOption && Stage == 0)
+        if (MemoryWatchers.Dialogue1.Current == BattleConstants.DialogueTriggerGui && dialogBoxStatus == DialogBoxStatus.Active && dialogBoxSelection == DialogBoxSelection.FirstOption && Stage == 0)
         {
             process.Suspend();
 
             new Transition
             {
-                EncounterMapID = 27,
+                EncounterMapID = BattleConstants.EncounterMapGui1,
                 EncounterFormationID2 = 0,
                 ScriptedBattleFlag1 = 1,
                 ScriptedBattleFlag2 = 1,
@@ -50,11 +50,11 @@ class GuiTransition : Transition
 
             process.Resume();
         }
-        else if (MemoryWatchers.BattleState2.Current == 22 && Stage == 1)
+        else if (MemoryWatchers.BattleState2.Current == BattleConstants.BattleState2InBattle && Stage == 1)
         {
             Stage += 1;
         }
-        else if (MemoryWatchers.BattleState2.Current == 0 && Stage == 2)
+        else if (MemoryWatchers.BattleState2.Current == BattleConstants.BattleState2NotInBattle && Stage == 2)
         {
             process.Suspend();
 
@@ -64,7 +64,7 @@ class GuiTransition : Transition
             {
                 RoomNumber = 247,
                 Storyline = 865,
-                EncounterMapID = 29,
+                EncounterMapID = BattleConstants.EncounterMapGui2,
                 EncounterFormationID2 = 0,
                 ScriptedBattleFlag1 = 0,
                 ScriptedBattleFlag2 = 1,
