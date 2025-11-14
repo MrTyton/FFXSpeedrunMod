@@ -318,7 +318,7 @@ public class MainForm : Form
         {
             Text = "Status",
             Location = new Point(10, 280),
-            Size = new Size(760, 220),
+            Size = new Size(760, 215),
             Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom
         };
 
@@ -350,7 +350,7 @@ public class MainForm : Form
         logTextBox = new RichTextBox
         {
             Location = new Point(20, 110),
-            Size = new Size(720, 150),
+            Size = new Size(720, 90),
             Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom,
             ReadOnly = true,
             BackColor = Color.Black,
@@ -379,7 +379,7 @@ public class MainForm : Form
         {
             Text = "Stop Mod",
             Location = new Point(140, 510),
-            Size = new Size(120, 35),
+            Size = new Size(200, 35),
             Enabled = false,
             Anchor = AnchorStyles.Bottom | AnchorStyles.Left
         };
@@ -898,11 +898,13 @@ public class MainForm : Form
                 connectionStatusLabel.Text = "Connection: " + message;
                 connectionStatusLabel.ForeColor = Color.Orange;
                 gameStatusLabel.Text = "Game Status: Waiting for FFX";
+                stopButton.Text = "Stop Mod";
                 break;
             case 1: // Connected
                 connectionStatusLabel.Text = "Connection: Connected";
                 connectionStatusLabel.ForeColor = Color.Green;
                 gameStatusLabel.Text = "Game Status: FFX Running";
+                stopButton.Text = "Stop Mod (Close FFX First)";
                 LogMessage(message);
                 break;
             case 2: // Running
@@ -912,6 +914,7 @@ public class MainForm : Form
                 break;
             case 3: // Stopped
                 gameStatusLabel.Text = "Game Status: " + message;
+                stopButton.Text = "Stop Mod";
                 break;
             case 10: // Seed injection
                 LogMessage(message);
