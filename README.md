@@ -22,16 +22,9 @@ If you encounter any bugs or have any questions, please open an issue on GitHub 
 
 ## Installation & Usage
 
-### Download Options
-
-Two versions are available on the [releases page](https://github.com/MrTyton/FFXSpeedrunMod/releases):
-
-1. **Self-Contained** (Recommended): ~163 MB, no prerequisites required
-2. **Framework-Dependent**: ~800 KB, requires [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0)
-
 ### Getting Started
 
-1. Download your preferred version from the releases page
+1. Download your preferred version from the [releases page](https://github.com/HannibalSnekter/FFXSpeedrunMod/releases)
 2. Extract the files to a folder of your choice
 3. Launch `FFXSpeedrunMod.exe`
 4. Configure your settings using the GUI or CLI
