@@ -137,7 +137,7 @@ public class MainForm : Form
                 // When running with dotnet run, we get a .dll, look for the .exe
                 exePath = exePath.Replace(".dll", ".exe");
             }
-            
+
             if (File.Exists(exePath))
             {
                 this.Icon = Icon.ExtractAssociatedIcon(exePath);
