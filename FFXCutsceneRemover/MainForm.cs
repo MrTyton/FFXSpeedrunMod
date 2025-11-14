@@ -29,22 +29,25 @@ public class MainForm : Form
     private Label sleepIntervalLabel;
     private ComboBox logLevelComboBox;
     private Label logLevelLabel;
-    
+
     private GroupBox statusGroupBox;
     private Label connectionStatusLabel;
     private Label gameStatusLabel;
     private Label modStatusLabel;
     private RichTextBox logTextBox;
-    
+
     private Button startButton;
     private Button stopButton;
     private Button saveConfigButton;
     private Button loadConfigButton;
-    
+
+    // ToolTip component
+    private ToolTip toolTip;
+
     // Background worker for game monitoring
     private BackgroundWorker gameWorker;
     private CancellationTokenSource cancellationTokenSource;
-    
+
     // Application state
     private CsrConfig csrConfig;
     private Process game;
@@ -52,7 +55,7 @@ public class MainForm : Form
     private RNGMod rngMod;
     private bool isRunning = false;
     private LogEventLevel currentLogLevel = LogEventLevel.Information;
-    
+
     private static readonly uint[] PCSeeds = new uint[] {
         2804382593, 2807284884, 2810252711, 2813220538, 2816122829, 2819090656,
         2822058483, 2825026310, 2827928601, 2830896428, 2833864255, 2836766546,
@@ -97,10 +100,10 @@ public class MainForm : Form
     {
         InitializeComponent();
         InitializeCustomComponents();
-        
+
         // Subscribe to diagnostic log events
         DiagnosticLog.LogMessageReceived += OnDiagnosticLogReceived;
-        
+
         DiagnosticLog.Information("FFX Speedrun Mod GUI started");
     }
 
@@ -112,7 +115,16 @@ public class MainForm : Form
         this.StartPosition = FormStartPosition.CenterScreen;
         this.FormBorderStyle = FormBorderStyle.FixedSingle;
         this.MaximizeBox = false;
-        
+
+        // Initialize ToolTip
+        toolTip = new ToolTip
+        {
+            AutoPopDelay = 10000,
+            InitialDelay = 500,
+            ReshowDelay = 200,
+            ShowAlways = true
+        };
+
         // Settings GroupBox
         settingsGroupBox = new GroupBox
         {
@@ -121,7 +133,7 @@ public class MainForm : Form
             Size = new Size(370, 110),
             Anchor = AnchorStyles.Top | AnchorStyles.Left
         };
-        
+
         // Cutscene Remover checkbox
         csrOnCheckBox = new CheckBox
         {
@@ -131,7 +143,8 @@ public class MainForm : Form
             Checked = true
         };
         csrOnCheckBox.CheckedChanged += CsrOnCheckBox_CheckedChanged;
-        
+        toolTip.SetToolTip(csrOnCheckBox, "Automatically skip cutscenes during gameplay");
+
         // CSR Break checkbox
         csrBreakOnCheckBox = new CheckBox
         {
@@ -141,11 +154,12 @@ public class MainForm : Form
             Checked = false,
             Enabled = true
         };
-        
+        toolTip.SetToolTip(csrBreakOnCheckBox, "Take a break during the run after Guadosalam");
+
         // Add controls to settings group
         settingsGroupBox.Controls.Add(csrOnCheckBox);
         settingsGroupBox.Controls.Add(csrBreakOnCheckBox);
-        
+
         // RNG GroupBox
         rngGroupBox = new GroupBox
         {
@@ -154,7 +168,7 @@ public class MainForm : Form
             Size = new Size(370, 110),
             Anchor = AnchorStyles.Top | AnchorStyles.Left
         };
-        
+
         // No RNG Mod radio button (default)
         noRngModRadioButton = new RadioButton
         {
@@ -164,7 +178,8 @@ public class MainForm : Form
             Checked = true
         };
         noRngModRadioButton.CheckedChanged += RngRadioButton_CheckedChanged;
-        
+        toolTip.SetToolTip(noRngModRadioButton, "Use the game's default RNG behavior");
+
         // True RNG radio button
         trueRngRadioButton = new RadioButton
         {
@@ -174,7 +189,8 @@ public class MainForm : Form
             Checked = false
         };
         trueRngRadioButton.CheckedChanged += RngRadioButton_CheckedChanged;
-        
+        toolTip.SetToolTip(trueRngRadioButton, "Use truly random RNG");
+
         // Set Seed radio button
         setSeedRadioButton = new RadioButton
         {
@@ -184,7 +200,8 @@ public class MainForm : Form
             Checked = false
         };
         setSeedRadioButton.CheckedChanged += RngRadioButton_CheckedChanged;
-        
+        toolTip.SetToolTip(setSeedRadioButton, "Use a specific RNG seed");
+
         // Seed dropdown
         seedLabel = new Label
         {
@@ -193,7 +210,7 @@ public class MainForm : Form
             Size = new Size(50, 20),
             Enabled = false
         };
-        
+
         seedComboBox = new ComboBox
         {
             Location = new Point(170, 80),
@@ -206,14 +223,15 @@ public class MainForm : Form
             seedComboBox.Items.Add(seed.ToString());
         }
         seedComboBox.SelectedIndex = 0;
-        
+        toolTip.SetToolTip(seedComboBox, "Select a specific RNG seed value (only active when 'Set Seed' is selected)");
+
         // Add controls to RNG group
         rngGroupBox.Controls.Add(noRngModRadioButton);
         rngGroupBox.Controls.Add(trueRngRadioButton);
         rngGroupBox.Controls.Add(setSeedRadioButton);
         rngGroupBox.Controls.Add(seedLabel);
         rngGroupBox.Controls.Add(seedComboBox);
-        
+
         // Advanced Settings GroupBox
         var advancedGroupBox = new GroupBox
         {
@@ -222,7 +240,7 @@ public class MainForm : Form
             Size = new Size(370, 110),
             Anchor = AnchorStyles.Top | AnchorStyles.Left
         };
-        
+
         // Sleep interval
         sleepIntervalLabel = new Label
         {
@@ -230,7 +248,7 @@ public class MainForm : Form
             Location = new Point(20, 32),
             Size = new Size(200, 20)
         };
-        
+
         sleepIntervalNumeric = new NumericUpDown
         {
             Location = new Point(230, 30),
@@ -239,7 +257,8 @@ public class MainForm : Form
             Maximum = 1000,
             Value = 16
         };
-        
+        toolTip.SetToolTip(sleepIntervalNumeric, "How often (in milliseconds) the mod checks game state. Lower = more responsive, higher = less CPU usage");
+
         // Log level
         logLevelLabel = new Label
         {
@@ -247,38 +266,45 @@ public class MainForm : Form
             Location = new Point(20, 62),
             Size = new Size(70, 20)
         };
-        
+
         logLevelComboBox = new ComboBox
         {
             Location = new Point(100, 60),
             Size = new Size(150, 20),
             DropDownStyle = ComboBoxStyle.DropDownList
         };
-        logLevelComboBox.Items.AddRange(new object[] 
-        { 
-            "Information", 
-            "Warning", 
+        logLevelComboBox.Items.AddRange(new object[]
+        {
+            "Information",
+            "Warning",
             "Error",
             "Debug",
             "Verbose"
         });
         logLevelComboBox.SelectedIndex = 0; // Default to Information
         logLevelComboBox.SelectedIndexChanged += LogLevelComboBox_SelectedIndexChanged;
-        
+        toolTip.SetToolTip(logLevelComboBox,
+            "Minimum log level to display:\n" +
+            "• Information - Standard operational messages\n" +
+            "• Warning - Potential issues that don't stop execution\n" +
+            "• Error - Serious problems and failures\n" +
+            "• Debug - Detailed diagnostic information\n" +
+            "• Verbose - All messages including very detailed trace info");
+
         advancedGroupBox.Controls.Add(sleepIntervalLabel);
         advancedGroupBox.Controls.Add(sleepIntervalNumeric);
         advancedGroupBox.Controls.Add(logLevelLabel);
         advancedGroupBox.Controls.Add(logLevelComboBox);
-        
+
         // Status GroupBox
         statusGroupBox = new GroupBox
         {
             Text = "Status",
-            Location = new Point(10, 220),
-            Size = new Size(760, 280),
+            Location = new Point(10, 250),
+            Size = new Size(760, 250),
             Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom
         };
-        
+
         connectionStatusLabel = new Label
         {
             Text = "Connection: Not Connected",
@@ -286,21 +312,24 @@ public class MainForm : Form
             Size = new Size(720, 20),
             ForeColor = Color.Red
         };
-        
+        toolTip.SetToolTip(connectionStatusLabel, "Shows whether the mod is connected to the FFX process");
+
         gameStatusLabel = new Label
         {
             Text = "Game Status: Waiting for FFX",
             Location = new Point(20, 55),
             Size = new Size(720, 20)
         };
-        
+        toolTip.SetToolTip(gameStatusLabel, "Shows the current game state and progress");
+
         modStatusLabel = new Label
         {
             Text = "Mod Status: Stopped",
             Location = new Point(20, 80),
             Size = new Size(720, 20)
         };
-        
+        toolTip.SetToolTip(modStatusLabel, "Shows what the mod is currently doing");
+
         logTextBox = new RichTextBox
         {
             Location = new Point(20, 110),
@@ -311,12 +340,13 @@ public class MainForm : Form
             ForeColor = Color.LightGreen,
             Font = new Font("Consolas", 9)
         };
-        
+        toolTip.SetToolTip(logTextBox, "Displays diagnostic messages and mod activity");
+
         statusGroupBox.Controls.Add(connectionStatusLabel);
         statusGroupBox.Controls.Add(gameStatusLabel);
         statusGroupBox.Controls.Add(modStatusLabel);
         statusGroupBox.Controls.Add(logTextBox);
-        
+
         // Buttons
         startButton = new Button
         {
@@ -326,7 +356,8 @@ public class MainForm : Form
             Anchor = AnchorStyles.Bottom | AnchorStyles.Left
         };
         startButton.Click += StartButton_Click;
-        
+        toolTip.SetToolTip(startButton, "Start the FFX Speedrun Mod with current settings");
+
         stopButton = new Button
         {
             Text = "Stop Mod",
@@ -336,7 +367,8 @@ public class MainForm : Form
             Anchor = AnchorStyles.Bottom | AnchorStyles.Left
         };
         stopButton.Click += StopButton_Click;
-        
+        toolTip.SetToolTip(stopButton, "Stop the mod and disconnect from the game");
+
         // Config buttons
         saveConfigButton = new Button
         {
@@ -346,7 +378,8 @@ public class MainForm : Form
             Anchor = AnchorStyles.Bottom | AnchorStyles.Right
         };
         saveConfigButton.Click += SaveConfigButton_Click;
-        
+        toolTip.SetToolTip(saveConfigButton, "Save current settings to a configuration file");
+
         loadConfigButton = new Button
         {
             Text = "Load Config",
@@ -355,7 +388,8 @@ public class MainForm : Form
             Anchor = AnchorStyles.Bottom | AnchorStyles.Right
         };
         loadConfigButton.Click += LoadConfigButton_Click;
-        
+        toolTip.SetToolTip(loadConfigButton, "Load settings from a saved configuration file");
+
         // Add all controls to form
         this.Controls.Add(settingsGroupBox);
         this.Controls.Add(rngGroupBox);
@@ -378,7 +412,7 @@ public class MainForm : Form
         gameWorker.DoWork += GameWorker_DoWork;
         gameWorker.ProgressChanged += GameWorker_ProgressChanged;
         gameWorker.RunWorkerCompleted += GameWorker_RunWorkerCompleted;
-        
+
         // Try to load default configuration
         LoadDefaultConfig();
     }
@@ -400,7 +434,7 @@ public class MainForm : Form
     {
         csrOnCheckBox.Checked = config.CsrOn;
         csrBreakOnCheckBox.Checked = config.CsrBreakOn;
-        
+
         if (config.TrueRngOn)
         {
             trueRngRadioButton.Checked = true;
@@ -408,7 +442,7 @@ public class MainForm : Form
         else if (config.SetSeedOn)
         {
             setSeedRadioButton.Checked = true;
-            
+
             // Try to find and select the seed in the combo box
             if (config.SelectedSeed > 0)
             {
@@ -424,7 +458,7 @@ public class MainForm : Form
         {
             noRngModRadioButton.Checked = true;
         }
-        
+
         sleepIntervalNumeric.Value = config.MtSleepInterval;
     }
 
@@ -494,15 +528,15 @@ public class MainForm : Form
                     var config = GetConfigFromUI();
                     string filename = Path.GetFileName(dialog.FileName);
                     ConfigManager.SaveConfig(config, filename);
-                    
+
                     LogMessage($"Configuration saved: {filename}");
-                    MessageBox.Show($"Configuration saved successfully to:\n{dialog.FileName}", 
+                    MessageBox.Show($"Configuration saved successfully to:\n{dialog.FileName}",
                         "Save Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (Exception ex)
                 {
                     LogMessage($"Error saving configuration: {ex.Message}");
-                    MessageBox.Show($"Failed to save configuration:\n{ex.Message}", 
+                    MessageBox.Show($"Failed to save configuration:\n{ex.Message}",
                         "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -524,25 +558,25 @@ public class MainForm : Form
                 {
                     string filename = Path.GetFileName(dialog.FileName);
                     var config = ConfigManager.LoadConfig(filename);
-                    
+
                     if (config != null)
                     {
                         ApplyConfigToUI(config);
                         LogMessage($"Configuration loaded: {filename}");
-                        MessageBox.Show($"Configuration loaded successfully from:\n{dialog.FileName}", 
+                        MessageBox.Show($"Configuration loaded successfully from:\n{dialog.FileName}",
                             "Load Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
                     {
                         LogMessage($"Failed to load configuration: {filename}");
-                        MessageBox.Show($"Failed to load configuration from:\n{dialog.FileName}", 
+                        MessageBox.Show($"Failed to load configuration from:\n{dialog.FileName}",
                             "Load Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 catch (Exception ex)
                 {
                     LogMessage($"Error loading configuration: {ex.Message}");
-                    MessageBox.Show($"Failed to load configuration:\n{ex.Message}", 
+                    MessageBox.Show($"Failed to load configuration:\n{ex.Message}",
                         "Load Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -561,10 +595,10 @@ public class MainForm : Form
         stopButton.Enabled = false;
         saveConfigButton.Enabled = false;
         loadConfigButton.Enabled = false;
-        
+
         isRunning = true;
         cancellationTokenSource = new CancellationTokenSource();
-        
+
         LogMessage("Starting FFX Speedrun Mod...");
         LogMessage($"CSR: {csrConfig.CsrOn}, CSR Break: {csrConfig.CsrBreakOn}");
         LogMessage($"True RNG: {csrConfig.TrueRngOn}, Set Seed: {csrConfig.SetSeedOn}");
@@ -572,10 +606,10 @@ public class MainForm : Form
         {
             LogMessage($"Selected Seed: {csrConfig.SelectedSeed}");
         }
-        
+
         modStatusLabel.Text = "Mod Status: Starting...";
         modStatusLabel.ForeColor = Color.Orange;
-        
+
         // Start background worker
         gameWorker.RunWorkerAsync();
     }
@@ -589,11 +623,11 @@ public class MainForm : Form
     {
         isRunning = false;
         cancellationTokenSource?.Cancel();
-        
+
         LogMessage("Stopping mod...");
         modStatusLabel.Text = "Mod Status: Stopped";
         modStatusLabel.ForeColor = Color.Gray;
-        
+
         settingsGroupBox.Enabled = true;
         rngGroupBox.Enabled = true;
         startButton.Enabled = true;
@@ -605,7 +639,7 @@ public class MainForm : Form
     private void GameWorker_DoWork(object sender, DoWorkEventArgs e)
     {
         var worker = sender as BackgroundWorker;
-        
+
         // Try to connect to game
         while (isRunning && game == null)
         {
@@ -650,16 +684,16 @@ public class MainForm : Form
         // Main game loop
         bool newGameSetUp = false;
         bool seedInjected = false;
-        
-        var BreakTransition = new BreakTransition 
-        { 
-            ForceLoad = false, 
-            Description = "Break Setup", 
-            ConsoleOutput = false, 
-            Suspendable = false, 
-            Repeatable = true 
+
+        var BreakTransition = new BreakTransition
+        {
+            ForceLoad = false,
+            Description = "Break Setup",
+            ConsoleOutput = false,
+            Suspendable = false,
+            Repeatable = true
         };
-        
+
         while (isRunning && !game.HasExited)
         {
             try
@@ -667,18 +701,18 @@ public class MainForm : Form
                 MemoryWatchers.Watchers.UpdateAll(game);
 
                 // New game setup logic
-                if (!newGameSetUp && MemoryWatchers.RoomNumber.Current == 0 && 
+                if (!newGameSetUp && MemoryWatchers.RoomNumber.Current == 0 &&
                     MemoryWatchers.Storyline.Current == 0 && MemoryWatchers.Dialogue1.Current == 6)
                 {
                     if (csrConfig.SetSeedOn)
                     {
                         worker.ReportProgress(10, $"Injecting Seed {csrConfig.SelectedSeed}");
-                        new Transition 
-                        { 
-                            ForceLoad = false, 
-                            SetSeed = true, 
-                            SetSeedValue = unchecked((int)csrConfig.SelectedSeed), 
-                            RoomNumberAlt = (short)Array.IndexOf(PCSeeds, csrConfig.SelectedSeed) 
+                        new Transition
+                        {
+                            ForceLoad = false,
+                            SetSeed = true,
+                            SetSeedValue = unchecked((int)csrConfig.SelectedSeed),
+                            RoomNumberAlt = (short)Array.IndexOf(PCSeeds, csrConfig.SelectedSeed)
                         }.Execute();
                         seedInjected = true;
                     }
@@ -701,7 +735,7 @@ public class MainForm : Form
 
                     newGameSetUp = true;
                 }
-                
+
                 if (newGameSetUp && MemoryWatchers.RoomNumber.Current == 23)
                 {
                     newGameSetUp = false;
@@ -788,7 +822,7 @@ public class MainForm : Form
     private void GameWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
     {
         string message = e.UserState as string;
-        
+
         switch (e.ProgressPercentage)
         {
             case 0: // Waiting for game
@@ -824,17 +858,17 @@ public class MainForm : Form
         if (e.Error != null)
         {
             LogMessage($"Error: {e.Error.Message}");
-            MessageBox.Show($"An error occurred: {e.Error.Message}", "Error", 
+            MessageBox.Show($"An error occurred: {e.Error.Message}", "Error",
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
-        
+
         game = null;
         cutsceneRemover = null;
         rngMod = null;
-        
+
         connectionStatusLabel.Text = "Connection: Disconnected";
         connectionStatusLabel.ForeColor = Color.Red;
-        
+
         if (isRunning)
         {
             StopMod();
@@ -865,24 +899,24 @@ public class MainForm : Form
         }
 
         string timestamp = DateTime.Now.ToString("HH:mm:ss");
-        
+
         // Save current selection
         int selectionStart = logTextBox.SelectionStart;
         int selectionLength = logTextBox.SelectionLength;
-        
+
         // Move to end and add new text
         logTextBox.SelectionStart = logTextBox.TextLength;
         logTextBox.SelectionLength = 0;
-        
+
         // Set color for the message
         logTextBox.SelectionColor = color ?? Color.LightGreen;
         logTextBox.AppendText($"[{timestamp}] {message}\n");
-        
+
         // Restore selection
         logTextBox.SelectionStart = selectionStart;
         logTextBox.SelectionLength = selectionLength;
         logTextBox.SelectionColor = logTextBox.ForeColor;
-        
+
         // Scroll to bottom
         logTextBox.SelectionStart = logTextBox.TextLength;
         logTextBox.ScrollToCaret();
@@ -907,7 +941,7 @@ public class MainForm : Form
             LogEventLevel.Verbose => Color.Gray,
             _ => Color.LightGreen
         };
-        
+
         LogMessage(message, color);
     }
 

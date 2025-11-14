@@ -41,7 +41,7 @@ internal sealed class CsrConfigBinder : BinderBase<CsrConfig>
 
     protected override CsrConfig GetBoundValue(BindingContext bindingContext)
     {
-        var csr_config = new CsrConfig {};
+        var csr_config = new CsrConfig { };
 
         csr_config.CsrOn = bindingContext.ParseResult.GetValueForOption(_optCsrOn) ?? ResolveMandatoryBoolArg(_optCsrOn);
         csr_config.CsrBreakOn = csr_config.CsrOn && ResolveMandatoryBoolArg(_optCsrBreakOn);
@@ -61,7 +61,7 @@ public sealed record CsrConfig
     public bool CsrBreakOn { get; set; }
     public bool TrueRngOn { get; set; }
     public bool SetSeedOn { get; set; }
-    public int  MtSleepInterval { get; set; }
+    public int MtSleepInterval { get; set; }
     public uint SelectedSeed { get; set; }
 };
 
@@ -76,7 +76,7 @@ public class Program
     private static bool newGameSetUp = false;
 
     private static readonly BreakTransition BreakTransition = new BreakTransition { ForceLoad = false, Description = "Break Setup", ConsoleOutput = false, Suspendable = false, Repeatable = true };
-	
+
     private static bool seedInjected = false;
     private static uint seedSubmitted;
     private static uint[] PCSeeds = new uint[] {
@@ -353,11 +353,11 @@ public class Program
         DiagnosticLog.Information($"Cutscene Remover for Final Fantasy X, version {majorID}.{minorID}.{patchID}");
         if (args.Length > 0) DiagnosticLog.Information($"!!! LAUNCHED WITH COMMAND-LINE OPTIONS: {string.Join(' ', args)} !!!");
 
-        Option<bool?> optCsrOn           = new Option<bool?>("--csr", "Enable Cutscene Remover (CSR) Mod? [Y/N]");
-        Option<bool?> optCsrBreakOn      = new Option<bool?>("--csrbreak", "Enable break for CSR? [Y/N]");
-        Option<bool?> optTrueRngOn       = new Option<bool?>("--truerng", "Enable True RNG Mod? [Y/N]");
-        Option<bool?> optSetSeedOn       = new Option<bool?>("--setseed", "Enable Set Seed Mod? [Y/N]");
-        Option<int?>  optMtSleepInterval = new Option<int?>("--mt_sleep_interval", "Specify the main thread sleep interval. [ms]");
+        Option<bool?> optCsrOn = new Option<bool?>("--csr", "Enable Cutscene Remover (CSR) Mod? [Y/N]");
+        Option<bool?> optCsrBreakOn = new Option<bool?>("--csrbreak", "Enable break for CSR? [Y/N]");
+        Option<bool?> optTrueRngOn = new Option<bool?>("--truerng", "Enable True RNG Mod? [Y/N]");
+        Option<bool?> optSetSeedOn = new Option<bool?>("--setseed", "Enable Set Seed Mod? [Y/N]");
+        Option<int?> optMtSleepInterval = new Option<int?>("--mt_sleep_interval", "Specify the main thread sleep interval. [ms]");
 
         RootCommand rootCmd = new RootCommand("Launches the FFX Cutscene Remover.")
         {
@@ -395,7 +395,7 @@ public class Program
             MemoryWatchers.Initialize(Game);
             MemoryWatchers.Watchers.UpdateAll(Game);
 
-            List<byte> startGameIndents = new List<byte> (8);
+            List<byte> startGameIndents = new List<byte>(8);
 
             byte language = MemoryWatchers.Language.Current;
 
@@ -522,7 +522,7 @@ public class Program
                     {
                         new Transition { RoomNumber = 140, Storyline = 1310, SpawnPoint = 0, Description = "End of Break + Map + Rikku afraid + tutorial" }.Execute();
                     }
-				}
+                }
 
                 if (csrConfig.CsrOn)
                 {
@@ -539,7 +539,7 @@ public class Program
             }
         }
     }
-    
+
     private static bool CheckExistingCSR()
     {
         bool isRunning = !mutex.WaitOne(TimeSpan.Zero, true);

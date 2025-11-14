@@ -24,19 +24,19 @@ public class ConfigManager
     public static void SaveConfig(CsrConfig config, string filename)
     {
         EnsureConfigDirectoryExists();
-        
+
         string filePath = Path.Combine(ConfigDirectory, filename);
-        
+
         try
         {
             var options = new JsonSerializerOptions
             {
                 WriteIndented = true
             };
-            
+
             string json = JsonSerializer.Serialize(config, options);
             File.WriteAllText(filePath, json);
-            
+
             DiagnosticLog.Information($"Configuration saved to: {filePath}");
         }
         catch (Exception ex)
@@ -49,7 +49,7 @@ public class ConfigManager
     public static CsrConfig LoadConfig(string filename)
     {
         string filePath = Path.Combine(ConfigDirectory, filename);
-        
+
         if (!File.Exists(filePath))
         {
             DiagnosticLog.Information($"Configuration file not found: {filePath}");
@@ -60,7 +60,7 @@ public class ConfigManager
         {
             string json = File.ReadAllText(filePath);
             var config = JsonSerializer.Deserialize<CsrConfig>(json);
-            
+
             DiagnosticLog.Information($"Configuration loaded from: {filePath}");
             return config;
         }
@@ -80,17 +80,17 @@ public class ConfigManager
     public static string[] GetAvailableConfigs()
     {
         EnsureConfigDirectoryExists();
-        
+
         try
         {
             var files = Directory.GetFiles(ConfigDirectory, "*.conf");
             var filenames = new string[files.Length];
-            
+
             for (int i = 0; i < files.Length; i++)
             {
                 filenames[i] = Path.GetFileName(files[i]);
             }
-            
+
             return filenames;
         }
         catch (Exception ex)
