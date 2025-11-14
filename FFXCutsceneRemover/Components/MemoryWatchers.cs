@@ -549,6 +549,9 @@ public static class MemoryWatchers
                 Watchers.Add(field.GetValue(null) as MemoryWatcher);
             }
         }
+
+        // Rebuild the name lookup dictionary after bulk add operations
+        Watchers.RebuildNameDictionary();
     }
 
     private static MemoryWatcher<T> GetMemoryWatcher<T>(MemoryLocation data) where T : struct

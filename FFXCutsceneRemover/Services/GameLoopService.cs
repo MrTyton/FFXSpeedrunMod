@@ -51,7 +51,15 @@ internal class GameLoopService
 
         while (shouldContinue() && !game.HasExited && !cancellationToken.IsCancellationRequested)
         {
-            MemoryWatchers.Watchers.UpdateAll(game);
+            try
+            {
+                MemoryWatchers.Watchers.UpdateAll(game);
+            }
+            catch (InvalidOperationException) when (game.HasExited)
+            {
+                // Process has exited, break gracefully
+                break;
+            }
 
             // Handle new game setup
             HandleNewGameSetup(startGameIndents);

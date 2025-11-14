@@ -50,6 +50,22 @@ public class MemoryWatcherList : List<MemoryWatcher>
         changedList.Clear();
     }
 
+    /// <summary>
+    /// Rebuilds the name lookup dictionary from current list items.
+    /// Call this after bulk operations that bypass the Add method.
+    /// </summary>
+    public void RebuildNameDictionary()
+    {
+        watchersByName.Clear();
+        foreach (var watcher in this)
+        {
+            if (!string.IsNullOrEmpty(watcher.Name))
+            {
+                watchersByName[watcher.Name] = watcher;
+            }
+        }
+    }
+
     public void UpdateAll(Process process)
     {
         if (OnWatcherDataChanged != null)

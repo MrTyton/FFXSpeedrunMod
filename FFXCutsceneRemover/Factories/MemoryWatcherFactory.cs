@@ -21,15 +21,16 @@ public static class MemoryWatcherFactory
     /// <returns>Initialized MemoryWatcher</returns>
     public static MemoryWatcher<T> Create<T>(string watcherName) where T : struct
     {
-        var locationProperty = typeof(MemoryLocations).GetProperty(watcherName, BindingFlags.Public | BindingFlags.Static);
+        // MemoryLocations uses fields, not properties
+        var locationField = typeof(MemoryLocations).GetField(watcherName, BindingFlags.Public | BindingFlags.Static);
 
-        if (locationProperty == null)
+        if (locationField == null)
         {
             DiagnosticLog.Warning($"MemoryLocation property not found for watcher: {watcherName}");
             return null;
         }
 
-        var location = locationProperty.GetValue(null);
+        var location = locationField.GetValue(null);
 
         // Call GetMemoryWatcher<T> with the location
         var getMemoryWatcherMethod = typeof(MemoryWatchers).GetMethod("GetMemoryWatcher", BindingFlags.NonPublic | BindingFlags.Static);
