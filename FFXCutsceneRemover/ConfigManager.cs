@@ -7,24 +7,11 @@ namespace FFXCutsceneRemover;
 
 public class ConfigManager
 {
-    private static readonly string ConfigDirectory = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "FFXSpeedrunMod"
-    );
-
-    public static void EnsureConfigDirectoryExists()
-    {
-        if (!Directory.Exists(ConfigDirectory))
-        {
-            Directory.CreateDirectory(ConfigDirectory);
-            DiagnosticLog.Information($"Created config directory: {ConfigDirectory}");
-        }
-    }
+    // Use the directory where the executable is located
+    private static readonly string ConfigDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
     public static void SaveConfig(CsrConfig config, string filename)
     {
-        EnsureConfigDirectoryExists();
-
         string filePath = Path.Combine(ConfigDirectory, filename);
 
         try
@@ -79,8 +66,6 @@ public class ConfigManager
 
     public static string[] GetAvailableConfigs()
     {
-        EnsureConfigDirectoryExists();
-
         try
         {
             var files = Directory.GetFiles(ConfigDirectory, "*.conf");
