@@ -62,6 +62,7 @@ internal sealed record CsrConfig
     public bool TrueRngOn { get; set; }
     public bool SetSeedOn { get; set; }
     public int  MtSleepInterval { get; set; }
+    public uint SelectedSeed { get; set; }
 };
 
 public class Program
