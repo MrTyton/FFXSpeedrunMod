@@ -110,7 +110,7 @@ public class MainForm : Form
         {
             // For single-file apps, use AppContext.BaseDirectory instead of Assembly.Location
             string exePath = Process.GetCurrentProcess().MainModule?.FileName;
-            
+
             if (!string.IsNullOrEmpty(exePath) && File.Exists(exePath))
             {
                 this.Icon = Icon.ExtractAssociatedIcon(exePath);
