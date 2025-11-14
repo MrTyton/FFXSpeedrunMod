@@ -1,4 +1,6 @@
-﻿namespace FFXCutsceneRemover;
+﻿using FFXCutsceneRemover.Constants;
+
+namespace FFXCutsceneRemover;
 
 class UnderwaterRuinsOutsideTransition : Transition
 {
@@ -12,9 +14,9 @@ class UnderwaterRuinsOutsideTransition : Transition
             Stage += 1;
 
         }
-        else if (MemoryWatchers.UnderwaterRuinsOutsideTransition.Current >= (BaseCutsceneValue + 0x3870) && Stage == 1)
+        else if (MemoryWatchers.UnderwaterRuinsOutsideTransition.Current >= (BaseCutsceneValue + CutsceneOffsets.UnderwaterRuinsOutside.CheckOffset) && Stage == 1)
         {
-            WriteValue<int>(MemoryWatchers.UnderwaterRuinsOutsideTransition, BaseCutsceneValue + 0x3AB2);
+            WriteValue<int>(MemoryWatchers.UnderwaterRuinsOutsideTransition, BaseCutsceneValue + CutsceneOffsets.UnderwaterRuinsOutside.SkipOffset);
             Stage += 1;
         }
     }

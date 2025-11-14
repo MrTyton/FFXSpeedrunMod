@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 
+using FFXCutsceneRemover.Constants;
+
 namespace FFXCutsceneRemover;
 
 class TromellTransition : Transition
@@ -14,9 +16,9 @@ class TromellTransition : Transition
             Stage += 1;
 
         }
-        else if (MemoryWatchers.TromellTransition.Current > (BaseCutsceneValue + 0x88A9) && Stage == 1)
+        else if (MemoryWatchers.TromellTransition.Current > (BaseCutsceneValue + CutsceneOffsets.Tromell.CheckOffset) && Stage == 1)
         {
-            WriteValue<int>(MemoryWatchers.TromellTransition, BaseCutsceneValue + 0x9339);
+            WriteValue<int>(MemoryWatchers.TromellTransition, BaseCutsceneValue + CutsceneOffsets.Tromell.SkipOffset);
             Stage += 1;
         }
 

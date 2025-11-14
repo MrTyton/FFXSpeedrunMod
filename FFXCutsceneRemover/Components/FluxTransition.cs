@@ -2,6 +2,7 @@
 using System.Linq;
 
 using FFXCutsceneRemover.ComponentUtil;
+using FFXCutsceneRemover.Constants;
 
 namespace FFXCutsceneRemover;
 
@@ -20,14 +21,14 @@ class FluxTransition : Transition
             Stage += 1;
 
         }
-        else if (MemoryWatchers.FluxTransition.Current == (BaseCutsceneValue + 0x5D5C) && Stage == 1)
+        else if (MemoryWatchers.FluxTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Flux.CheckOffset) && Stage == 1)
         {
-            WriteValue<int>(MemoryWatchers.FluxTransition, BaseCutsceneValue + 0x6BC7);
+            WriteValue<int>(MemoryWatchers.FluxTransition, BaseCutsceneValue + CutsceneOffsets.Flux.SkipOffset);
             Stage += 1;
         }
         else if (MemoryWatchers.BattleState2.Current == 1 && Stage == 2)
         {
-            WriteValue<int>(MemoryWatchers.FluxTransition, BaseCutsceneValue + 0x6E23);
+            WriteValue<int>(MemoryWatchers.FluxTransition, BaseCutsceneValue + CutsceneOffsets.Flux.PostBattleOffset);
             Stage += 1;
         }
         else if (MemoryWatchers.GilRewardCounter.Current > 0 && Stage == 3)

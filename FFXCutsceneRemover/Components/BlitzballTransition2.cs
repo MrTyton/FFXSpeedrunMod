@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 
+using FFXCutsceneRemover.Constants;
+
 namespace FFXCutsceneRemover;
 
 class BlitzballTransition2 : Transition
@@ -20,9 +22,9 @@ class BlitzballTransition2 : Transition
                 Stage = 1;
 
             }
-            else if (MemoryWatchers.BlitzballTransition.Current == (BaseCutsceneValue + 0x2EA1) && Stage == 1)
+            else if (MemoryWatchers.BlitzballTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Blitzball.CheckOffset) && Stage == 1)
             {
-                WriteValue<int>(MemoryWatchers.BlitzballTransition, BaseCutsceneValue + 0x301C);
+                WriteValue<int>(MemoryWatchers.BlitzballTransition, BaseCutsceneValue + CutsceneOffsets.Blitzball.SkipOffset);
                 Stage = 2;
             }
         }

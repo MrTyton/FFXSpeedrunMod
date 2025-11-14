@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 
 using FFXCutsceneRemover.ComponentUtil;
+using FFXCutsceneRemover.Constants;
 
 
 namespace FFXCutsceneRemover;
@@ -25,7 +26,7 @@ class NatusTransition : Transition
                 Stage += 1;
 
             }
-            else if (MemoryWatchers.NatusTransition.Current == (BaseCutsceneValue + 0xE0F0) && Stage == 1) // 1893
+            else if (MemoryWatchers.NatusTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Natus.CheckOffset) && Stage == 1) // 1893
             {
 
                 Transition FormationSwitch = new Transition { ForceLoad = false, ConsoleOutput = true, FormationSwitch = Transition.Formations.PreNatus, Description = "Fix party before Natus" };
@@ -33,7 +34,7 @@ class NatusTransition : Transition
 
                 formation = process.ReadBytes(MemoryWatchers.Formation.Address, 10);
 
-                WriteValue<int>(MemoryWatchers.NatusTransition, BaseCutsceneValue + 0xE2DF);//
+                WriteValue<int>(MemoryWatchers.NatusTransition, BaseCutsceneValue + CutsceneOffsets.Natus.SkipOffset);//
 
                 Transition actorPositions;
                 //Position Party Member 1
@@ -54,9 +55,9 @@ class NatusTransition : Transition
 
                 Stage += 1;
             }
-            else if (MemoryWatchers.NatusTransition.Current == (BaseCutsceneValue + 0xE2FD) && MemoryWatchers.BattleState2.Current == 22 && Stage == 2)
+            else if (MemoryWatchers.NatusTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Natus.CheckOffset2) && MemoryWatchers.BattleState2.Current == 22 && Stage == 2)
             {
-                WriteValue<int>(MemoryWatchers.NatusTransition, BaseCutsceneValue + 0xE395);
+                WriteValue<int>(MemoryWatchers.NatusTransition, BaseCutsceneValue + CutsceneOffsets.Natus.SkipOffset2);
                 Stage += 1;
             }
         }

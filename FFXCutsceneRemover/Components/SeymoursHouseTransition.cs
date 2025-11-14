@@ -1,4 +1,5 @@
-﻿using FFXCutsceneRemover.Logging;
+﻿using FFXCutsceneRemover.Constants;
+using FFXCutsceneRemover.Logging;
 using System;
 using System.Diagnostics;
 
@@ -22,19 +23,19 @@ class SeymoursHouseTransition : Transition
 
             Stage += 1;
         }
-        else if (MemoryWatchers.SeymoursHouseTransition1.Current == (BaseCutsceneValue + 0x730E) && Stage == 1)
+        else if (MemoryWatchers.SeymoursHouseTransition1.Current == (BaseCutsceneValue + CutsceneOffsets.SeymoursHouse.CheckOffset1) && Stage == 1)
         {
-            WriteValue<int>(MemoryWatchers.SeymoursHouseTransition1, BaseCutsceneValue + 0x7372);
+            WriteValue<int>(MemoryWatchers.SeymoursHouseTransition1, BaseCutsceneValue + CutsceneOffsets.SeymoursHouse.SkipOffset1);
             Stage += 1;
         }
-        else if (MemoryWatchers.SeymoursHouseTransition2.Current == (BaseCutsceneValue + 0x7122) && Stage == 2)
+        else if (MemoryWatchers.SeymoursHouseTransition2.Current == (BaseCutsceneValue + CutsceneOffsets.SeymoursHouse.CheckOffset2) && Stage == 2)
         {
-            WriteValue<int>(MemoryWatchers.SeymoursHouseTransition2, BaseCutsceneValue + 0x7263);
+            WriteValue<int>(MemoryWatchers.SeymoursHouseTransition2, BaseCutsceneValue + CutsceneOffsets.SeymoursHouse.SkipOffset2);
             TalkedToAuron = true;
         }
-        else if (MemoryWatchers.SeymoursHouseTransition2.Current == (BaseCutsceneValue + 0x6EC1) && Stage == 2)
+        else if (MemoryWatchers.SeymoursHouseTransition2.Current == (BaseCutsceneValue + CutsceneOffsets.SeymoursHouse.CheckOffset3) && Stage == 2)
         {
-            WriteValue<int>(MemoryWatchers.SeymoursHouseTransition2, BaseCutsceneValue + 0x70B5);
+            WriteValue<int>(MemoryWatchers.SeymoursHouseTransition2, BaseCutsceneValue + CutsceneOffsets.SeymoursHouse.SkipOffset3);
             TalkedToLulu = true;
         }
         else if (MemoryWatchers.NPCLastInteraction.Current == 2 && Stage == 2)

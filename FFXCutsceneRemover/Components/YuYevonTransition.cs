@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 
+using FFXCutsceneRemover.Constants;
 using FFXCutsceneRemover.Logging;
 
 namespace FFXCutsceneRemover;
@@ -144,9 +145,9 @@ class YuYevonTransition : Transition
             BaseCutsceneValue = MemoryWatchers.EventFileStart.Current;
             Stage += 1;
         }
-        else if (MemoryWatchers.AeonTransition.Current >= (BaseCutsceneValue + 0x69BD) && Stage == 1)
+        else if (MemoryWatchers.AeonTransition.Current >= (BaseCutsceneValue + CutsceneOffsets.YuYevon.CheckOffset1) && Stage == 1)
         {
-            WriteValue<int>(MemoryWatchers.AeonTransition, BaseCutsceneValue + 0x6A9F);
+            WriteValue<int>(MemoryWatchers.AeonTransition, BaseCutsceneValue + CutsceneOffsets.YuYevon.SkipOffset1);
             Stage += 1;
         }
         else if (activeAeon != "" && Stage == 2)
@@ -158,9 +159,9 @@ class YuYevonTransition : Transition
                 activeAeon = "";
             }
         }
-        else if (MemoryWatchers.AeonTransition.Current == (BaseCutsceneValue + 0x7B30))
+        else if (MemoryWatchers.AeonTransition.Current == (BaseCutsceneValue + CutsceneOffsets.YuYevon.CheckOffset2))
         {
-            WriteValue<int>(MemoryWatchers.AeonTransition, BaseCutsceneValue + 0x86D0);
+            WriteValue<int>(MemoryWatchers.AeonTransition, BaseCutsceneValue + CutsceneOffsets.YuYevon.SkipOffset2);
             WriteValue<short>(MemoryWatchers.Storyline, 3380);
         }
     }

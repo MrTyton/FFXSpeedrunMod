@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 
 using FFXCutsceneRemover.ComponentUtil;
+using FFXCutsceneRemover.Constants;
 using FFXCutsceneRemover.Logging;
 
 namespace FFXCutsceneRemover;
@@ -23,15 +24,15 @@ class FarplaneTransition : Transition
 
             Stage += 1;
         }
-        else if (MemoryWatchers.FarplaneTransition1.Current == (BaseCutsceneValue + 0XB12D) && Stage == 1)
+        else if (MemoryWatchers.FarplaneTransition1.Current == (BaseCutsceneValue + CutsceneOffsets.Farplane.CheckOffset1) && Stage == 1)
         {
-            WriteValue<int>(MemoryWatchers.FarplaneTransition1, BaseCutsceneValue + 0XB350);
+            WriteValue<int>(MemoryWatchers.FarplaneTransition1, BaseCutsceneValue + CutsceneOffsets.Farplane.SkipOffset1);
 
             Stage += 1;
         }
-        else if (MemoryWatchers.FarplaneTransition2.Current == (BaseCutsceneValue + 0xB620) && Stage == 2)
+        else if (MemoryWatchers.FarplaneTransition2.Current == (BaseCutsceneValue + CutsceneOffsets.Farplane.CheckOffset2) && Stage == 2)
         {
-            WriteValue<int>(MemoryWatchers.FarplaneTransition2, BaseCutsceneValue + 0xB86C);
+            WriteValue<int>(MemoryWatchers.FarplaneTransition2, BaseCutsceneValue + CutsceneOffsets.Farplane.SkipOffset2);
 
             process.Suspend();
             IntPtr EquipMenu = new IntPtr(baseAddress + 0xD30F2C); // Address of beginning of Equipment menu
@@ -77,7 +78,7 @@ class FarplaneTransition : Transition
 
             Stage += 1;
         }
-        else if (MemoryWatchers.FarplaneTransition2.Current == (BaseCutsceneValue + 0xBC00) && Stage == 3)
+        else if (MemoryWatchers.FarplaneTransition2.Current == (BaseCutsceneValue + CutsceneOffsets.Farplane.CheckOffset3) && Stage == 3)
         {
             new Transition { RoomNumber = 134, Storyline = 1170, TidusWeaponDamageBoost = 15, Description = "Tidus talks to Yuna" }.Execute();
             Stage += 1;

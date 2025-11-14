@@ -1,4 +1,6 @@
-﻿namespace FFXCutsceneRemover;
+﻿using FFXCutsceneRemover.Constants;
+
+namespace FFXCutsceneRemover;
 
 class EchuillesTransition : Transition
 {
@@ -14,9 +16,9 @@ class EchuillesTransition : Transition
                 Stage += 1;
 
             }
-            else if (MemoryWatchers.EchuillesTransition.Current >= (BaseCutsceneValue + 0x20D0) && Stage == 1)
+            else if (MemoryWatchers.EchuillesTransition.Current >= (BaseCutsceneValue + CutsceneOffsets.Echuilles.CheckOffset) && Stage == 1)
             {
-                WriteValue<int>(MemoryWatchers.EchuillesTransition, BaseCutsceneValue + 0x248A); // 0x2490
+                WriteValue<int>(MemoryWatchers.EchuillesTransition, BaseCutsceneValue + CutsceneOffsets.Echuilles.SkipOffset); // 0x2490
 
                 Transition actorPositions;
 

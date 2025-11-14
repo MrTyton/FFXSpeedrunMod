@@ -1,4 +1,6 @@
-﻿namespace FFXCutsceneRemover;
+﻿using FFXCutsceneRemover.Constants;
+
+namespace FFXCutsceneRemover;
 
 class ValeforTransition : Transition
 {
@@ -9,7 +11,7 @@ class ValeforTransition : Transition
             base.Execute();
 
             BaseCutsceneValue = MemoryWatchers.ValeforTransition.Current;
-            WriteValue<int>(MemoryWatchers.ValeforTransition, BaseCutsceneValue + 0xAA4);
+            WriteValue<int>(MemoryWatchers.ValeforTransition, BaseCutsceneValue + CutsceneOffsets.Valefor.SkipOffset);
 
             Stage += 1;
 

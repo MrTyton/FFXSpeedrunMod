@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 
 using FFXCutsceneRemover.ComponentUtil;
+using FFXCutsceneRemover.Constants;
 
 namespace FFXCutsceneRemover;
 
@@ -17,18 +18,18 @@ class AmmesTransition : Transition
             Stage = 1;
 
         }
-        else if (MemoryWatchers.AmmesTransition.Current == (BaseCutsceneValue + 0x97FA) && Stage == 1)
+        else if (MemoryWatchers.AmmesTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Ammes.CheckOffset1) && Stage == 1)
         {
             Transition actorPositions;
             //Position Ammes
             actorPositions = new Transition { ForceLoad = false, ConsoleOutput = false, TargetActorIDs = new short[] { 4255 }, Target_x = 843.5f, Target_y = -42.0f, Target_z = -126.7f };
             actorPositions.Execute();
 
-            WriteValue<int>(MemoryWatchers.AmmesTransition, BaseCutsceneValue + 0x9936);// 2AB , 255 , 21A
+            WriteValue<int>(MemoryWatchers.AmmesTransition, BaseCutsceneValue + CutsceneOffsets.Ammes.SkipOffset1);// 2AB , 255 , 21A
 
             Stage += 1;
         }
-        else if (MemoryWatchers.AmmesTransition.Current == (BaseCutsceneValue + 0x9A2C) && Stage == 2)
+        else if (MemoryWatchers.AmmesTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Ammes.CheckOffset2) && Stage == 2)
         {
             process.Suspend();
 

@@ -16,7 +16,7 @@ class BikanelTransition : Transition
                 Stage += 1;
 
             }
-            else if (MemoryWatchers.BikanelTransition.Current == (BaseCutsceneValue + 0x11F) && Stage == 1)
+            else if (MemoryWatchers.BikanelTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Bikanel.CheckOffset) && Stage == 1)
             {
                 WriteValue<int>(MemoryWatchers.BikanelTransition, BaseCutsceneValue + CutsceneOffsets.Bikanel.SkipOffset);
 

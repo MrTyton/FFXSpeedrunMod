@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 
+using FFXCutsceneRemover.Constants;
+
 namespace FFXCutsceneRemover;
 
 class JechtShotTransition : Transition
@@ -20,13 +22,13 @@ class JechtShotTransition : Transition
                 Stage += 1;
 
             }
-            else if (MemoryWatchers.JechtShotTransition.Current == (BaseCutsceneValue + 0xF3A7) && Stage == 1)
+            else if (MemoryWatchers.JechtShotTransition.Current == (BaseCutsceneValue + CutsceneOffsets.JechtShot.CheckOffset1) && Stage == 1)
             {
-                WriteValue<int>(MemoryWatchers.JechtShotTransition, BaseCutsceneValue + 0xF9E4);
+                WriteValue<int>(MemoryWatchers.JechtShotTransition, BaseCutsceneValue + CutsceneOffsets.JechtShot.SkipOffset1);
 
                 Stage += 1;
             }
-            else if (MemoryWatchers.JechtShotTransition.Current == (BaseCutsceneValue + 0xFAAE) && Stage == 2)
+            else if (MemoryWatchers.JechtShotTransition.Current == (BaseCutsceneValue + CutsceneOffsets.JechtShot.CheckOffset2) && Stage == 2)
             {
                 Transition actorPositions;
                 //Position Tidus

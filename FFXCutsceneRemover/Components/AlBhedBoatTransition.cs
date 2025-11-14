@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 
+using FFXCutsceneRemover.Constants;
+
 namespace FFXCutsceneRemover;
 
 class AlBhedBoatTransition : Transition
@@ -18,9 +20,9 @@ class AlBhedBoatTransition : Transition
                 Stage += 1;
 
             }
-            else if (MemoryWatchers.AlBhedBoatTransition.Current == (BaseCutsceneValue + 0xEF32) && Stage == 1)
+            else if (MemoryWatchers.AlBhedBoatTransition.Current == (BaseCutsceneValue + CutsceneOffsets.AlBhedBoat.CheckOffset) && Stage == 1)
             {
-                WriteValue<int>(MemoryWatchers.AlBhedBoatTransition, BaseCutsceneValue + 0xF127);
+                WriteValue<int>(MemoryWatchers.AlBhedBoatTransition, BaseCutsceneValue + CutsceneOffsets.AlBhedBoat.SkipOffset);
                 Stage += 1;
             }
         }

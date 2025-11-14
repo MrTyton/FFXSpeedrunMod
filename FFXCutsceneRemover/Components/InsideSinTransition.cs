@@ -1,4 +1,6 @@
-﻿namespace FFXCutsceneRemover;
+﻿using FFXCutsceneRemover.Constants;
+
+namespace FFXCutsceneRemover;
 
 class InsideSinTransition : Transition
 {
@@ -14,9 +16,9 @@ class InsideSinTransition : Transition
                 Stage += 1;
 
             }
-            else if (MemoryWatchers.InsideSinTransition.Current == (BaseCutsceneValue + 0xE65) && Stage == 1)
+            else if (MemoryWatchers.InsideSinTransition.Current == (BaseCutsceneValue + CutsceneOffsets.InsideSin.CheckOffset) && Stage == 1)
             {
-                WriteValue<int>(MemoryWatchers.InsideSinTransition, BaseCutsceneValue + 0xF43);
+                WriteValue<int>(MemoryWatchers.InsideSinTransition, BaseCutsceneValue + CutsceneOffsets.InsideSin.SkipOffset);
                 Stage += 1;
             }
         }

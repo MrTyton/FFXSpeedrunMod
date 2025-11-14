@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 
+using FFXCutsceneRemover.Constants;
+
 namespace FFXCutsceneRemover;
 
 class OmnisTransition : Transition
@@ -15,27 +17,27 @@ class OmnisTransition : Transition
             Stage += 1;
 
         }
-        else if (MemoryWatchers.OmnisTransition.Current >= (BaseCutsceneValue + 0x1DB0) && Stage == 1)
+        else if (MemoryWatchers.OmnisTransition.Current >= (BaseCutsceneValue + CutsceneOffsets.Omnis.CheckOffset1) && Stage == 1)
         {
-            WriteValue<int>(MemoryWatchers.OmnisTransition, BaseCutsceneValue + 0x1E2C);
+            WriteValue<int>(MemoryWatchers.OmnisTransition, BaseCutsceneValue + CutsceneOffsets.Omnis.SkipOffset1);
 
             Stage += 1;
         }
-        else if (MemoryWatchers.OmnisTransition.Current >= (BaseCutsceneValue + 0x1E3B) && Stage == 2)
+        else if (MemoryWatchers.OmnisTransition.Current >= (BaseCutsceneValue + CutsceneOffsets.Omnis.CheckOffset2) && Stage == 2)
         {
-            WriteValue<int>(MemoryWatchers.OmnisTransition, BaseCutsceneValue + 0x25B5);
+            WriteValue<int>(MemoryWatchers.OmnisTransition, BaseCutsceneValue + CutsceneOffsets.Omnis.SkipOffset2);
 
             Stage += 1;
         }
-        else if (MemoryWatchers.OmnisTransition.Current >= (BaseCutsceneValue + 0x25BB) && Stage == 3)
+        else if (MemoryWatchers.OmnisTransition.Current >= (BaseCutsceneValue + CutsceneOffsets.Omnis.CheckOffset3) && Stage == 3)
         {
-            WriteValue<int>(MemoryWatchers.OmnisTransition, BaseCutsceneValue + 0x274A);
+            WriteValue<int>(MemoryWatchers.OmnisTransition, BaseCutsceneValue + CutsceneOffsets.Omnis.SkipOffset3);
 
             Stage += 1;
         }
-        else if (MemoryWatchers.OmnisTransition.Current >= (BaseCutsceneValue + 0x2786) && MemoryWatchers.BattleState2.Current == 22 && Stage == 4)
+        else if (MemoryWatchers.OmnisTransition.Current >= (BaseCutsceneValue + CutsceneOffsets.Omnis.CheckOffset4) && MemoryWatchers.BattleState2.Current == 22 && Stage == 4)
         {
-            WriteValue<int>(MemoryWatchers.OmnisTransition, BaseCutsceneValue + 0x2D84);
+            WriteValue<int>(MemoryWatchers.OmnisTransition, BaseCutsceneValue + CutsceneOffsets.Omnis.SkipOffset4);
 
             Stage += 1;
         }

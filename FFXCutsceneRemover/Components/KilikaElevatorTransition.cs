@@ -1,4 +1,5 @@
-﻿using FFXCutsceneRemover.Logging;
+﻿using FFXCutsceneRemover.Constants;
+using FFXCutsceneRemover.Logging;
 using System.Collections.Generic;
 
 namespace FFXCutsceneRemover;
@@ -15,18 +16,12 @@ class KilikaElevatorTransition : Transition
             Stage += 1;
 
         }
-        else if (MemoryWatchers.KilikaElevatorTransition.Current > (BaseCutsceneValue + 0x3582) && Stage == 1)
+        else if (MemoryWatchers.KilikaElevatorTransition.Current > (BaseCutsceneValue + CutsceneOffsets.KilikaElevator.CheckOffset) && Stage == 1)
         {
-            WriteValue<int>(MemoryWatchers.KilikaElevatorTransition, BaseCutsceneValue + 0x385C);
+            WriteValue<int>(MemoryWatchers.KilikaElevatorTransition, BaseCutsceneValue + CutsceneOffsets.KilikaElevator.SkipOffset);
             new Transition { ForceLoad = false, ConsoleOutput = false, TargetActorIDs = new short[] { 1 }, Target_x = 0.0f, Target_y = -163.75f, Target_z = -25.0f, Target_var1 = 229 }.Execute();
             DiagnosticLog.Information("Test 1");
             Stage += 1;
         }
-        //else if (MemoryWatchers.KilikaElevatorTransition.Current == (BaseCutsceneValue + 0x391A) && Stage == 2)
-        //{
-        //    WriteValue<int>(MemoryWatchers.KilikaElevatorTransition, BaseCutsceneValue + 0x3D46);
-        //    DiagnosticLog.Information("Test 2");
-        //    Stage += 1;
-        //}
     }
 }

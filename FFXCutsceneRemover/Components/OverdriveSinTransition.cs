@@ -1,4 +1,6 @@
-﻿namespace FFXCutsceneRemover;
+﻿using FFXCutsceneRemover.Constants;
+
+namespace FFXCutsceneRemover;
 
 class OverdriveSinTransition : Transition
 {
@@ -12,14 +14,14 @@ class OverdriveSinTransition : Transition
             Stage += 1;
 
         }
-        else if (MemoryWatchers.OverdriveSinTransition.Current >= (BaseCutsceneValue + 0x5BF8) && Stage == 1)
+        else if (MemoryWatchers.OverdriveSinTransition.Current >= (BaseCutsceneValue + CutsceneOffsets.OverdriveSin.CheckOffset) && Stage == 1)
         {
-            WriteValue<int>(MemoryWatchers.OverdriveSinTransition, BaseCutsceneValue + 0x5E2E);
+            WriteValue<int>(MemoryWatchers.OverdriveSinTransition, BaseCutsceneValue + CutsceneOffsets.OverdriveSin.SkipOffset1);
             Stage += 1;
         }
         else if (MemoryWatchers.BattleState2.Current == 1 && Stage == 2)
         {
-            WriteValue<int>(MemoryWatchers.OverdriveSinTransition, BaseCutsceneValue + 0x5F79);
+            WriteValue<int>(MemoryWatchers.OverdriveSinTransition, BaseCutsceneValue + CutsceneOffsets.OverdriveSin.SkipOffset2);
             Stage += 1;
         }
     }

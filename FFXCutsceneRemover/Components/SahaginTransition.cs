@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 
+using FFXCutsceneRemover.Constants;
+
 namespace FFXCutsceneRemover;
 
 class SahaginTransition : Transition
@@ -20,9 +22,9 @@ class SahaginTransition : Transition
                 Stage = 1;
 
             }
-            else if (MemoryWatchers.SahaginTransition.Current == (BaseCutsceneValue + 0xC9) && Stage == 1)
+            else if (MemoryWatchers.SahaginTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Sahagin.CheckOffset) && Stage == 1)
             {
-                WriteValue<int>(MemoryWatchers.SahaginTransition, BaseCutsceneValue + 0x45A);
+                WriteValue<int>(MemoryWatchers.SahaginTransition, BaseCutsceneValue + CutsceneOffsets.Sahagin.SkipOffset);
 
                 Transition actorPositions;
                 //Position Wakka
@@ -39,9 +41,9 @@ class SahaginTransition : Transition
 
                 Stage = 2;
             }
-            else if (MemoryWatchers.SahaginTransition.Current == (BaseCutsceneValue + 0x491) && MemoryWatchers.TidusActionCount.Current == 1 && Stage == 2)
+            else if (MemoryWatchers.SahaginTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Sahagin.CheckOffset2) && MemoryWatchers.TidusActionCount.Current == 1 && Stage == 2)
             {
-                WriteValue<int>(MemoryWatchers.SahaginTransition, BaseCutsceneValue + 0x556);
+                WriteValue<int>(MemoryWatchers.SahaginTransition, BaseCutsceneValue + CutsceneOffsets.Sahagin.SkipOffset2);
                 Stage = 3;
             }
         }

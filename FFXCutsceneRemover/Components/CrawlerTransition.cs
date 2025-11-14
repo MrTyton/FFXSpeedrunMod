@@ -2,6 +2,7 @@
 using System.Diagnostics;
 
 using FFXCutsceneRemover.ComponentUtil;
+using FFXCutsceneRemover.Constants;
 using FFXCutsceneRemover.Logging;
 
 namespace FFXCutsceneRemover;
@@ -22,24 +23,24 @@ class CrawlerTransition : Transition
 
         }
         //First 4 stages are an attempt to emulate the logic from the PS2 Pnach. Values don't line up perfectly but it works.
-        else if (MemoryWatchers.CrawlerTransition.Current == (BaseCutsceneValue + 0xEBC2) && Stage == 1)
+        else if (MemoryWatchers.CrawlerTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Crawler.Stage1CheckOffset) && Stage == 1)
         {
-            WriteValue<int>(MemoryWatchers.CrawlerTransition, BaseCutsceneValue + 0xF017);
+            WriteValue<int>(MemoryWatchers.CrawlerTransition, BaseCutsceneValue + CutsceneOffsets.Crawler.Stage1SkipOffset);
             Stage += 1;
         }
-        else if (MemoryWatchers.CrawlerTransition.Current >= (BaseCutsceneValue + 0xF02D) && Stage == 2)
+        else if (MemoryWatchers.CrawlerTransition.Current >= (BaseCutsceneValue + CutsceneOffsets.Crawler.Stage2CheckOffset) && Stage == 2)
         {
-            WriteValue<int>(MemoryWatchers.CrawlerTransition, BaseCutsceneValue + 0xF0F3);
+            WriteValue<int>(MemoryWatchers.CrawlerTransition, BaseCutsceneValue + CutsceneOffsets.Crawler.Stage2SkipOffset);
             Stage += 1;
         }
-        else if (MemoryWatchers.CrawlerTransition.Current >= (BaseCutsceneValue + 0xF0FC) && Stage == 3)
+        else if (MemoryWatchers.CrawlerTransition.Current >= (BaseCutsceneValue + CutsceneOffsets.Crawler.Stage3CheckOffset) && Stage == 3)
         {
-            WriteValue<int>(MemoryWatchers.CrawlerTransition, BaseCutsceneValue + 0xF113);
+            WriteValue<int>(MemoryWatchers.CrawlerTransition, BaseCutsceneValue + CutsceneOffsets.Crawler.Stage3SkipOffset);
             Stage += 1;
         }
-        else if (MemoryWatchers.CrawlerTransition.Current >= (BaseCutsceneValue + 0xF113) && Stage == 4)
+        else if (MemoryWatchers.CrawlerTransition.Current >= (BaseCutsceneValue + CutsceneOffsets.Crawler.Stage4CheckOffset) && Stage == 4)
         {
-            WriteValue<int>(MemoryWatchers.CrawlerTransition, BaseCutsceneValue + 0xF19E);
+            WriteValue<int>(MemoryWatchers.CrawlerTransition, BaseCutsceneValue + CutsceneOffsets.Crawler.Stage4SkipOffset);
             Stage += 1;
         }
         else if (Stage == 5)
@@ -60,9 +61,9 @@ class CrawlerTransition : Transition
             actorPositions.Execute();
             Stage += 1;
         }
-        else if (MemoryWatchers.CrawlerTransition.Current == (BaseCutsceneValue + 0xF1E6) && MemoryWatchers.BattleState2.Current == 22 && Stage == 6)
+        else if (MemoryWatchers.CrawlerTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Crawler.Stage6CheckOffset) && MemoryWatchers.BattleState2.Current == 22 && Stage == 6)
         {
-            WriteValue<int>(MemoryWatchers.CrawlerTransition, BaseCutsceneValue + 0xF437);
+            WriteValue<int>(MemoryWatchers.CrawlerTransition, BaseCutsceneValue + CutsceneOffsets.Crawler.Stage6SkipOffset);
             Stage += 1;
         }
 

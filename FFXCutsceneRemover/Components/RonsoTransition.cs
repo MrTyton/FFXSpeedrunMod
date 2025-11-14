@@ -1,6 +1,7 @@
 using System.Diagnostics;
 
 using FFXCutsceneRemover.ComponentUtil;
+using FFXCutsceneRemover.Constants;
 
 namespace FFXCutsceneRemover;
 
@@ -24,14 +25,14 @@ class RonsoTransition : Transition
                 Stage += 1;
 
             }
-            else if (MemoryWatchers.RonsoTransition.Current > (BaseCutsceneValue + 0x12907) && Stage == 1)
+            else if (MemoryWatchers.RonsoTransition.Current > (BaseCutsceneValue + CutsceneOffsets.Ronso.CheckOffset1) && Stage == 1)
             {
                 RonsoFormation = process.ReadBytes(MemoryWatchers.Formation.Address, 10);
 
-                WriteValue<int>(MemoryWatchers.RonsoTransition, BaseCutsceneValue + 0x13F9F);
+                WriteValue<int>(MemoryWatchers.RonsoTransition, BaseCutsceneValue + CutsceneOffsets.Ronso.SkipOffset1);
                 Stage += 1;
             }
-            else if (MemoryWatchers.RonsoTransition.Current == (BaseCutsceneValue + 0x14056) && MemoryWatchers.Menu.Current == 1 && Stage == 2)
+            else if (MemoryWatchers.RonsoTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Ronso.CheckOffset2) && MemoryWatchers.Menu.Current == 1 && Stage == 2)
             {
                 Transition FormationSwitch = new Transition { ForceLoad = false, ConsoleOutput = true, EncountersActiveFlag = EncountersActive, FormationSwitch = Transition.Formations.PostBiranYenke, Formation = RonsoFormation, Description = "Fix party after Biran and Yenke" };
                 FormationSwitch.Execute();

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
 using FFXCutsceneRemover.Logging;
+using FFXCutsceneRemover.Constants;
 
 namespace FFXCutsceneRemover;
 
@@ -21,9 +22,9 @@ class YojimboFaythTransition : Transition
                 Stage += 1;
 
             }
-            else if (MemoryWatchers.YojimboFaythTransition.Current == (BaseCutsceneValue + 0x2C19) && Stage == 1)
+            else if (MemoryWatchers.YojimboFaythTransition.Current == (BaseCutsceneValue + CutsceneOffsets.YojimboFayth.CheckOffset) && Stage == 1)
             {
-                WriteValue<int>(MemoryWatchers.YojimboFaythTransition, BaseCutsceneValue + 0x2DFF);
+                WriteValue<int>(MemoryWatchers.YojimboFaythTransition, BaseCutsceneValue + CutsceneOffsets.YojimboFayth.SkipOffset);
                 Stage += 1;
                 DiagnosticLog.Information($"Test Stage {Stage}");
             }

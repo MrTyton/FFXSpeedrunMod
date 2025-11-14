@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 
+using FFXCutsceneRemover.Constants;
+
 namespace FFXCutsceneRemover;
 
 class KlikkTransition : Transition
@@ -15,19 +17,19 @@ class KlikkTransition : Transition
             Stage += 1;
 
         }
-        else if (MemoryWatchers.KlikkTransition.Current == (BaseCutsceneValue + 0xA523) && Stage == 1)
+        else if (MemoryWatchers.KlikkTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Klikk.CheckOffset1) && Stage == 1)
         {
-            WriteValue<int>(MemoryWatchers.KlikkTransition, BaseCutsceneValue + 0xA7E3);
+            WriteValue<int>(MemoryWatchers.KlikkTransition, BaseCutsceneValue + CutsceneOffsets.Klikk.SkipOffset1);
             Stage += 1;
         }
-        else if (MemoryWatchers.KlikkTransition.Current > (BaseCutsceneValue + 0xA7E3) && Stage == 2)
+        else if (MemoryWatchers.KlikkTransition.Current > (BaseCutsceneValue + CutsceneOffsets.Klikk.CheckOffset2) && Stage == 2)
         {
-            WriteValue<int>(MemoryWatchers.KlikkTransition, BaseCutsceneValue + 0xA847);
+            WriteValue<int>(MemoryWatchers.KlikkTransition, BaseCutsceneValue + CutsceneOffsets.Klikk.SkipOffset2);
             Stage += 1;
         }
         else if (MemoryWatchers.BattleState2.Current == 1 && Stage == 3)
         {
-            WriteValue<int>(MemoryWatchers.KlikkTransition, BaseCutsceneValue + 0xAF27);
+            WriteValue<int>(MemoryWatchers.KlikkTransition, BaseCutsceneValue + CutsceneOffsets.Klikk.SkipOffset3);
             Stage += 1;
         }
     }

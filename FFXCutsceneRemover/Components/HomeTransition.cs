@@ -1,4 +1,5 @@
 ﻿using FFXCutsceneRemover.Logging;
+using FFXCutsceneRemover.Constants;
 
 namespace FFXCutsceneRemover;
 
@@ -24,9 +25,9 @@ class HomeTransition : Transition
 
         }
         // Skip cutscene after walking through door post bombs
-        else if (MemoryWatchers.HomeTransition.Current == (BaseCutsceneValue + 0x5FDB) && Stage == 1)
+        else if (MemoryWatchers.HomeTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Home.CheckOffset1) && Stage == 1)
         {
-            WriteValue<int>(MemoryWatchers.HomeTransition, BaseCutsceneValue + 0x61CE);
+            WriteValue<int>(MemoryWatchers.HomeTransition, BaseCutsceneValue + CutsceneOffsets.Home.SkipOffset1);
             Stage += 1;
         }
         // Set camera lock value after defeating Dual Horns so the camera faces up the stairs
@@ -36,7 +37,7 @@ class HomeTransition : Transition
             Stage += 1;
         }
         // Skip cutscene before the Chimeras encounter
-        else if (MemoryWatchers.HomeTransition.Current == (BaseCutsceneValue + 0x63AA) && Stage == 3)
+        else if (MemoryWatchers.HomeTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Home.CheckOffset2) && Stage == 3)
         {
             // Remove cutscene timing to remove low fps
             WriteValue<byte>(MemoryWatchers.CutsceneTiming, 0);

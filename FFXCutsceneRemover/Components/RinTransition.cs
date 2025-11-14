@@ -2,6 +2,7 @@
 using System.Diagnostics;
 
 using FFXCutsceneRemover.ComponentUtil;
+using FFXCutsceneRemover.Constants;
 
 namespace FFXCutsceneRemover;
 
@@ -23,19 +24,19 @@ class RinTransition : Transition
                 Stage += 1;
 
             }
-            else if (MemoryWatchers.RinTransition.Current >= (BaseCutsceneValue + 0x271) && Stage == 1)
+            else if (MemoryWatchers.RinTransition.Current >= (BaseCutsceneValue + CutsceneOffsets.Rin.CheckOffset1) && Stage == 1)
             {
-                WriteValue<int>(MemoryWatchers.RinTransition, BaseCutsceneValue + 0x466);
+                WriteValue<int>(MemoryWatchers.RinTransition, BaseCutsceneValue + CutsceneOffsets.Rin.SkipOffset1);
 
                 Stage += 1;
             }
             else if (MemoryWatchers.Dialogue1.Current == 92 && Stage == 2)
             {
-                WriteValue<int>(MemoryWatchers.RinTransition, BaseCutsceneValue + 0x58B);
+                WriteValue<int>(MemoryWatchers.RinTransition, BaseCutsceneValue + CutsceneOffsets.Rin.CheckOffset2);
 
                 Stage += 1;
             }
-            else if (MemoryWatchers.RinTransition.Current == (BaseCutsceneValue + 0x5B1) && Stage == 3)
+            else if (MemoryWatchers.RinTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Rin.CheckOffset3) && Stage == 3)
             {
                 process.Suspend();
 

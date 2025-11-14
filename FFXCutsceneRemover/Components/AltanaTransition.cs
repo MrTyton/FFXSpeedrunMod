@@ -2,6 +2,7 @@
 using System.Diagnostics;
 
 using FFXCutsceneRemover.ComponentUtil;
+using FFXCutsceneRemover.Constants;
 
 namespace FFXCutsceneRemover;
 
@@ -24,9 +25,9 @@ class AltanaTransition : Transition
                 Stage += 1;
 
             }
-            else if (MemoryWatchers.AltanaTransition.Current == (BaseCutsceneValue + 0x69) && Stage == 1)
+            else if (MemoryWatchers.AltanaTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Altana.CheckOffset) && Stage == 1)
             {
-                WriteValue<int>(MemoryWatchers.AltanaTransition, BaseCutsceneValue + 0x307);
+                WriteValue<int>(MemoryWatchers.AltanaTransition, BaseCutsceneValue + CutsceneOffsets.Altana.SkipOffset);
 
                 formation = process.ReadBytes(MemoryWatchers.Formation.Address, 3);
 
@@ -45,23 +46,23 @@ class AltanaTransition : Transition
 
                 Stage += 1;
             }
-            else if (MemoryWatchers.AltanaTransition.Current == (BaseCutsceneValue + 0x32C) && Stage == 2) // This is a filler stage which only serves to facilitate fight end logic
+            else if (MemoryWatchers.AltanaTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Altana.CheckOffset2) && Stage == 2) // This is a filler stage which only serves to facilitate fight end logic
             {
                 Stage += 1;
             }
             else if (MemoryWatchers.BattleState.Current == 522 && Stage == 7)
             {
-                WriteValue<int>(MemoryWatchers.AltanaTransition, BaseCutsceneValue + 0xA7D);
+                WriteValue<int>(MemoryWatchers.AltanaTransition, BaseCutsceneValue + CutsceneOffsets.Altana.SkipOffset2_1);
                 Stage = 99;
             }
             else if (MemoryWatchers.BattleState.Current == 522 && Stage == 5)
             {
-                WriteValue<int>(MemoryWatchers.AltanaTransition, BaseCutsceneValue + 0x7A2);// Camera is jank if ending fight in second room. Need to work out how to move camera.
+                WriteValue<int>(MemoryWatchers.AltanaTransition, BaseCutsceneValue + CutsceneOffsets.Altana.SkipOffset2_2);// Camera is jank if ending fight in second room. Need to work out how to move camera.
                 Stage = 98;
             }
             else if (MemoryWatchers.BattleState.Current == 522 && Stage == 3)
             {
-                WriteValue<int>(MemoryWatchers.AltanaTransition, BaseCutsceneValue + 0x3A9);// 
+                WriteValue<int>(MemoryWatchers.AltanaTransition, BaseCutsceneValue + CutsceneOffsets.Altana.SkipOffset2_3);// 
                 Stage = 99;
             }
             else if (MemoryWatchers.Menu.Current == 0 && MemoryWatchers.Menu.Old == 1 && Stage == 98)

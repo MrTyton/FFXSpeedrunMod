@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 
 using FFXCutsceneRemover.ComponentUtil;
+using FFXCutsceneRemover.Constants;
 
 namespace FFXCutsceneRemover;
 
@@ -22,7 +23,7 @@ class AftermathTransition : Transition
                 Stage += 1;
 
             }
-            else if (MemoryWatchers.DjoseTransition.Current == (BaseCutsceneValue + 0x13D3) && Stage == 1)
+            else if (MemoryWatchers.DjoseTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Aftermath.CheckOffset) && Stage == 1)
             {
                 process.Suspend();
 

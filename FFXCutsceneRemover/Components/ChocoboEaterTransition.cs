@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 
 using FFXCutsceneRemover.ComponentUtil;
+using FFXCutsceneRemover.Constants;
 
 namespace FFXCutsceneRemover;
 
@@ -20,9 +21,9 @@ class ChocoboEaterTransition : Transition
                 Stage += 1;
 
             }
-            else if (MemoryWatchers.ChocoboEaterTransition.Current >= (BaseCutsceneValue + 0x7A5) && Stage == 1) // 21B , EC
+            else if (MemoryWatchers.ChocoboEaterTransition.Current >= (BaseCutsceneValue + CutsceneOffsets.ChocoboEater.CheckOffset) && Stage == 1) // 21B , EC
             {
-                WriteValue<int>(MemoryWatchers.ChocoboEaterTransition, BaseCutsceneValue + 0xC96);// 30A
+                WriteValue<int>(MemoryWatchers.ChocoboEaterTransition, BaseCutsceneValue + CutsceneOffsets.ChocoboEater.SkipOffset);// 30A
 
                 byte[] ActiveParty = process.ReadBytes(MemoryWatchers.Formation.Address, 3);
 

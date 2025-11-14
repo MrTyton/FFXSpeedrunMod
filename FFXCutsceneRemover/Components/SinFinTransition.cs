@@ -2,6 +2,7 @@
 using System.Diagnostics;
 
 using FFXCutsceneRemover.ComponentUtil;
+using FFXCutsceneRemover.Constants;
 
 namespace FFXCutsceneRemover;
 
@@ -23,9 +24,9 @@ class SinFinTransition : Transition
                 Stage = 1;
 
             }
-            else if (MemoryWatchers.SinFinTransition.Current == (BaseCutsceneValue + 0x76F) && Stage == 1)
+            else if (MemoryWatchers.SinFinTransition.Current == (BaseCutsceneValue + CutsceneOffsets.SinFin.CheckOffset1) && Stage == 1)
             {
-                WriteValue<int>(MemoryWatchers.SinFinTransition, BaseCutsceneValue + 0xBF0);
+                WriteValue<int>(MemoryWatchers.SinFinTransition, BaseCutsceneValue + CutsceneOffsets.SinFin.SkipOffset1);
 
                 Transition actorPositions;
 
@@ -39,13 +40,13 @@ class SinFinTransition : Transition
 
                 Stage += 1;
             }
-            else if (MemoryWatchers.SinFinTransition.Current == (BaseCutsceneValue + 0xCFD) && MemoryWatchers.BattleState2.Current == 1 && Stage == 2) //200 = Sinscale HP
+            else if (MemoryWatchers.SinFinTransition.Current == (BaseCutsceneValue + CutsceneOffsets.SinFin.CheckOffset2) && MemoryWatchers.BattleState2.Current == 1 && Stage == 2) //200 = Sinscale HP
             {
                 process.Suspend();
 
                 new Transition { ForceLoad = false, Storyline = 272, Description = "Post Sin Fin" }.Execute();
 
-                WriteValue<int>(MemoryWatchers.SinFinTransition, BaseCutsceneValue + 0x114A);
+                WriteValue<int>(MemoryWatchers.SinFinTransition, BaseCutsceneValue + CutsceneOffsets.SinFin.SkipOffset2);
 
                 Stage += 1;
 

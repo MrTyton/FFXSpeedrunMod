@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using FFXCutsceneRemover.Constants;
+using System.Collections.Generic;
 
 namespace FFXCutsceneRemover;
 
@@ -17,9 +18,9 @@ class KilikaTrialsTransition : Transition
                 Stage += 1;
 
             }
-            else if (MemoryWatchers.KilikaTrialsTransition.Current == (BaseCutsceneValue + 0x61) && Stage == 1) // 486
+            else if (MemoryWatchers.KilikaTrialsTransition.Current == (BaseCutsceneValue + CutsceneOffsets.KilikaTrials.CheckOffset) && Stage == 1)
             {
-                WriteValue<int>(MemoryWatchers.KilikaTrialsTransition, BaseCutsceneValue + 0x108);
+                WriteValue<int>(MemoryWatchers.KilikaTrialsTransition, BaseCutsceneValue + CutsceneOffsets.KilikaTrials.SkipOffset);
 
                 Stage += 1;
             }

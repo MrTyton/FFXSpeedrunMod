@@ -17,7 +17,7 @@ class DefenderXTransition : Transition
             Stage = 1;
 
         }
-        else if (MemoryWatchers.DefenderXTransition.Current >= (BaseCutsceneValue + 0x5451) && Stage == 1)
+        else if (MemoryWatchers.DefenderXTransition.Current >= (BaseCutsceneValue + CutsceneOffsets.DefenderX.CheckOffset) && Stage == 1)
         {
             WriteValue<int>(MemoryWatchers.DefenderXTransition, BaseCutsceneValue + CutsceneOffsets.DefenderX.SkipOffset);
             Stage = 2;

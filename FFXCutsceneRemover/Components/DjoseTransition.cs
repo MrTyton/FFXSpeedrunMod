@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 
+using FFXCutsceneRemover.Constants;
+
 namespace FFXCutsceneRemover;
 
 class DjoseTransition : Transition
@@ -19,9 +21,9 @@ class DjoseTransition : Transition
                 Stage += 1;
 
             }
-            else if (MemoryWatchers.DjoseTransition.Current == (BaseCutsceneValue + 0x160) && Stage == 1) // 160
+            else if (MemoryWatchers.DjoseTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Djose.CheckOffset) && Stage == 1) // 160
             {
-                WriteValue<int>(MemoryWatchers.DjoseTransition, BaseCutsceneValue + 0x4ED);
+                WriteValue<int>(MemoryWatchers.DjoseTransition, BaseCutsceneValue + CutsceneOffsets.Djose.SkipOffset);
 
                 Transition actorPositions;
                 //Position Tidus

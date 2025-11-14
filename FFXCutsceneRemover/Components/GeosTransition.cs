@@ -2,6 +2,7 @@
 using System.Diagnostics;
 
 using FFXCutsceneRemover.ComponentUtil;
+using FFXCutsceneRemover.Constants;
 
 namespace FFXCutsceneRemover;
 
@@ -20,7 +21,7 @@ class GeosTransition : Transition
             Stage += 1;
 
         }
-        else if (MemoryWatchers.GeosTransition.Current == (BaseCutsceneValue + 0xA4F8) && Stage == 1)
+        else if (MemoryWatchers.GeosTransition.Current == (BaseCutsceneValue + CutsceneOffsets.Geos.CheckOffset) && Stage == 1)
         {
             process.Suspend();
 
