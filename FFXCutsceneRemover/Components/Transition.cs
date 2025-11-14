@@ -6,6 +6,7 @@ using System.Linq;
 using FFXCutsceneRemover.ComponentUtil;
 using FFXCutsceneRemover.Logging;
 using FFXCutsceneRemover.Resources;
+using FFXCutsceneRemover.Constants;
 
 namespace FFXCutsceneRemover;
 
@@ -484,11 +485,11 @@ public class Transition
 
     private void FixMenuBug()
     {
-        WriteValue<int>(MemoryWatchers.MenuValue3, unchecked((int)0xFFFFFFFF));
-        WriteValue<int>(MemoryWatchers.MenuValue4, 0x00000000);
-        WriteValue<byte>(MemoryWatchers.MenuValue5, 0x00);
-        WriteValue<int>(MemoryWatchers.MenuValue6, 0x00000001);
-        WriteValue<byte>(MemoryWatchers.MenuValue7, 0x00);
+        WriteValue<int>(MemoryWatchers.MenuValue3, MenuFixValues.MenuValue3Reset);
+        WriteValue<int>(MemoryWatchers.MenuValue4, MenuFixValues.MenuValue4Reset);
+        WriteValue<byte>(MemoryWatchers.MenuValue5, MenuFixValues.MenuValue5Reset);
+        WriteValue<int>(MemoryWatchers.MenuValue6, MenuFixValues.MenuValue6Reset);
+        WriteValue<byte>(MemoryWatchers.MenuValue7, MenuFixValues.MenuValue7Reset);
     }
 
     private void FixSpeedBoosterBug()
@@ -712,19 +713,6 @@ public class Transition
     /// <summary>
     /// Character IDs used in formations and party management.
     /// </summary>
-    public enum CharacterId : byte
-    {
-        Tidus = 0x00,
-        Yuna = 0x01,
-        Auron = 0x02,
-        Kimahri = 0x03,
-        Wakka = 0x04,
-        Lulu = 0x05,
-        Rikku = 0x06,
-        Seymour = 0x07,
-        Empty = 0xFF
-    }
-
     public enum Formations
     {
         Klikk2,

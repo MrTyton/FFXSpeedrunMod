@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 
 using FFXCutsceneRemover.ComponentUtil;
+using FFXCutsceneRemover.Constants;
 
 namespace FFXCutsceneRemover;
 
@@ -29,32 +30,32 @@ class BrotherhoodTransition : Transition
 
         equipmentIndex = 0;
         MemoryWatcher<byte> unequipLongsword = new MemoryWatcher<byte>(new IntPtr(baseAddress + equipmentStructRelativeOffset + equipmentStructSizeBytes * equipmentIndex + equipmentEquippedFlagOffset));
-        WriteValue<byte>(unequipLongsword, 0xFF);
+        WriteValue<byte>(unequipLongsword, (byte)EquipmentFlag.Unequipped);
 
         equipmentIndex = 2;
         MemoryWatcher<byte> addYunaStaff = new MemoryWatcher<byte>(new IntPtr(baseAddress + equipmentStructRelativeOffset + equipmentStructSizeBytes * equipmentIndex + 0x03));
-        WriteValue<byte>(addYunaStaff, 0x00);
+        WriteValue<byte>(addYunaStaff, (byte)EquipmentFlag.Equipped);
 
         equipmentIndex = 3;
         MemoryWatcher<byte> addYunaRing = new MemoryWatcher<byte>(new IntPtr(baseAddress + equipmentStructRelativeOffset + equipmentStructSizeBytes * equipmentIndex + 0x03));
-        WriteValue<byte>(addYunaRing, 0x00);
+        WriteValue<byte>(addYunaRing, (byte)EquipmentFlag.Equipped);
 
         equipmentIndex = 8;
         MemoryWatcher<byte> addLuluMoogle = new MemoryWatcher<byte>(new IntPtr(baseAddress + equipmentStructRelativeOffset + equipmentStructSizeBytes * equipmentIndex + 0x03));
-        WriteValue<byte>(addLuluMoogle, 0x00);
+        WriteValue<byte>(addLuluMoogle, (byte)EquipmentFlag.Equipped);
 
         equipmentIndex = 9;
         MemoryWatcher<byte> addLuluBangle = new MemoryWatcher<byte>(new IntPtr(baseAddress + equipmentStructRelativeOffset + equipmentStructSizeBytes * equipmentIndex + 0x03));
-        WriteValue<byte>(addLuluBangle, 0x00);
+        WriteValue<byte>(addLuluBangle, (byte)EquipmentFlag.Equipped);
 
         equipmentIndex = 34;
         MemoryWatcher<byte> addBrotherhood = new MemoryWatcher<byte>(new IntPtr(baseAddress + equipmentStructRelativeOffset + equipmentStructSizeBytes * equipmentIndex + 0x03));
-        WriteValue<byte>(addBrotherhood, 0x09);
+        WriteValue<byte>(addBrotherhood, (byte)EquipmentFlag.BrotherhoodSpecial);
 
         // By triangle I mean the small triangle that appears in menus to show what item is equipped
         equipmentIndex = 34;
         MemoryWatcher<byte> equipBrotherhoodTriangle = new MemoryWatcher<byte>(new IntPtr(baseAddress + equipmentStructRelativeOffset + equipmentStructSizeBytes * equipmentIndex + equipmentEquippedFlagOffset));
-        WriteValue<byte>(equipBrotherhoodTriangle, 0x00);
+        WriteValue<byte>(equipBrotherhoodTriangle, (byte)EquipmentFlag.Equipped);
 
         characterIndex = 0;
         MemoryWatcher<byte> equipBrotherhood = new MemoryWatcher<byte>(new IntPtr(baseAddress + characterDataStructRelativeOffset + characterDataStructSizeBytes * characterIndex + equippedWeaponIndexOffset));
@@ -79,7 +80,7 @@ class BrotherhoodTransition : Transition
                 foundEmptySlot = true;
                 IntPtr MapCount = IntPtr.Add(ItemCount, count);
 
-                process.WriteBytes(ItemMenu, new byte[] { 0x64, 0x20 }); // Map location in item menu
+                process.WriteBytes(ItemMenu, new byte[] { ItemId.MapItemByte1, ItemId.MapItemByte2 }); // Map location in item menu
                 process.WriteValue<byte>(MapCount, 1); // Number of maps to add
                 break;
             }
