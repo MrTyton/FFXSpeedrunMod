@@ -417,7 +417,7 @@ public static class MemoryWatchers
         {
             typeof(MemoryWatchers).GetField(name, BindingFlags.Public | BindingFlags.Static)?.SetValue(null, watcher);
         });
-        
+
         MemoryWatcherFactory.CreateBatch<int>(new[]
         {
             nameof(ScriptedBattleVar1), nameof(ScriptedBattleVar3), nameof(ScriptedBattleVar4)
@@ -454,7 +454,7 @@ public static class MemoryWatchers
         {
             typeof(MemoryWatchers).GetField(name, BindingFlags.Public | BindingFlags.Static)?.SetValue(null, watcher);
         });
-        
+
         MemoryWatcherFactory.CreateBatch<short>(new[]
         {
             nameof(TidusMP), nameof(TidusMaxMP), nameof(YunaMP), nameof(YunaMaxMP),
@@ -470,7 +470,7 @@ public static class MemoryWatchers
         FangirlsOrKidsSkip = MemoryWatcherFactory.Create<short>(nameof(FangirlsOrKidsSkip));
         CalmLandsFlag = MemoryWatcherFactory.Create<ushort>(nameof(CalmLandsFlag));
         GagazetCaveFlag = MemoryWatcherFactory.Create<short>(nameof(GagazetCaveFlag));
-        
+
         MemoryWatcherFactory.CreateBatch<byte>(new[]
         {
             nameof(BaajFlag1), nameof(BesaidFlag1), nameof(SSWinnoFlag1), nameof(KilikaMapFlag),
@@ -522,7 +522,7 @@ public static class MemoryWatchers
         {
             typeof(MemoryWatchers).GetField(name, BindingFlags.Public | BindingFlags.Static)?.SetValue(null, watcher);
         });
-        
+
         MemoryWatcherFactory.CreateBatch<byte>(new[]
         {
             nameof(MenuValue5), nameof(MenuValue7), nameof(AutosaveTrigger),
