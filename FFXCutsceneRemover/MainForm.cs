@@ -32,6 +32,10 @@ public class MainForm : Form
     private Label logLevelLabel;
     private CheckBox autoStartCheckBox;
 
+    private GroupBox categoryGroupBox;
+    private Label categoryLabel;
+    private LinkLabel categoryRulesLink;
+
     private GroupBox statusGroupBox;
     private Label connectionStatusLabel;
     private Label gameStatusLabel;
@@ -314,6 +318,43 @@ public class MainForm : Form
         advancedGroupBox.Controls.Add(logLevelComboBox);
         advancedGroupBox.Controls.Add(autoStartCheckBox);
 
+        // Category GroupBox
+        categoryGroupBox = new GroupBox
+        {
+            Text = "Speedrun Category",
+            Location = new Point(390, 130),
+            Size = new Size(380, 140),
+            Anchor = AnchorStyles.Top | AnchorStyles.Left
+        };
+
+        categoryLabel = new Label
+        {
+            Text = "Any%",
+            Location = new Point(20, 30),
+            Size = new Size(340, 40),
+            Font = new Font(this.Font.FontFamily, 14, FontStyle.Bold),
+            TextAlign = ContentAlignment.MiddleCenter,
+            ForeColor = Color.DarkBlue
+        };
+        toolTip.SetToolTip(categoryLabel, "The speedrun category based on your current settings");
+
+        categoryRulesLink = new LinkLabel
+        {
+            Text = "View Category Rules",
+            Location = new Point(20, 80),
+            Size = new Size(340, 30),
+            Font = new Font(this.Font.FontFamily, 10),
+            TextAlign = ContentAlignment.MiddleCenter,
+            LinkColor = Color.Blue,
+            ActiveLinkColor = Color.Red,
+            VisitedLinkColor = Color.Purple
+        };
+        categoryRulesLink.LinkClicked += CategoryRulesLink_LinkClicked;
+        toolTip.SetToolTip(categoryRulesLink, "Click to open the speedrun.com rules for this category");
+
+        categoryGroupBox.Controls.Add(categoryLabel);
+        categoryGroupBox.Controls.Add(categoryRulesLink);
+
         // Status GroupBox
         statusGroupBox = new GroupBox
         {
@@ -412,6 +453,7 @@ public class MainForm : Form
         this.Controls.Add(settingsGroupBox);
         this.Controls.Add(rngGroupBox);
         this.Controls.Add(advancedGroupBox);
+        this.Controls.Add(categoryGroupBox);
         this.Controls.Add(statusGroupBox);
         this.Controls.Add(startButton);
         this.Controls.Add(stopButton);
@@ -441,6 +483,9 @@ public class MainForm : Form
 
         // Try to load default configuration
         LoadDefaultConfig();
+
+        // Update category display
+        UpdateCategory();
     }
 
     private void LoadDefaultConfig()
@@ -487,6 +532,9 @@ public class MainForm : Form
 
         sleepIntervalNumeric.Value = config.MtSleepInterval;
         autoStartCheckBox.Checked = config.AutoStart;
+
+        // Update category display
+        UpdateCategory();
     }
 
     private CsrConfig GetConfigFromUI()
@@ -511,6 +559,62 @@ public class MainForm : Form
         return config;
     }
 
+    private void UpdateCategory()
+    {
+        bool csrEnabled = csrOnCheckBox.Checked;
+        bool trueRng = trueRngRadioButton.Checked;
+        bool setSeed = setSeedRadioButton.Checked;
+        bool noRng = noRngModRadioButton.Checked;
+
+        string category;
+        string rulesUrl;
+
+        if (csrEnabled && trueRng)
+        {
+            category = "CSR True RNG";
+            rulesUrl = "https://www.speedrun.com/ffx?h=Cutscene_Remover-true-rng&rules=category&x=7dg14oxd-p85d1kvl.lr3edv2l";
+        }
+        else if (csrEnabled && (noRng || setSeed))
+        {
+            category = "CSR Any%";
+            rulesUrl = "https://www.speedrun.com/ffx?h=Cutscene_Remover-any&rules=category&x=7dg14oxd-p85d1kvl.21dpoyp1";
+        }
+        else if (!csrEnabled && (noRng || setSeed))
+        {
+            category = "Any%";
+            rulesUrl = "https://www.speedrun.com/ffx?h=PC-Any&rules=category&x=zdnqrzqd-ylqx078r.0q5vovnl";
+        }
+        else
+        {
+            category = "Unknown";
+            rulesUrl = "";
+        }
+
+        categoryLabel.Text = category;
+        categoryRulesLink.Tag = rulesUrl; // Store URL in Tag property
+        categoryRulesLink.Enabled = !string.IsNullOrEmpty(rulesUrl);
+    }
+
+    private void CategoryRulesLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+    {
+        string url = categoryRulesLink.Tag as string;
+        if (!string.IsNullOrEmpty(url))
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = url,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to open URL: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+    }
+
     private void CsrOnCheckBox_CheckedChanged(object sender, EventArgs e)
     {
         csrBreakOnCheckBox.Enabled = csrOnCheckBox.Checked;
@@ -525,6 +629,7 @@ public class MainForm : Form
             // Restore the previous state when re-enabling
             csrBreakOnCheckBox.Checked = previousBreakState;
         }
+        UpdateCategory();
     }
 
     private void RngRadioButton_CheckedChanged(object sender, EventArgs e)
@@ -533,6 +638,7 @@ public class MainForm : Form
         bool isSeedSelected = setSeedRadioButton.Checked;
         seedComboBox.Enabled = isSeedSelected;
         seedLabel.Enabled = isSeedSelected;
+        UpdateCategory();
     }
 
     private void LogLevelComboBox_SelectedIndexChanged(object sender, EventArgs e)
