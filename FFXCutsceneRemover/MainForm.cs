@@ -58,6 +58,7 @@ public class MainForm : Form
     private BackgroundWorker gameWorker;
     private CancellationTokenSource cancellationTokenSource;
     private System.Windows.Forms.Timer autoStartTimer;
+    private System.Windows.Forms.Timer launcherMonitorTimer;
 
     // Application state
     private CsrConfig csrConfig;
@@ -68,6 +69,7 @@ public class MainForm : Form
     private bool autoStartEnabled = false;
     private LogEventLevel currentLogLevel = LogEventLevel.Information;
     private bool previousBreakState = false; // Remember break checkbox state when CSR is disabled
+    private Process launcherProcess = null; // Track the launcher process to close it later
 
     public MainForm()
     {
@@ -695,6 +697,50 @@ public class MainForm : Form
         }
     }
 
+    private void LauncherMonitor_Tick(object sender, EventArgs e)
+    {
+        try
+        {
+            // Find the FFX&X-2 launcher process
+            if (launcherProcess == null || launcherProcess.HasExited)
+            {
+                var launchers = Process.GetProcessesByName("FFX&X-2_LAUNCHER");
+                if (launchers.Length > 0)
+                {
+                    launcherProcess = launchers[0];
+                    LogMessage($"Found launcher process (PID: {launcherProcess.Id})");
+                }
+            }
+
+            // Check if FFX is running
+            var ffxProcesses = Process.GetProcessesByName("FFX");
+            
+            // If FFX is not running but we have a launcher process, close it
+            if (ffxProcesses.Length == 0 && launcherProcess != null && !launcherProcess.HasExited)
+            {
+                try
+                {
+                    launcherProcess.Kill();
+                    launcherProcess.WaitForExit(2000); // Wait up to 2 seconds
+                    LogMessage("Closed FFX launcher after game exit");
+                }
+                catch (Exception ex)
+                {
+                    LogMessage($"Could not close launcher: {ex.Message}");
+                }
+                finally
+                {
+                    launcherProcess = null;
+                    launcherMonitorTimer?.Stop();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            LogMessage($"Error in launcher monitor: {ex.Message}");
+        }
+    }
+
     private void LaunchGameButton_Click(object sender, EventArgs e)
     {
         try
@@ -779,6 +825,15 @@ public class MainForm : Form
                     WorkingDirectory = Path.GetDirectoryName(ffxPath)
                 });
                 LogMessage($"Launching Final Fantasy X from: {ffxPath}");
+
+                // Start monitoring for the launcher process to close it after FFX exits
+                if (launcherMonitorTimer == null)
+                {
+                    launcherMonitorTimer = new System.Windows.Forms.Timer();
+                    launcherMonitorTimer.Interval = 1000; // Check every second
+                    launcherMonitorTimer.Tick += LauncherMonitor_Tick;
+                }
+                launcherMonitorTimer.Start();
             }
             else
             {
@@ -1061,6 +1116,12 @@ public class MainForm : Form
             StopMod();
             Thread.Sleep(500); // Give time for cleanup
         }
+
+        // Clean up timers
+        autoStartTimer?.Stop();
+        autoStartTimer?.Dispose();
+        launcherMonitorTimer?.Stop();
+        launcherMonitorTimer?.Dispose();
 
         // Unsubscribe from log events
         DiagnosticLog.LogMessageReceived -= OnDiagnosticLogReceived;
