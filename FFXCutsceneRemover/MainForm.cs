@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
+using System.Reflection;
 using Serilog.Events;
 using FFXCutsceneRemover.Logging;
 
@@ -125,6 +126,33 @@ public class MainForm : Form
         this.StartPosition = FormStartPosition.CenterScreen;
         this.FormBorderStyle = FormBorderStyle.FixedSingle;
         this.MaximizeBox = false;
+
+        // Set application icon
+        try
+        {
+            // Try to extract icon from the executing assembly (embedded by ApplicationIcon in .csproj)
+            string exePath = Assembly.GetExecutingAssembly().Location;
+            if (exePath.EndsWith(".dll"))
+            {
+                // When running with dotnet run, we get a .dll, look for the .exe
+                exePath = exePath.Replace(".dll", ".exe");
+            }
+            
+            if (File.Exists(exePath))
+            {
+                this.Icon = Icon.ExtractAssociatedIcon(exePath);
+            }
+            else
+            {
+                // Fallback to loading from file
+                this.Icon = new Icon("FFXCSR_icon.ico");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Icon loading failed, continue without icon
+            Debug.WriteLine($"Failed to load icon: {ex.Message}");
+        }
 
         // Initialize ToolTip
         toolTip = new ToolTip
