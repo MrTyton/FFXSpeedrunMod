@@ -20,23 +20,33 @@ class CutsceneRemover
     // so we don't execute the same transition twice
     private Transition PreviouslyExecutedTransition;
     private int LoopSleepMillis;
+    
+    // Cache transition dictionaries to avoid repeated property access
+    private readonly Dictionary<Func<bool>, Transition> standardTransitions;
+    private readonly Dictionary<Func<bool>, Transition> postBossBattleTransitions;
 
     public CutsceneRemover(int loopSleepMillis)
     {
         LoopSleepMillis = loopSleepMillis;
+        standardTransitions = Transitions.StandardTransitions;
+        postBossBattleTransitions = Transitions.PostBossBattleTransitions;
     }
 
     public void MainLoop()
     {
         /* This loop iterates over the list of standard transitions
          * and applies them when necessary. Most transitions can be performed here. */
-        Dictionary<Func<bool>, Transition> standardTransitions = Transitions.StandardTransitions;
         
-        foreach (var transition in standardTransitions)
+        // Early exit optimization: Skip all transition checks if ForceLoad is active
+        // This prevents evaluating hundreds of conditions when transitions can't execute
+        if (MemoryWatchers.ForceLoad.Current == 0)
         {
-            if (transition.Key.Invoke() && MemoryWatchers.ForceLoad.Current == 0)
+            foreach (var transition in standardTransitions)
             {
-                ExecuteTransition(transition.Value, "Executing Standard Transition - No Description");
+                if (transition.Key.Invoke())
+                {
+                    ExecuteTransition(transition.Value, "Executing Standard Transition - No Description");
+                }
             }
         }
 
@@ -51,8 +61,6 @@ class CutsceneRemover
 
         /* Loop for post boss fights transitions. Once we enter the fight we set the boss bit and the transition
             * to perform once we exit the AP menu. */
-        Dictionary<Func<bool>, Transition> postBossBattleTransitions = Transitions.PostBossBattleTransitions;
-        
         if (!InBossFight)
         {
             foreach (var transition in postBossBattleTransitions)

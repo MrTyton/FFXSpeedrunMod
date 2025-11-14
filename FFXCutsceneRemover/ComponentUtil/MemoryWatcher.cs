@@ -14,16 +14,48 @@ public class MemoryWatcherList : List<MemoryWatcher>
     public delegate void MemoryWatcherDataChangedEventHandler(MemoryWatcher watcher);
     public event MemoryWatcherDataChangedEventHandler OnWatcherDataChanged;
 
+    // Dictionary for O(1) name lookups instead of O(n) LINQ
+    private readonly Dictionary<string, MemoryWatcher> watchersByName = new Dictionary<string, MemoryWatcher>();
+    
+    // Pre-allocated list to avoid creating new lists every update
+    private readonly List<MemoryWatcher> changedList = new List<MemoryWatcher>();
+
     public MemoryWatcher this[string name]
     {
-        get { return this.First(w => w.Name == name); }
+        get 
+        { 
+            if (watchersByName.TryGetValue(name, out var watcher))
+                return watcher;
+            
+            // Fallback to LINQ if not in dictionary (shouldn't happen in normal operation)
+            return this.First(w => w.Name == name);
+        }
+    }
+    
+    // Override Add to maintain the dictionary
+    public new void Add(MemoryWatcher item)
+    {
+        base.Add(item);
+        if (!string.IsNullOrEmpty(item.Name))
+        {
+            watchersByName[item.Name] = item;
+        }
+    }
+    
+    // Override Clear to maintain the dictionary
+    public new void Clear()
+    {
+        base.Clear();
+        watchersByName.Clear();
+        changedList.Clear();
     }
 
     public void UpdateAll(Process process)
     {
         if (OnWatcherDataChanged != null)
         {
-            var changedList = new List<MemoryWatcher>();
+            // Reuse pre-allocated list instead of creating new one
+            changedList.Clear();
 
             foreach (var watcher in this)
             {
