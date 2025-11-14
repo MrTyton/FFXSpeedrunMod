@@ -44,6 +44,7 @@ public class MainForm : Form
 
     private Button startButton;
     private Button stopButton;
+    private Button launchGameButton;
     private Button saveConfigButton;
     private Button loadConfigButton;
 
@@ -428,6 +429,17 @@ public class MainForm : Form
         stopButton.Click += StopButton_Click;
         toolTip.SetToolTip(stopButton, "Stop the mod and disconnect from the game");
 
+        // Launch Game button
+        launchGameButton = new Button
+        {
+            Text = "Launch FFX",
+            Location = new Point(350, 510),
+            Size = new Size(120, 35),
+            Anchor = AnchorStyles.Bottom | AnchorStyles.Left
+        };
+        launchGameButton.Click += LaunchGameButton_Click;
+        toolTip.SetToolTip(launchGameButton, "Launch Final Fantasy X via Steam");
+
         // Config buttons
         saveConfigButton = new Button
         {
@@ -457,6 +469,7 @@ public class MainForm : Form
         this.Controls.Add(statusGroupBox);
         this.Controls.Add(startButton);
         this.Controls.Add(stopButton);
+        this.Controls.Add(launchGameButton);
         this.Controls.Add(saveConfigButton);
         this.Controls.Add(loadConfigButton);
     }
@@ -547,7 +560,8 @@ public class MainForm : Form
             SetSeedOn = setSeedRadioButton.Checked,
             MtSleepInterval = (int)sleepIntervalNumeric.Value,
             AutoStart = autoStartCheckBox.Checked,
-            SelectedSeed = PCSeeds[0] // Default to first seed
+            SelectedSeed = PCSeeds[0], // Default to first seed
+            FfxExecutablePath = csrConfig?.FfxExecutablePath // Preserve the saved path
         };
 
         // Index 0 is the placeholder "--- Select Seed ---", real seeds start at index 1
@@ -761,6 +775,104 @@ public class MainForm : Form
                         "Load Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+        }
+    }
+
+    private void LaunchGameButton_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            string ffxPath = null;
+
+            // First, check if we have a saved path in the config
+            if (csrConfig != null && !string.IsNullOrEmpty(csrConfig.FfxExecutablePath) && File.Exists(csrConfig.FfxExecutablePath))
+            {
+                ffxPath = csrConfig.FfxExecutablePath;
+            }
+            else
+            {
+                // Try common Steam library locations for FFX executable
+                string[] possiblePaths = new[]
+                {
+                    @"C:\Program Files (x86)\Steam\steamapps\common\FINAL FANTASY FFX&FFX-2 HD Remaster\FFX.exe",
+                    @"C:\Program Files\Steam\steamapps\common\FINAL FANTASY FFX&FFX-2 HD Remaster\FFX.exe",
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), @"Steam\steamapps\common\FINAL FANTASY FFX&FFX-2 HD Remaster\FFX.exe"),
+                    @"D:\SteamLibrary\steamapps\common\FINAL FANTASY FFX&FFX-2 HD Remaster\FFX.exe",
+                    @"E:\SteamLibrary\steamapps\common\FINAL FANTASY FFX&FFX-2 HD Remaster\FFX.exe"
+                };
+
+                foreach (var path in possiblePaths)
+                {
+                    if (File.Exists(path))
+                    {
+                        ffxPath = path;
+                        break;
+                    }
+                }
+            }
+
+            // If we still haven't found it, prompt the user to locate it
+            if (ffxPath == null)
+            {
+                var result = MessageBox.Show(
+                    "Could not find FFX.exe in common Steam library locations.\n\n" +
+                    "Would you like to browse for the FFX.exe file?",
+                    "Game Not Found",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    using (var openFileDialog = new OpenFileDialog())
+                    {
+                        openFileDialog.Title = "Locate FFX.exe";
+                        openFileDialog.Filter = "FFX Executable|FFX.exe|All Executables|*.exe";
+                        openFileDialog.InitialDirectory = @"C:\Program Files (x86)\Steam\steamapps\common";
+
+                        if (openFileDialog.ShowDialog() == DialogResult.OK)
+                        {
+                            ffxPath = openFileDialog.FileName;
+                            
+                            // Save the path by updating csrConfig and saving it
+                            csrConfig = GetConfigFromUI();
+                            csrConfig.FfxExecutablePath = ffxPath;
+                            
+                            // Try to save to a default config file
+                            try
+                            {
+                                ConfigManager.SaveConfig(csrConfig, "default.conf");
+                                LogMessage($"FFX path saved to configuration: {ffxPath}");
+                            }
+                            catch (Exception saveEx)
+                            {
+                                LogMessage($"Warning: Could not save FFX path to config: {saveEx.Message}");
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Launch the game if we have a valid path
+            if (ffxPath != null)
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = ffxPath,
+                    UseShellExecute = true,
+                    WorkingDirectory = Path.GetDirectoryName(ffxPath)
+                });
+                LogMessage($"Launching Final Fantasy X from: {ffxPath}");
+            }
+            else
+            {
+                LogMessage("FFX launch cancelled by user");
+            }
+        }
+        catch (Exception ex)
+        {
+            LogMessage($"Failed to launch FFX: {ex.Message}");
+            MessageBox.Show($"Failed to launch Final Fantasy X:\n{ex.Message}",
+                "Launch Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 

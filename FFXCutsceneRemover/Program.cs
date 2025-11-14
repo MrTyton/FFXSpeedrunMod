@@ -64,6 +64,7 @@ public sealed record CsrConfig
     public int MtSleepInterval { get; set; }
     public uint SelectedSeed { get; set; }
     public bool AutoStart { get; set; }
+    public string FfxExecutablePath { get; set; }
 };
 
 public class Program
