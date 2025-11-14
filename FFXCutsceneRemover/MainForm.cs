@@ -59,6 +59,7 @@ public class MainForm : Form
     private bool isRunning = false;
     private bool autoStartEnabled = false;
     private LogEventLevel currentLogLevel = LogEventLevel.Information;
+    private bool previousBreakState = false; // Remember break checkbox state when CSR is disabled
 
     private static readonly uint[] PCSeeds = new uint[] {
         2804382593, 2807284884, 2810252711, 2813220538, 2816122829, 2819090656,
@@ -515,7 +516,14 @@ public class MainForm : Form
         csrBreakOnCheckBox.Enabled = csrOnCheckBox.Checked;
         if (!csrOnCheckBox.Checked)
         {
+            // Remember the current state before unchecking
+            previousBreakState = csrBreakOnCheckBox.Checked;
             csrBreakOnCheckBox.Checked = false;
+        }
+        else
+        {
+            // Restore the previous state when re-enabling
+            csrBreakOnCheckBox.Checked = previousBreakState;
         }
     }
 
