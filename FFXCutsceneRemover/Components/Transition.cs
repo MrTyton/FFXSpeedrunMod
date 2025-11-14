@@ -300,205 +300,8 @@ public class Transition
         // Always update to get the latest process
         process = MemoryWatchers.Process;
 
-        WriteValue(MemoryWatchers.RoomNumber, RoomNumber);
-        WriteValue(MemoryWatchers.Storyline, Storyline);
-        WriteValue(MemoryWatchers.SpawnPoint, SpawnPoint);
-        WriteValue(MemoryWatchers.BattleState, BattleState);
-        WriteValue(MemoryWatchers.BattleState2, BattleState2);
-        WriteValue(MemoryWatchers.Menu, Menu);
-        WriteValue(MemoryWatchers.MenuLock, MenuLock);
-        WriteValue(MemoryWatchers.Intro, Intro);
-        WriteValue(MemoryWatchers.FangirlsOrKidsSkip, FangirlsOrKidsSkip);
-        WriteValue(MemoryWatchers.State, State);
-        WriteValue(MemoryWatchers.XCoordinate, XCoordinate);
-        WriteValue(MemoryWatchers.YCoordinate, YCoordinate);
-        WriteValue(MemoryWatchers.Camera, Camera);
-        WriteValue(MemoryWatchers.Camera_x, Camera_x);
-        WriteValue(MemoryWatchers.Camera_y, Camera_y);
-        WriteValue(MemoryWatchers.Camera_z, Camera_z);
-        WriteValue(MemoryWatchers.CameraRotation, CameraRotation);
-        WriteValue(MemoryWatchers.EncounterStatus, EncounterStatus);
-        WriteValue(MemoryWatchers.MovementLock, MovementLock);
-        WriteValue(MemoryWatchers.ActiveMusicId, ActiveMusicId);
-        WriteValue(MemoryWatchers.MusicId, MusicId);
-        WriteValue(MemoryWatchers.RoomNumberAlt, RoomNumberAlt);
-        WriteValue(MemoryWatchers.CutsceneAlt, CutsceneAlt);
-        WriteValue(MemoryWatchers.AirshipDestinations, AirshipDestinations);
-        WriteValue(MemoryWatchers.AuronOverdrives, AuronOverdrives);
-        WriteValue(MemoryWatchers.TargetFramerate, TargetFramerate);
-        WriteValue(MemoryWatchers.Sandragoras, Sandragoras);
-        WriteValue(MemoryWatchers.EncounterMapID, EncounterMapID);
-        WriteValue(MemoryWatchers.EncounterFormationID1, EncounterFormationID1);
-        WriteValue(MemoryWatchers.EncounterFormationID2, EncounterFormationID2);
-        WriteValue(MemoryWatchers.ScriptedBattleFlag1, ScriptedBattleFlag1);
-        WriteValue(MemoryWatchers.ScriptedBattleFlag2, ScriptedBattleFlag2);
-        WriteValue(MemoryWatchers.ScriptedBattleVar1, ScriptedBattleVar1);
-        WriteValue(MemoryWatchers.ScriptedBattleVar3, ScriptedBattleVar3);
-        WriteValue(MemoryWatchers.ScriptedBattleVar4, ScriptedBattleVar4);
-        WriteValue(MemoryWatchers.EncounterTrigger, EncounterTrigger);
-        WriteValue(MemoryWatchers.HpEnemyA, HpEnemyA);
-        WriteValue(MemoryWatchers.GuadoCount, GuadoCount);
-        WriteValue(MemoryWatchers.TidusXCoordinate, TidusXCoordinate);
-        WriteValue(MemoryWatchers.TidusYCoordinate, TidusYCoordinate);
-        WriteValue(MemoryWatchers.TidusZCoordinate, TidusZCoordinate);
-        WriteValue(MemoryWatchers.TidusRotation, TidusRotation);
-        WriteBytes(MemoryWatchers.DialogueFile, DialogueFile);
-        WriteValue(MemoryWatchers.CutsceneTiming, CutsceneTiming);
-        WriteValue(MemoryWatchers.IsLoading, IsLoading);
-        WriteValue(MemoryWatchers.CurrentMagicID, CurrentMagicID);
-        WriteValue(MemoryWatchers.ToBeDeletedMagicID, ToBeDeletedMagicID);
-        WriteValue(MemoryWatchers.CurrentMagicHandle, CurrentMagicHandle);
-        WriteValue(MemoryWatchers.ToBeDeletedMagicHandle, ToBeDeletedMagicHandle);
-        WriteValue(MemoryWatchers.EffectPointer, EffectPointer);
-        WriteValue(MemoryWatchers.EffectStatusFlag, EffectStatusFlag);
-        WriteValue(MemoryWatchers.AuronTransition, AuronTransition);
-        WriteValue(MemoryWatchers.AmmesTransition, AmmesTransition);
-        WriteValue(MemoryWatchers.TankerTransition, TankerTransition);
-        WriteValue(MemoryWatchers.InsideSinTransition, InsideSinTransition);
-        WriteValue(MemoryWatchers.DiveTransition, DiveTransition);
-        WriteValue(MemoryWatchers.DiveTransition2, DiveTransition2);
-        WriteValue(MemoryWatchers.DiveTransition3, DiveTransition3);
-        WriteValue(MemoryWatchers.GeosTransition, GeosTransition);
-        WriteValue(MemoryWatchers.KlikkTransition, KlikkTransition);
-        WriteValue(MemoryWatchers.AlBhedBoatTransition, AlBhedBoatTransition);
-        WriteValue(MemoryWatchers.UnderwaterRuinsTransition, UnderwaterRuinsTransition);
-        WriteValue(MemoryWatchers.UnderwaterRuinsTransition2, UnderwaterRuinsTransition2);
-        WriteValue(MemoryWatchers.UnderwaterRuinsOutsideTransition, UnderwaterRuinsOutsideTransition);
-        WriteValue(MemoryWatchers.BeachTransition, BeachTransition);
-        WriteValue(MemoryWatchers.LagoonTransition1, LagoonTransition1);
-        WriteValue(MemoryWatchers.LagoonTransition2, LagoonTransition2);
-        WriteValue(MemoryWatchers.ValeforTransition, ValeforTransition);
-        WriteValue(MemoryWatchers.BesaidNightTransition1, BesaidNightTransition1);
-        WriteValue(MemoryWatchers.BesaidNightTransition2, BesaidNightTransition2);
-        WriteValue(MemoryWatchers.KimahriTransition, KimahriTransition);
-        WriteValue(MemoryWatchers.YunaBoatTransition, YunaBoatTransition);
-        WriteValue(MemoryWatchers.SinFinTransition, SinFinTransition);
-        WriteValue(MemoryWatchers.EchuillesTransition, EchuillesTransition);
-        WriteValue(MemoryWatchers.GeneauxTransition, GeneauxTransition);
-        WriteValue(MemoryWatchers.KilikaElevatorTransition, KilikaElevatorTransition);
-        WriteValue(MemoryWatchers.KilikaTrialsTransition, KilikaTrialsTransition);
-        WriteValue(MemoryWatchers.KilikaAntechamberTransition, KilikaAntechamberTransition);
-        WriteValue(MemoryWatchers.IfritTransition, IfritTransition);
-        WriteValue(MemoryWatchers.IfritTransition2, IfritTransition2);
-        WriteValue(MemoryWatchers.JechtShotTransition, JechtShotTransition);
-        WriteValue(MemoryWatchers.OblitzeratorTransition, OblitzeratorTransition);
-        WriteValue(MemoryWatchers.BlitzballTransition, BlitzballTransition);
-        WriteValue(MemoryWatchers.SahaginTransition, SahaginTransition);
-        WriteValue(MemoryWatchers.GarudaTransition, GarudaTransition);
-        WriteValue(MemoryWatchers.RinTransition, RinTransition);
-        WriteValue(MemoryWatchers.ChocoboEaterTransition, ChocoboEaterTransition);
-        WriteValue(MemoryWatchers.GuiTransition, GuiTransition);
-        WriteValue(MemoryWatchers.Gui2Transition, Gui2Transition);
-        WriteValue(MemoryWatchers.DjoseTransition, DjoseTransition);
-        WriteValue(MemoryWatchers.IxionTransition, IxionTransition);
-        WriteValue(MemoryWatchers.ExtractorTransition, ExtractorTransition);
-        WriteValue(MemoryWatchers.SeymoursHouseTransition1, SeymoursHouseTransition1);
-        WriteValue(MemoryWatchers.SeymoursHouseTransition2, SeymoursHouseTransition2);
-        WriteValue(MemoryWatchers.FarplaneTransition1, FarplaneTransition1);
-        WriteValue(MemoryWatchers.FarplaneTransition2, FarplaneTransition2);
-        WriteValue(MemoryWatchers.TromellTransition, TromellTransition);
-        WriteValue(MemoryWatchers.CrawlerTransition, CrawlerTransition);
-        WriteValue(MemoryWatchers.SeymourTransition, SeymourTransition);
-        WriteValue(MemoryWatchers.SeymourTransition2, SeymourTransition2);
-        WriteValue(MemoryWatchers.WendigoTransition, WendigoTransition);
-        WriteValue(MemoryWatchers.SpherimorphTransition, SpherimorphTransition);
-        WriteValue(MemoryWatchers.UnderLakeTransition, UnderLakeTransition);
-        WriteValue(MemoryWatchers.BikanelTransition, BikanelTransition);
-        WriteValue(MemoryWatchers.HomeTransition, HomeTransition);
-        WriteValue(MemoryWatchers.EvraeTransition, EvraeTransition);
-        WriteValue(MemoryWatchers.EvraeAirshipTransition, EvraeAirshipTransition);
-        WriteValue(MemoryWatchers.GuardsTransition, GuardsTransition);
-        WriteValue(MemoryWatchers.BahamutTransition, BahamutTransition);
-        WriteValue(MemoryWatchers.IsaaruTransition, IsaaruTransition);
-        WriteValue(MemoryWatchers.AltanaTransition, AltanaTransition);
-        WriteValue(MemoryWatchers.NatusTransition, NatusTransition);
-        WriteValue(MemoryWatchers.DefenderXTransition, DefenderXTransition);
-        WriteValue(MemoryWatchers.RonsoTransition, RonsoTransition);
-        WriteValue(MemoryWatchers.FluxTransition, FluxTransition);
-        WriteValue(MemoryWatchers.SanctuaryTransition, SanctuaryTransition);
-        WriteValue(MemoryWatchers.SpectralKeeperTransition, SpectralKeeperTransition);
-        WriteValue(MemoryWatchers.SpectralKeeperTransition2, SpectralKeeperTransition2);
-        WriteValue(MemoryWatchers.YunalescaTransition, YunalescaTransition);
-        WriteValue(MemoryWatchers.FinsTransition, FinsTransition);
-        WriteValue(MemoryWatchers.FinsAirshipTransition, FinsAirshipTransition);
-        WriteValue(MemoryWatchers.SinCoreTransition, SinCoreTransition);
-        WriteValue(MemoryWatchers.OverdriveSinTransition, OverdriveSinTransition);
-        WriteValue(MemoryWatchers.OmnisTransition, OmnisTransition);
-        WriteValue(MemoryWatchers.BFATransition, BFATransition);
-        WriteValue(MemoryWatchers.AeonTransition, AeonTransition);
-        WriteValue(MemoryWatchers.YuYevonTransition, YuYevonTransition);
-        WriteValue(MemoryWatchers.YojimboFaythTransition, YojimboFaythTransition);
-        WriteValue(MemoryWatchers.EnableTidus, EnableTidus);
-        WriteValue(MemoryWatchers.EnableYuna, EnableYuna);
-        WriteValue(MemoryWatchers.EnableAuron, EnableAuron);
-        WriteValue(MemoryWatchers.EnableKimahri, EnableKimahri);
-        WriteValue(MemoryWatchers.EnableWakka, EnableWakka);
-        WriteValue(MemoryWatchers.EnableLulu, EnableLulu);
-        WriteValue(MemoryWatchers.EnableRikku, EnableRikku);
-        WriteValue(MemoryWatchers.EnableSeymour, EnableSeymour);
-        WriteValue(MemoryWatchers.EnableValefor, EnableValefor);
-        WriteValue(MemoryWatchers.EnableIfrit, EnableIfrit);
-        WriteValue(MemoryWatchers.EnableIxion, EnableIxion);
-        WriteValue(MemoryWatchers.EnableShiva, EnableShiva);
-        WriteValue(MemoryWatchers.EnableBahamut, EnableBahamut);
-        WriteValue(MemoryWatchers.EnableAnima, EnableAnima);
-        WriteValue(MemoryWatchers.EnableYojimbo, EnableYojimbo);
-        WriteValue(MemoryWatchers.EnableMagus, EnableMagus);
-
-        WriteValue(MemoryWatchers.BaajFlag1, BaajFlag1);
-        WriteValue(MemoryWatchers.SSWinnoFlag1, SSWinnoFlag1);
-        WriteValue(MemoryWatchers.KilikaMapFlag, KilikaMapFlag);
-        WriteValue(MemoryWatchers.SSWinnoFlag2, SSWinnoFlag2);
-
-        WriteValue(MemoryWatchers.LucaFlag, LucaFlag);
-        WriteValue(MemoryWatchers.LucaFlag2, LucaFlag2);
-        WriteValue(MemoryWatchers.BlitzballFlag, BlitzballFlag);
-        WriteValue(MemoryWatchers.MiihenFlag1, MiihenFlag1);
-        WriteValue(MemoryWatchers.MiihenFlag2, MiihenFlag2);
-        WriteValue(MemoryWatchers.MiihenFlag3, MiihenFlag3);
-        WriteValue(MemoryWatchers.MiihenFlag4, MiihenFlag4);
-        WriteValue(MemoryWatchers.MRRFlag1, MRRFlag1);
-        WriteValue(MemoryWatchers.MRRFlag2, MRRFlag2);
-        WriteValue(MemoryWatchers.MoonflowFlag, MoonflowFlag);
-        WriteValue(MemoryWatchers.MoonflowFlag2, MoonflowFlag2);
-        WriteValue(MemoryWatchers.RikkuOutfit, RikkuOutfit);
-        WriteValue(MemoryWatchers.TidusWeaponDamageBoost, TidusWeaponDamageBoost);
-        WriteValue(MemoryWatchers.GuadosalamShopFlag, GuadosalamShopFlag);
-        WriteValue(MemoryWatchers.ThunderPlainsFlag, ThunderPlainsFlag);
-        WriteValue(MemoryWatchers.MacalaniaFlag, MacalaniaFlag);
-        WriteValue(MemoryWatchers.BikanelFlag, BikanelFlag);
-        WriteBytes(MemoryWatchers.RikkuName, RikkuName);
-        WriteValue(MemoryWatchers.ViaPurificoPlatform, ViaPurificoPlatform);
-        WriteValue(MemoryWatchers.NatusFlag, NatusFlag);
-        WriteValue(MemoryWatchers.CalmLandsFlag, CalmLandsFlag);
-        WriteValue(MemoryWatchers.WantzFlag, WantzFlag);
-        WriteValue(MemoryWatchers.GagazetCaveFlag, GagazetCaveFlag);
-        WriteValue(MemoryWatchers.OmegaRuinsFlag, OmegaRuinsFlag);
-        WriteValue(MemoryWatchers.WantzMacalaniaFlag, WantzMacalaniaFlag);
-
-        WriteBytes(MemoryWatchers.AurochsTeamBytes, AurochsTeamBytes);
-        WriteBytes(MemoryWatchers.BlitzballBytes, BlitzballBytes);
-        WriteValue(MemoryWatchers.AurochsPlayer1, AurochsPlayer1);
-
-        WriteValue(MemoryWatchers.GilBattleRewards, GilBattleRewards);
-        WriteValue(MemoryWatchers.GilRewardCounter, GilRewardCounter);
-        WriteValue(MemoryWatchers.BattleRewardItemCount, BattleRewardItemCount);
-        WriteValue(MemoryWatchers.BattleRewardItem1, BattleRewardItem1);
-        WriteValue(MemoryWatchers.BattleRewardItemQty1, BattleRewardItemQty1);
-        WriteValue(MemoryWatchers.BattleRewardEquipCount, BattleRewardEquipCount);
-        WriteBytes(MemoryWatchers.BattleRewardEquip1, BattleRewardEquip1);
-
-        WriteValue(MemoryWatchers.MenuValue1, MenuValue1);
-        WriteValue(MemoryWatchers.MenuValue2, MenuValue2);
-        WriteValue(MemoryWatchers.MenuTriggerValue, MenuTriggerValue);
-
-        WriteValue(MemoryWatchers.AutosaveTrigger, AutosaveTrigger);
-        WriteValue(MemoryWatchers.SupressAutosaveOnForceLoad, SupressAutosaveOnForceLoad);
-        WriteValue(MemoryWatchers.SupressAutosaveCounter, SupressAutosaveCounter);
-
-        WriteValue(MemoryWatchers.LucaMusicSpheresUnlocked, LucaMusicSpheresUnlocked);
-
-        WriteBytes(MemoryWatchers.RNGArrayOpBytes, RNGArrayOpBytes);
+        // Write all properties to their corresponding MemoryWatchers
+        WriteValuesFromProperties();
 
         // Update Bitmasks
         WriteValue(MemoryWatchers.CalmLandsFlag, MemoryWatchers.CalmLandsFlag.Current | AddCalmLandsBitmask);
@@ -668,6 +471,51 @@ public class Transition
 
                 DiagnosticLog.Debug($"w {watcher.Name}: write {hexstring} to addr {finalPointer:X8}.");
                 process.WriteBytes(finalPointer, bytes);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Automatically writes all non-null properties to their corresponding MemoryWatchers.
+    /// Uses reflection to match property names with MemoryWatcher fields.
+    /// </summary>
+    protected void WriteValuesFromProperties()
+    {
+        var transitionProperties = this.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
+        var memoryWatcherFields = typeof(MemoryWatchers).GetFields(BindingFlags.Public | BindingFlags.Static);
+
+        foreach (var property in transitionProperties)
+        {
+            var propertyValue = property.GetValue(this);
+            if (propertyValue == null)
+                continue;
+
+            // Find matching MemoryWatcher field by name
+            var matchingWatcher = memoryWatcherFields.FirstOrDefault(f => f.Name == property.Name);
+            if (matchingWatcher == null)
+                continue;
+
+            var watcher = matchingWatcher.GetValue(null) as MemoryWatcher;
+            if (watcher == null)
+                continue;
+
+            // Handle byte arrays specially
+            if (property.FieldType == typeof(byte[]))
+            {
+                WriteBytes(watcher, propertyValue as byte[]);
+                continue;
+            }
+
+            // Handle nullable value types
+            var propertyType = property.FieldType;
+            if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                var underlyingType = Nullable.GetUnderlyingType(propertyType);
+
+                // Use reflection to call the generic WriteValue method
+                var writeValueMethod = this.GetType().GetMethod("WriteValue", BindingFlags.NonPublic | BindingFlags.Instance);
+                var genericMethod = writeValueMethod.MakeGenericMethod(underlyingType);
+                genericMethod.Invoke(this, new object[] { watcher, propertyValue });
             }
         }
     }
@@ -974,6 +822,22 @@ public class Transition
 
     // Formation Functions
 
+    /// <summary>
+    /// Character IDs used in formations and party management.
+    /// </summary>
+    public enum CharacterId : byte
+    {
+        Tidus = 0x00,
+        Yuna = 0x01,
+        Auron = 0x02,
+        Kimahri = 0x03,
+        Wakka = 0x04,
+        Lulu = 0x05,
+        Rikku = 0x06,
+        Seymour = 0x07,
+        Empty = 0xFF
+    }
+
     public enum Formations
     {
         Klikk2,
@@ -1000,12 +864,99 @@ public class Transition
         PostBiranYenke
     }
 
+    /// <summary>
+    /// Helper method to enable a character (sets enable flag to 17).
+    /// </summary>
+    private void EnableCharacter(CharacterId characterId)
+    {
+        MemoryWatcher<byte> watcher = characterId switch
+        {
+            CharacterId.Tidus => MemoryWatchers.EnableTidus,
+            CharacterId.Yuna => MemoryWatchers.EnableYuna,
+            CharacterId.Auron => MemoryWatchers.EnableAuron,
+            CharacterId.Kimahri => MemoryWatchers.EnableKimahri,
+            CharacterId.Wakka => MemoryWatchers.EnableWakka,
+            CharacterId.Lulu => MemoryWatchers.EnableLulu,
+            CharacterId.Rikku => MemoryWatchers.EnableRikku,
+            CharacterId.Seymour => MemoryWatchers.EnableSeymour,
+            _ => null
+        };
+
+        if (watcher != null)
+            WriteValue<byte>(watcher, 17);
+    }
+
+    /// <summary>
+    /// Helper method to disable a character (sets enable flag to 16 or 0).
+    /// </summary>
+    private void DisableCharacter(CharacterId characterId, byte disableValue = 16)
+    {
+        MemoryWatcher<byte> watcher = characterId switch
+        {
+            CharacterId.Tidus => MemoryWatchers.EnableTidus,
+            CharacterId.Yuna => MemoryWatchers.EnableYuna,
+            CharacterId.Auron => MemoryWatchers.EnableAuron,
+            CharacterId.Kimahri => MemoryWatchers.EnableKimahri,
+            CharacterId.Wakka => MemoryWatchers.EnableWakka,
+            CharacterId.Lulu => MemoryWatchers.EnableLulu,
+            CharacterId.Rikku => MemoryWatchers.EnableRikku,
+            CharacterId.Seymour => MemoryWatchers.EnableSeymour,
+            _ => null
+        };
+
+        if (watcher != null)
+            WriteValue<byte>(watcher, disableValue);
+    }
+
+    /// <summary>
+    /// Helper method to enable multiple characters at once.
+    /// </summary>
+    private void EnableCharacters(params CharacterId[] characterIds)
+    {
+        foreach (var id in characterIds)
+            EnableCharacter(id);
+    }
+
+    /// <summary>
+    /// Helper method to disable multiple characters at once.
+    /// </summary>
+    private void DisableCharacters(byte disableValue, params CharacterId[] characterIds)
+    {
+        foreach (var id in characterIds)
+            DisableCharacter(id, disableValue);
+    }
+
+    /// <summary>
+    /// Helper method to swap multiple characters with positions sequentially.
+    /// Each tuple contains (characterId, targetPosition).
+    /// </summary>
+    private byte[] SwapCharactersWithPositions(byte[] formation, params (CharacterId character, int position)[] swaps)
+    {
+        foreach (var (character, position) in swaps)
+        {
+            formation = SwapCharacterWithPosition(formation, character, position);
+        }
+        return formation;
+    }
+
+    /// <summary>
+    /// Helper method to add multiple characters to the formation.
+    /// </summary>
+    private byte[] AddCharacters(byte[] formation, params CharacterId[] characterIds)
+    {
+        foreach (var id in characterIds)
+        {
+            formation = AddCharacter(formation, id);
+        }
+        return formation;
+    }
+
     private void UpdateFormation(byte[] initialFormation = null)
     {
         byte[] formation = process.ReadBytes(MemoryWatchers.Formation.Address, 10);
-        byte initialPosition1 = 0xFF;
-        byte initialPosition2 = 0xFF;
-        byte initialPosition3 = 0xFF;
+        byte initialPosition1 = (byte)CharacterId.Empty;
+        byte initialPosition2 = (byte)CharacterId.Empty;
+        byte initialPosition3 = (byte)CharacterId.Empty;
 
         if (!(initialFormation is null))
         {
@@ -1028,140 +979,108 @@ public class Transition
                     formation = new byte[] { 0x00, 0x01, 0x04, 0xFF, 0xFF, 0x05, 0xFF, 0xFF, 0xFF, 0xFF };
                     break;
                 case Formations.BoardingSSLiki:
-                    formation = AddCharacter(formation, 0x03);
+                    formation = AddCharacter(formation, CharacterId.Kimahri);
                     break;
                 case Formations.PostEchuilles:
-                    formation = new byte[] { 0x05, 0x04, 0x00, 0x01, 0x03, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
-                    WriteValue<byte>(MemoryWatchers.EnableYuna, 17);
-                    WriteValue<byte>(MemoryWatchers.EnableKimahri, 17);
-                    WriteValue<byte>(MemoryWatchers.EnableLulu, 17);
+                    formation = new byte[] { (byte)CharacterId.Lulu, (byte)CharacterId.Wakka, (byte)CharacterId.Tidus, (byte)CharacterId.Yuna, (byte)CharacterId.Kimahri, (byte)CharacterId.Empty, (byte)CharacterId.Empty, (byte)CharacterId.Empty, (byte)CharacterId.Empty, (byte)CharacterId.Empty };
+                    EnableCharacters(CharacterId.Yuna, CharacterId.Kimahri, CharacterId.Lulu); // Yuna, Kimahri, Lulu
                     break;
                 case Formations.MachinaFights:
-                    formation = new byte[] { 0x05, 0x00, 0x03, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
-                    WriteValue<byte>(MemoryWatchers.EnableYuna, 16);
-                    WriteValue<byte>(MemoryWatchers.EnableWakka, 16);
+                    formation = new byte[] { (byte)CharacterId.Lulu, (byte)CharacterId.Tidus, (byte)CharacterId.Kimahri, (byte)CharacterId.Empty, (byte)CharacterId.Empty, (byte)CharacterId.Empty, (byte)CharacterId.Empty, (byte)CharacterId.Empty, (byte)CharacterId.Empty, (byte)CharacterId.Empty };
+                    DisableCharacters(16, CharacterId.Yuna, CharacterId.Wakka); // Yuna, Wakka
                     break;
                 case Formations.PreOblitzerator:
-                    formation = new byte[] { 0x00, 0x05, 0x03, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+                    formation = new byte[] { (byte)CharacterId.Tidus, (byte)CharacterId.Lulu, (byte)CharacterId.Kimahri, (byte)CharacterId.Empty, (byte)CharacterId.Empty, (byte)CharacterId.Empty, (byte)CharacterId.Empty, (byte)CharacterId.Empty, (byte)CharacterId.Empty, (byte)CharacterId.Empty };
                     break;
                 case Formations.PostOblitzerator:
-                    formation = new byte[] { 0x05, 0x00, 0x03, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+                    formation = new byte[] { (byte)CharacterId.Lulu, (byte)CharacterId.Tidus, (byte)CharacterId.Kimahri, (byte)CharacterId.Empty, (byte)CharacterId.Empty, (byte)CharacterId.Empty, (byte)CharacterId.Empty, (byte)CharacterId.Empty, (byte)CharacterId.Empty, (byte)CharacterId.Empty };
                     break;
                 case Formations.PreSahagins:
-                    WriteValue<byte>(MemoryWatchers.EnableKimahri, 16);
-                    WriteValue<byte>(MemoryWatchers.EnableLulu, 16);
-                    WriteValue<byte>(MemoryWatchers.EnableWakka, 17);
-                    formation = new byte[] { 0x04, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+                    DisableCharacters(16, CharacterId.Kimahri, CharacterId.Lulu); // Kimahri, Lulu
+                    EnableCharacter(CharacterId.Wakka); // Wakka
+                    formation = new byte[] { (byte)CharacterId.Wakka, (byte)CharacterId.Tidus, (byte)CharacterId.Empty, (byte)CharacterId.Empty, (byte)CharacterId.Empty, (byte)CharacterId.Empty, (byte)CharacterId.Empty, (byte)CharacterId.Empty, (byte)CharacterId.Empty, (byte)CharacterId.Empty };
                     break;
                 case Formations.AuronJoinsTheParty:
-                    WriteValue<byte>(MemoryWatchers.EnableTidus, 17);
-                    WriteValue<byte>(MemoryWatchers.EnableYuna, 17);
-                    WriteValue<byte>(MemoryWatchers.EnableAuron, 17);
-                    WriteValue<byte>(MemoryWatchers.EnableKimahri, 17);
-                    WriteValue<byte>(MemoryWatchers.EnableWakka, 17);
-                    WriteValue<byte>(MemoryWatchers.EnableLulu, 17);
-                    formation = new byte[] { 0x00, 0x04, 0x01, 0x02, 0xFF, 0xFF, 0x05, 0x03, 0xFF, 0xFF };
+                    EnableCharacters(CharacterId.Tidus, CharacterId.Yuna, CharacterId.Auron, CharacterId.Kimahri, CharacterId.Wakka, CharacterId.Lulu); // All main party
+                    formation = new byte[] { (byte)CharacterId.Tidus, (byte)CharacterId.Wakka, (byte)CharacterId.Yuna, (byte)CharacterId.Auron, (byte)CharacterId.Empty, (byte)CharacterId.Empty, (byte)CharacterId.Lulu, (byte)CharacterId.Kimahri, (byte)CharacterId.Empty, (byte)CharacterId.Empty };
                     break;
                 case Formations.PreGui2:
                     formation = SwapPositionWithFirstEmptyReservePosition(formation, 0);
                     formation = SwapPositionWithFirstEmptyReservePosition(formation, 1);
                     formation = SwapPositionWithFirstEmptyReservePosition(formation, 2);
-                    formation = RemoveCharacter(formation, 0);
-                    formation = RemoveCharacter(formation, 1);
-                    formation = RemoveCharacter(formation, 4);
-                    formation = RemoveCharacter(formation, 3);
-                    formation = RemoveCharacter(formation, 5);
-                    formation = RemoveCharacter(formation, 2);
-                    formation = AddCharacter(formation, 7);
-                    formation = AddCharacter(formation, 1);
-                    formation = AddCharacter(formation, 2);
-                    formation = SwapCharacterWithPosition(formation, 1, 0);
-                    formation = SwapCharacterWithPosition(formation, 7, 1);
-                    formation = SwapCharacterWithPosition(formation, 2, 2);
+                    formation = RemoveCharacter(formation, CharacterId.Tidus);
+                    formation = RemoveCharacter(formation, CharacterId.Yuna);
+                    formation = RemoveCharacter(formation, CharacterId.Wakka);
+                    formation = RemoveCharacter(formation, CharacterId.Kimahri);
+                    formation = RemoveCharacter(formation, CharacterId.Lulu);
+                    formation = RemoveCharacter(formation, CharacterId.Auron);
+                    formation = AddCharacters(formation, CharacterId.Seymour, CharacterId.Yuna, CharacterId.Auron);
+                    formation = SwapCharactersWithPositions(formation, (CharacterId.Yuna, 0), (CharacterId.Seymour, 1), (CharacterId.Auron, 2));
                     break;
                 case Formations.PostGui:
-                    WriteValue<byte>(MemoryWatchers.EnableTidus, 17);
-                    WriteValue<byte>(MemoryWatchers.EnableKimahri, 17);
-                    WriteValue<byte>(MemoryWatchers.EnableWakka, 17);
-                    WriteValue<byte>(MemoryWatchers.EnableLulu, 17);
-                    WriteValue<byte>(MemoryWatchers.EnableSeymour, 16);
-                    byte[] newformation = new byte[] { 0x01, 0xFF, 0x02, 0x00, 0x03, 0x04, 0x05, 0xFF, 0xFF, 0xFF };
-                    newformation = SwapCharacterWithPosition(newformation, initialPosition1, 0);
-                    newformation = SwapCharacterWithPosition(newformation, initialPosition2, 1);
-                    newformation = SwapCharacterWithPosition(newformation, initialPosition3, 2);
+                    EnableCharacters(CharacterId.Tidus, CharacterId.Kimahri, CharacterId.Wakka, CharacterId.Lulu); // Tidus, Kimahri, Wakka, Lulu
+                    DisableCharacter(CharacterId.Seymour, 16); // Seymour
+                    byte[] newformation = new byte[] { (byte)CharacterId.Yuna, (byte)CharacterId.Empty, (byte)CharacterId.Auron, (byte)CharacterId.Tidus, (byte)CharacterId.Kimahri, (byte)CharacterId.Wakka, (byte)CharacterId.Lulu, (byte)CharacterId.Empty, (byte)CharacterId.Empty, (byte)CharacterId.Empty };
+                    newformation = SwapCharactersWithPositions(newformation,
+                        ((CharacterId)initialPosition1, 0), ((CharacterId)initialPosition2, 1), ((CharacterId)initialPosition3, 2));
                     formation = newformation;
                     break;
                 case Formations.MeetRikku:
-                    WriteValue<byte>(MemoryWatchers.EnableRikku, 17);
-                    formation = AddCharacter(formation, 0x06);
-                    formation = SwapCharacterWithPosition(formation, 0x06, 3);
+                    EnableCharacter(CharacterId.Rikku); // Rikku
+                    formation = AddCharacter(formation, CharacterId.Rikku);
+                    formation = SwapCharacterWithPosition(formation, CharacterId.Rikku, 3);
                     break;
                 case Formations.PostCrawler:
-                    formation = RemoveCharacter(formation, 0x01);
-                    WriteValue<byte>(MemoryWatchers.EnableYuna, 0);
-                    formation = FillMainPartySlotIfEmpty(formation, 0x00);
+                    formation = RemoveCharacter(formation, CharacterId.Yuna);
+                    DisableCharacter(CharacterId.Yuna, 0); // Yuna
+                    formation = FillMainPartySlotIfEmpty(formation, CharacterId.Tidus);
                     break;
                 case Formations.PreSeymour:
-                    WriteValue<byte>(MemoryWatchers.EnableYuna, 17);
-                    formation = AddCharacter(formation, 0x01);
-                    formation = SwapCharacterWithPosition(formation, 0x00, 0);
-                    formation = SwapCharacterWithPosition(formation, 0x01, 1);
-                    formation = SwapCharacterWithPosition(formation, 0x03, 2);
+                    EnableCharacter(CharacterId.Yuna); // Yuna
+                    formation = AddCharacter(formation, CharacterId.Yuna);
+                    formation = SwapCharactersWithPositions(formation, (CharacterId.Tidus, 0), (CharacterId.Yuna, 1), (CharacterId.Kimahri, 2));
                     break;
                 case Formations.BikanelStart:
                     formation = RemoveAll(formation);
-                    WriteValue<byte>(MemoryWatchers.EnableTidus, 17);
-                    formation = AddCharacter(formation, 0x00);
-                    formation = SwapCharacterWithPosition(formation, 0x00, 0);
+                    EnableCharacter(CharacterId.Tidus); // Tidus
+                    formation = AddCharacter(formation, CharacterId.Tidus);
+                    formation = SwapCharacterWithPosition(formation, CharacterId.Tidus, 0);
                     break;
                 case Formations.PostZu:
-                    WriteValue<byte>(MemoryWatchers.EnableWakka, 17);
-                    formation = AddCharacter(formation, 0x04);
+                    EnableCharacter(CharacterId.Wakka); // Wakka
+                    formation = AddCharacter(formation, CharacterId.Wakka);
                     break;
                 case Formations.BikanelRikku:
-                    WriteValue<byte>(MemoryWatchers.EnableRikku, 17);
-                    formation = AddCharacter(formation, 0x06);
+                    EnableCharacter(CharacterId.Rikku); // Rikku
+                    formation = AddCharacter(formation, CharacterId.Rikku);
                     break;
                 case Formations.ViaPurificoStart:
                     formation = RemoveAll(formation);
-                    WriteValue<byte>(MemoryWatchers.EnableYuna, 17);
-                    formation = AddCharacter(formation, 0x01);
-                    formation = SwapCharacterWithPosition(formation, 0x01, 0);
+                    EnableCharacter(CharacterId.Yuna); // Yuna
+                    formation = AddCharacter(formation, CharacterId.Yuna);
+                    formation = SwapCharacterWithPosition(formation, CharacterId.Yuna, 0);
                     break;
                 case Formations.HighbridgeStart:
-                    WriteValue<byte>(MemoryWatchers.EnableYuna, 17);
-                    WriteValue<byte>(MemoryWatchers.EnableAuron, 17);
-                    WriteValue<byte>(MemoryWatchers.EnableLulu, 17);
-                    formation = AddCharacter(formation, 0x01);
-                    formation = AddCharacter(formation, 0x02);
-                    formation = AddCharacter(formation, 0x05);
-                    formation = SwapCharacterWithPosition(formation, 0x00, 0);
-                    formation = SwapCharacterWithPosition(formation, 0x01, 1);
-                    formation = SwapCharacterWithPosition(formation, 0x04, 2);
+                    EnableCharacters(CharacterId.Yuna, CharacterId.Auron, CharacterId.Lulu); // Yuna, Auron, Lulu
+                    formation = AddCharacters(formation, CharacterId.Yuna, CharacterId.Auron, CharacterId.Lulu);
+                    formation = SwapCharactersWithPositions(formation, (CharacterId.Tidus, 0), (CharacterId.Yuna, 1), (CharacterId.Wakka, 2));
                     break;
                 case Formations.PreNatus:
-                    WriteValue<byte>(MemoryWatchers.EnableKimahri, 17);
-                    formation = AddCharacter(formation, 0x03);
-                    formation = SwapCharacterWithPosition(formation, 0x00, 0);
-                    formation = SwapCharacterWithPosition(formation, 0x01, 2);
-                    formation = SwapCharacterWithPosition(formation, 0x03, 1);
+                    EnableCharacter(CharacterId.Kimahri); // Kimahri
+                    formation = AddCharacter(formation, CharacterId.Kimahri);
+                    formation = SwapCharactersWithPositions(formation, (CharacterId.Tidus, 0), (CharacterId.Yuna, 2), (CharacterId.Kimahri, 1));
                     break;
                 case Formations.PostBiranYenke:
-                    WriteValue<byte>(MemoryWatchers.EnableTidus, 17);
-                    WriteValue<byte>(MemoryWatchers.EnableYuna, 17);
-                    WriteValue<byte>(MemoryWatchers.EnableAuron, 17);
-                    WriteValue<byte>(MemoryWatchers.EnableWakka, 17);
-                    WriteValue<byte>(MemoryWatchers.EnableLulu, 17);
-                    WriteValue<byte>(MemoryWatchers.EnableRikku, 17);
-                    formation = AddCharacter(formation, 0x00);
-                    formation = AddCharacter(formation, 0x01);
-                    formation = AddCharacter(formation, 0x02);
-                    formation = AddCharacter(formation, 0x04);
-                    formation = AddCharacter(formation, 0x05);
-                    formation = AddCharacter(formation, 0x06);
-                    formation = SwapCharacterWithPosition(formation, initialPosition1, 0);
-                    formation = SwapCharacterWithPosition(formation, initialPosition2, 1);
-                    formation = SwapCharacterWithPosition(formation, initialPosition3, 2);
+                    EnableCharacters(CharacterId.Tidus, CharacterId.Yuna, CharacterId.Auron, CharacterId.Wakka, CharacterId.Lulu, CharacterId.Rikku); // All except Kimahri
+                    formation = AddCharacter(formation, CharacterId.Tidus);
+                    formation = AddCharacter(formation, CharacterId.Yuna);
+                    formation = AddCharacter(formation, CharacterId.Auron);
+                    formation = AddCharacter(formation, CharacterId.Wakka);
+                    formation = AddCharacter(formation, CharacterId.Lulu);
+                    formation = AddCharacter(formation, CharacterId.Rikku);
+                    formation = SwapCharacterWithPosition(formation, (CharacterId)initialPosition1, 0);
+                    formation = SwapCharacterWithPosition(formation, (CharacterId)initialPosition2, 1);
+                    formation = SwapCharacterWithPosition(formation, (CharacterId)initialPosition3, 2);
                     break;
             }
             RemoveDuplicates(formation);
@@ -1177,7 +1096,7 @@ public class Transition
         {
             byte character = formation[i];
 
-            if (character == 0xFF)
+            if (character == (byte)CharacterId.Empty)
             {
                 continue;
             }
@@ -1188,7 +1107,7 @@ public class Transition
             }
             else
             {
-                formation[i] = 0xFF;
+                formation[i] = (byte)CharacterId.Empty;
             }
         }
     }
@@ -1199,7 +1118,7 @@ public class Transition
 
         for (int i = 3; i < formationSize; i++)
         {
-            if (formation[i] == 0xFF)
+            if (formation[i] == (byte)CharacterId.Empty)
             {
                 return i;
             }
@@ -1207,15 +1126,15 @@ public class Transition
         return 0;
     }
 
-    public byte[] RemoveCharacter(byte[] formation, byte Character)
+    public byte[] RemoveCharacter(byte[] formation, CharacterId character)
     {
         int formationSize = formation.Length;
 
         for (int i = 0; i < formationSize; i++)
         {
-            if (formation[i] == Character)
+            if (formation[i] == (byte)character)
             {
-                formation[i] = 0xFF;
+                formation[i] = (byte)CharacterId.Empty;
             }
         }
         return formation;
@@ -1227,34 +1146,28 @@ public class Transition
 
         for (int i = 0; i < formationSize; i++)
         {
-            formation[i] = 0xFF;
+            formation[i] = (byte)CharacterId.Empty;
         }
 
-        WriteValue<byte>(MemoryWatchers.EnableTidus, 0);
-        WriteValue<byte>(MemoryWatchers.EnableYuna, 0);
-        WriteValue<byte>(MemoryWatchers.EnableAuron, 0);
-        WriteValue<byte>(MemoryWatchers.EnableKimahri, 0);
-        WriteValue<byte>(MemoryWatchers.EnableWakka, 0);
-        WriteValue<byte>(MemoryWatchers.EnableLulu, 0);
-        WriteValue<byte>(MemoryWatchers.EnableRikku, 0);
+        DisableCharacters(0, CharacterId.Tidus, CharacterId.Yuna, CharacterId.Auron, CharacterId.Kimahri, CharacterId.Wakka, CharacterId.Lulu, CharacterId.Rikku); // Disable all party members
 
         return formation;
     }
 
-    public byte[] AddCharacter(byte[] formation, byte Character)
+    public byte[] AddCharacter(byte[] formation, CharacterId character)
     {
-        if (Array.IndexOf(formation, Character) == -1)
+        if (Array.IndexOf(formation, (byte)character) == -1)
         {
             int Position = GetFirstEmptyReservePosition(formation);
 
-            formation[Position] = Character;
+            formation[Position] = (byte)character;
         }
         return formation;
     }
 
-    public byte[] SwapCharacterWithPosition(byte[] formation, byte Character, int newPosition)
+    public byte[] SwapCharacterWithPosition(byte[] formation, CharacterId character, int newPosition)
     {
-        int oldposition = Array.IndexOf(formation, Character);
+        int oldposition = Array.IndexOf(formation, (byte)character);
 
         byte temp = formation[oldposition];
         formation[oldposition] = formation[newPosition];
@@ -1268,18 +1181,18 @@ public class Transition
         int newPosition = GetFirstEmptyReservePosition(formation);
 
         formation[newPosition] = formation[Position];
-        formation[Position] = 0xFF;
+        formation[Position] = (byte)CharacterId.Empty;
 
         return formation;
     }
 
-    public byte[] FillMainPartySlotIfEmpty(byte[] formation, byte Character)
+    public byte[] FillMainPartySlotIfEmpty(byte[] formation, CharacterId character)
     {
         for (int i = 0; i < 3; i++)
         {
-            if (formation[i] == 0xFF)
+            if (formation[i] == (byte)CharacterId.Empty)
             {
-                formation = SwapCharacterWithPosition(formation, Character, i);
+                formation = SwapCharacterWithPosition(formation, character, i);
                 return formation;
             }
         }
